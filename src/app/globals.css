@@ -1,61 +1,125 @@
 @import "tailwindcss";
 
 :root {
-  --background: #101216;
-  --foreground: #f1f3f5;
-  --surface: #181b22;
-  --surface-hover: #1f232c;
+  --background: #090a0d;
+  --foreground: #f8fafc;
+  --surface: #12141a;
+  --surface-hover: #181b22;
   --surface-border: rgba(255, 255, 255, 0.08);
 }
 
 body {
-  background-color: #101216;
-  color: #f1f3f5;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #090a0d;
+  color: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* Custom iOS Frosted Glass Styles */
+/* Premium Apple / Linear Frosted Glass System */
 .glass-panel {
-  background: rgba(24, 27, 34, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(18, 20, 26, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .glass-card {
-  background: #181b22;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #12141a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-card:hover {
+  background: #161820;
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .glass-pill {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .glass-pill-active {
-  background: #10b981;
-  color: #0b1410;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* Custom scrollbars */
+/* Primary Button with Subtle Emerald Glow */
+.btn-primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #04130c;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Secondary Frosted Button */
+.btn-secondary {
+  background: #161820;
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-secondary:hover {
+  background: #1c1f28;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+
+/* Smooth custom scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #101216;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #252a34;
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #323846;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Micro animations */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-tab-switch {
+  animation: fadeInScale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

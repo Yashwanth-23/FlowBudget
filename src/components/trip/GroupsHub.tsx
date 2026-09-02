@@ -64,32 +64,32 @@ export function GroupsHub({ user }: GroupsHubProps) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-7">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8 animate-tab-switch pb-24 md:pb-12">
       {/* Header & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white flex items-center gap-2">
             <span>Trip & Shared Ledgers</span>
           </h1>
-          <p className="text-xs sm:text-sm text-neutral-400">
-            Split expenses with friends, track trip budgets, and settle up easily.
+          <p className="text-xs sm:text-sm text-neutral-400 mt-0.5">
+            Split expenses with friends, track trip budgets & settle debts.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5">
           {/* Join with Code */}
           <button
             onClick={() => setIsJoinOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-[#181b22] hover:bg-[#1f232c] border border-white/10 text-neutral-200 text-xs font-bold rounded-2xl shadow-sm transition"
+            className="btn-secondary flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 text-xs font-medium rounded-2xl"
           >
-            <UserPlus className="h-3.5 w-3.5 text-teal-400" />
+            <UserPlus className="h-3.5 w-3.5 text-emerald-400/90" />
             <span>Join with Code</span>
           </button>
 
           {/* Create Group */}
           <button
             onClick={() => setIsCreateOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-[#0b1410] text-xs font-black rounded-2xl shadow-lg shadow-emerald-500/15 transition active:scale-[0.99]"
+            className="btn-primary flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 text-xs font-bold rounded-2xl"
           >
             <Plus className="h-4 w-4" />
             <span>Create New Trip</span>
@@ -100,50 +100,50 @@ export function GroupsHub({ user }: GroupsHubProps) {
       {/* Groups Grid */}
       {loading ? (
         <div className="py-20 flex items-center justify-center">
-          <div className="h-8 w-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <div className="h-7 w-7 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : groups.length === 0 ? (
-        <div className="py-16 text-center bg-[#181b22] rounded-3xl border border-white/5 p-8 space-y-4">
-          <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-emerald-500/10 text-emerald-400 mb-2">
+        <div className="py-16 text-center glass-card rounded-3xl p-8 space-y-4 max-w-lg mx-auto">
+          <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mb-1">
             <Plane className="h-7 w-7" />
           </div>
-          <h3 className="text-base font-black text-white">No Trips or Groups Yet</h3>
-          <p className="text-xs text-neutral-400 max-w-md mx-auto">
+          <h3 className="text-base font-bold text-white">No Trips or Groups Yet</h3>
+          <p className="text-xs text-neutral-400 max-w-sm mx-auto leading-relaxed">
             Heading on a trip with friends? Create a group, share the invite link,
             and log shared expenses together!
           </p>
           <div className="pt-2 flex items-center justify-center gap-3">
             <button
               onClick={() => setIsCreateOpen(true)}
-              className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-[#0b1410] text-xs font-bold rounded-xl transition shadow-lg shadow-emerald-500/15"
+              className="btn-primary px-4 py-2 text-xs rounded-xl"
             >
               + Create Trip Group
             </button>
             <button
               onClick={() => setIsJoinOpen(true)}
-              className="px-4 py-2 bg-[#101216] border border-white/5 hover:bg-white/5 text-neutral-200 text-xs font-bold rounded-xl transition"
+              className="btn-secondary px-4 py-2 text-xs rounded-xl"
             >
               Join Friend&apos;s Trip
             </button>
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {groups.map((group) => {
             const isAdmin = group.currentUserRole === "ADMIN";
             return (
               <div
                 key={group.id}
                 onClick={() => setSelectedGroupId(group.id)}
-                className="group bg-[#181b22] hover:bg-[#1e222b] border border-white/5 hover:border-emerald-500/40 rounded-3xl p-6 shadow-sm cursor-pointer transition-all hover:-translate-y-0.5 relative"
+                className="glass-card rounded-3xl p-5 sm:p-6 cursor-pointer transition duration-200 hover:-translate-y-0.5 group relative"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
+                    <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
                       <Plane className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="text-base font-black text-white group-hover:text-emerald-300 transition">
+                      <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-emerald-300 transition">
                         {group.name}
                       </h3>
                       <p className="text-[11px] text-neutral-400 font-mono">Code: {group.code}</p>
@@ -153,7 +153,7 @@ export function GroupsHub({ user }: GroupsHubProps) {
                   {isAdmin && (
                     <span
                       title="You are Group Admin"
-                      className="px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-bold flex items-center gap-1"
+                      className="px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/20 text-[10px] font-bold flex items-center gap-1"
                     >
                       <Crown className="h-3 w-3" />
                       <span>Admin</span>
@@ -161,30 +161,30 @@ export function GroupsHub({ user }: GroupsHubProps) {
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 py-3 border-y border-white/5 mb-4">
+                <div className="grid grid-cols-2 gap-3 py-3 border-y border-white/[0.06] mb-4">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-neutral-500 block">
+                    <span className="text-[10px] uppercase font-bold text-neutral-400 block">
                       Total Spent
                     </span>
-                    <span className="text-base font-black text-white font-mono">
+                    <span className="text-base font-bold text-white font-mono">
                       {formatCurrency(group.totalSpent, group.currency)}
                     </span>
                   </div>
 
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-neutral-500 block">
+                    <span className="text-[10px] uppercase font-bold text-neutral-400 block">
                       Members
                     </span>
-                    <span className="text-base font-black text-emerald-400 flex items-center gap-1">
+                    <span className="text-base font-bold text-emerald-400 flex items-center gap-1">
                       <Users className="h-4 w-4" />
                       <span>{group.memberCount}</span>
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-neutral-400 font-semibold">
+                <div className="flex items-center justify-between text-xs text-neutral-400 font-medium">
                   <span>Open Trip Ledger</span>
-                  <ChevronRight className="h-4 w-4 text-emerald-400 group-hover:translate-x-1 transition" />
+                  <ChevronRight className="h-4 w-4 text-emerald-400 group-hover:translate-x-1 transition duration-150" />
                 </div>
               </div>
             );

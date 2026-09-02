@@ -42,61 +42,62 @@ export function Navbar({
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-white/5 bg-[#101216]/85 backdrop-blur-2xl">
+      {/* Top Navbar */}
+      <header className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-[#090a0d]/80 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Brand Logo */}
             <div
-              className="flex items-center gap-2.5 cursor-pointer"
+              className="flex items-center gap-2.5 cursor-pointer select-none group"
               onClick={() => onTabChange("personal")}
             >
-              <div className="h-9 w-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shadow-inner">
-                <Wallet className="h-5 w-5 text-emerald-400 font-bold" />
+              <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/30 flex items-center justify-center shadow-inner group-hover:border-emerald-500/50 transition duration-200">
+                <Wallet className="h-4 w-4 text-emerald-400 font-bold" />
               </div>
               <div>
-                <span className="text-lg font-black tracking-tight text-white flex items-center gap-1">
-                  Flow<span className="text-emerald-400">Budget</span>
+                <span className="text-base sm:text-lg font-bold tracking-tight text-white flex items-center">
+                  Flow<span className="text-emerald-400 font-semibold ml-0.5">Budget</span>
                 </span>
               </div>
             </div>
 
-            {/* Navigation Links - iOS Segmented Glass Style */}
+            {/* Desktop Navigation Links - Refined Apple Frosted Dock */}
             {user && (
-              <nav className="hidden md:flex items-center gap-1 bg-[#181b22] border border-white/5 p-1 rounded-2xl shadow-inner">
+              <nav className="hidden md:flex items-center gap-1 bg-[#12141a]/90 border border-white/[0.08] p-1 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
                 <button
                   onClick={() => onTabChange("personal")}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
                     currentTab === "personal"
-                      ? "bg-emerald-500 text-[#0b1410] shadow-sm font-black"
-                      : "text-neutral-400 hover:text-white hover:bg-white/5"
+                      ? "bg-white/10 text-white border border-white/15 shadow-sm backdrop-blur-md"
+                      : "text-neutral-400 hover:text-white hover:bg-white/[0.04]"
                   }`}
                 >
                   <Wallet className="h-3.5 w-3.5" />
-                  Personal Finance
+                  <span>Personal Finance</span>
                 </button>
 
                 <button
                   onClick={() => onTabChange("trips")}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
                     currentTab === "trips"
-                      ? "bg-emerald-500 text-[#0b1410] shadow-sm font-black"
-                      : "text-neutral-400 hover:text-white hover:bg-white/5"
+                      ? "bg-white/10 text-white border border-white/15 shadow-sm backdrop-blur-md"
+                      : "text-neutral-400 hover:text-white hover:bg-white/[0.04]"
                   }`}
                 >
                   <Users className="h-3.5 w-3.5" />
-                  Trips & Groups
+                  <span>Trips & Groups</span>
                 </button>
 
                 <button
                   onClick={() => onTabChange("reports")}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
                     currentTab === "reports"
-                      ? "bg-emerald-500 text-[#0b1410] shadow-sm font-black"
-                      : "text-neutral-400 hover:text-white hover:bg-white/5"
+                      ? "bg-white/10 text-white border border-white/15 shadow-sm backdrop-blur-md"
+                      : "text-neutral-400 hover:text-white hover:bg-white/[0.04]"
                   }`}
                 >
                   <BarChart3 className="h-3.5 w-3.5" />
-                  Analytics & Reports
+                  <span>Analytics & Reports</span>
                 </button>
               </nav>
             )}
@@ -107,9 +108,9 @@ export function Navbar({
               <button
                 onClick={() => setIsHelpOpen(true)}
                 title="Help & Support Desk"
-                className="p-2 text-neutral-400 hover:text-white bg-[#181b22] hover:bg-white/5 border border-white/10 rounded-xl transition"
+                className="p-2 text-neutral-400 hover:text-white bg-[#12141a] hover:bg-white/[0.06] border border-white/[0.08] rounded-xl transition duration-150 active:scale-95"
               >
-                <HelpCircle className="h-4 w-4 text-emerald-400" />
+                <HelpCircle className="h-4 w-4 text-emerald-400/90" />
               </button>
 
               {user && (
@@ -118,16 +119,16 @@ export function Navbar({
                   <div className="relative">
                     <button
                       onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[#181b22] border border-white/10 text-neutral-300 hover:text-white hover:border-white/20 transition"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-[#12141a] border border-white/[0.08] text-neutral-300 hover:text-white hover:border-white/20 transition duration-150 active:scale-95"
                     >
                       <Globe className="h-3.5 w-3.5 text-emerald-400" />
-                      <span>{user.currency || "USD"}</span>
-                      <ChevronDown className="h-3 w-3 text-neutral-400" />
+                      <span className="font-mono">{user.currency || "USD"}</span>
+                      <ChevronDown className="h-3 w-3 text-neutral-500" />
                     </button>
 
                     {currencyDropdownOpen && (
-                      <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-[#181b22] border border-white/10 shadow-2xl p-1.5 z-50 animate-in fade-in duration-150">
-                        <div className="px-3 py-1 text-[10px] font-bold text-neutral-500 uppercase tracking-wider">
+                      <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-[#12141a] border border-white/10 shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                        <div className="px-3 py-1.5 text-[10px] font-bold text-neutral-500 uppercase tracking-wider">
                           Select Currency
                         </div>
                         {Object.values(SUPPORTED_CURRENCIES).map((curr) => (
@@ -139,12 +140,12 @@ export function Navbar({
                             }}
                             className={`w-full flex items-center justify-between px-3 py-1.5 text-xs rounded-lg text-left transition ${
                               user.currency === curr.code
-                                ? "bg-emerald-500/10 text-emerald-400 font-bold"
-                                : "text-neutral-300 hover:bg-white/5"
+                                ? "bg-white/10 text-white font-semibold"
+                                : "text-neutral-300 hover:bg-white/[0.04]"
                             }`}
                           >
                             <span>{curr.name}</span>
-                            <span className="font-mono text-neutral-400">
+                            <span className="font-mono text-neutral-400 text-[11px]">
                               {curr.symbol} {curr.code}
                             </span>
                           </button>
@@ -154,26 +155,26 @@ export function Navbar({
                   </div>
 
                   {/* Profile & Security Settings Trigger */}
-                  <div className="flex items-center gap-1.5 pl-2 border-l border-white/10">
+                  <div className="flex items-center gap-1.5 pl-2 border-l border-white/[0.08]">
                     <button
                       onClick={() => setIsSecurityOpen(true)}
-                      title="Profile & Security Settings (Backup Word, Change PIN)"
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#181b22] hover:bg-[#1f232c] border border-white/10 text-neutral-200 transition"
+                      title="Profile & Security Settings"
+                      className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#12141a] hover:bg-[#181b22] border border-white/[0.08] text-neutral-200 transition duration-150 active:scale-95"
                     >
-                      <div className="h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px]">
+                      <div className="h-5 w-5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-[10px]">
                         {user.username.charAt(0).toUpperCase()}
                       </div>
-                      <span className="text-xs font-semibold hidden sm:inline">
+                      <span className="text-xs font-medium hidden sm:inline">
                         @{user.username}
                       </span>
-                      <Shield className="h-3.5 w-3.5 text-emerald-400" />
+                      <Shield className="h-3 w-3 text-emerald-400/80 hidden sm:inline" />
                     </button>
 
                     {/* Logout Button */}
                     <button
                       onClick={onLogout}
                       title="Logout"
-                      className="p-2 text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition"
+                      className="p-2 text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition duration-150 active:scale-95"
                     >
                       <LogOut className="h-4 w-4" />
                     </button>
@@ -182,41 +183,51 @@ export function Navbar({
               )}
             </div>
           </div>
-
-          {/* Mobile Bottom/Sub Navigation */}
-          {user && (
-            <div className="md:hidden flex items-center justify-around py-2 border-t border-white/5 bg-[#101216]">
-              <button
-                onClick={() => onTabChange("personal")}
-                className={`flex flex-col items-center gap-1 text-[11px] font-semibold ${
-                  currentTab === "personal" ? "text-emerald-400" : "text-neutral-400"
-                }`}
-              >
-                <Wallet className="h-4 w-4" />
-                <span>Personal</span>
-              </button>
-              <button
-                onClick={() => onTabChange("trips")}
-                className={`flex flex-col items-center gap-1 text-[11px] font-semibold ${
-                  currentTab === "trips" ? "text-emerald-400" : "text-neutral-400"
-                }`}
-              >
-                <Users className="h-4 w-4" />
-                <span>Trips</span>
-              </button>
-              <button
-                onClick={() => onTabChange("reports")}
-                className={`flex flex-col items-center gap-1 text-[11px] font-semibold ${
-                  currentTab === "reports" ? "text-emerald-400" : "text-neutral-400"
-                }`}
-              >
-                <BarChart3 className="h-4 w-4" />
-                <span>Reports</span>
-              </button>
-            </div>
-          )}
         </div>
       </header>
+
+      {/* Floating Bottom Navigation Dock for Mobile (iOS Native Feel) */}
+      {user && (
+        <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 max-w-sm mx-auto">
+          <div className="bg-[#12141a]/90 backdrop-blur-2xl border border-white/[0.12] rounded-full p-1.5 shadow-[0_12px_36px_rgba(0,0,0,0.8)] flex items-center justify-around">
+            <button
+              onClick={() => onTabChange("personal")}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-full text-xs font-medium transition-all duration-200 ${
+                currentTab === "personal"
+                  ? "bg-white/10 text-white font-semibold border border-white/15 shadow-sm"
+                  : "text-neutral-400 hover:text-white"
+              }`}
+            >
+              <Wallet className="h-3.5 w-3.5" />
+              <span>Personal</span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("trips")}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-full text-xs font-medium transition-all duration-200 ${
+                currentTab === "trips"
+                  ? "bg-white/10 text-white font-semibold border border-white/15 shadow-sm"
+                  : "text-neutral-400 hover:text-white"
+              }`}
+            >
+              <Users className="h-3.5 w-3.5" />
+              <span>Trips</span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("reports")}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-full text-xs font-medium transition-all duration-200 ${
+                currentTab === "reports"
+                  ? "bg-white/10 text-white font-semibold border border-white/15 shadow-sm"
+                  : "text-neutral-400 hover:text-white"
+              }`}
+            >
+              <BarChart3 className="h-3.5 w-3.5" />
+              <span>Reports</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Security & Backup Word Settings Modal */}
       {user && (

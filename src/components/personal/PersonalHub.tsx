@@ -129,35 +129,35 @@ export function PersonalHub({ user }: PersonalHubProps) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-7">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8 animate-tab-switch pb-24 md:pb-12">
       {/* Month Navigation & Action Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white flex items-center gap-2">
             <span>Personal Finance Ledger</span>
           </h1>
-          <p className="text-xs sm:text-sm text-neutral-400">
-            Daily income, expenses, category budgets, and financial health.
+          <p className="text-xs sm:text-sm text-neutral-400 mt-0.5">
+            Daily income, expenditures, category budget caps & analytics.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
           {/* Month Controller */}
-          <div className="flex items-center bg-[#181b22] border border-white/5 rounded-2xl p-1 shadow-sm">
+          <div className="flex items-center bg-[#12141a] border border-white/[0.08] rounded-2xl p-1 shadow-sm">
             <button
               onClick={handlePrevMonth}
-              className="p-1.5 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl transition"
+              className="p-1.5 text-neutral-400 hover:text-white hover:bg-white/[0.06] rounded-xl transition duration-150 active:scale-95"
               title="Previous Month"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
-            <div className="px-3 text-xs font-black text-white flex items-center gap-1.5 min-w-[120px] justify-center">
+            <div className="px-2.5 sm:px-3 text-xs font-semibold text-white flex items-center gap-1.5 min-w-[110px] sm:min-w-[130px] justify-center select-none">
               <Calendar className="h-3.5 w-3.5 text-emerald-400" />
               <span>{monthLabel}</span>
             </div>
             <button
               onClick={handleNextMonth}
-              className="p-1.5 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl transition"
+              className="p-1.5 text-neutral-400 hover:text-white hover:bg-white/[0.06] rounded-xl transition duration-150 active:scale-95"
               title="Next Month"
             >
               <ChevronRight className="h-4 w-4" />
@@ -167,16 +167,16 @@ export function PersonalHub({ user }: PersonalHubProps) {
           {/* Budget button */}
           <button
             onClick={() => setIsBudgetOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-[#181b22] hover:bg-[#1f232c] border border-white/10 text-neutral-200 text-xs font-bold rounded-2xl shadow-sm transition"
+            className="btn-secondary flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 text-xs font-medium rounded-2xl"
           >
-            <Target className="h-3.5 w-3.5 text-teal-400" />
+            <Target className="h-3.5 w-3.5 text-emerald-400/90" />
             <span>Set Budget Cap</span>
           </button>
 
           {/* Add Transaction Button */}
           <button
             onClick={() => setIsAddTxOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-[#0b1410] text-xs font-black rounded-2xl shadow-lg shadow-emerald-500/15 transition active:scale-[0.99]"
+            className="btn-primary flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 text-xs font-bold rounded-2xl"
           >
             <Plus className="h-4 w-4" />
             <span>Add Transaction</span>
@@ -203,107 +203,127 @@ export function PersonalHub({ user }: PersonalHubProps) {
         </div>
       )}
 
-      {/* Summary KPI Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Summary KPI Grid - Apple Wallet Inspired */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* 1. Total Income */}
-        <div className="bg-[#181b22] border border-white/5 rounded-3xl p-5 shadow-sm relative">
-          <div className="flex items-center justify-between text-neutral-400 mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Total Income</span>
-            <div className="h-7 w-7 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+        <div className="glass-card rounded-3xl p-4 sm:p-5 relative overflow-hidden group transition duration-200">
+          <div className="flex items-center justify-between text-neutral-400 mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+              Total Inflow
+            </span>
+            <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
               <TrendingUp className="h-3.5 w-3.5" />
             </div>
           </div>
-          <p className="text-xl sm:text-2xl font-black text-white font-mono">
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white font-mono tracking-tight">
             {formatCurrency(summary.totalIncome, user.currency)}
           </p>
-          <span className="text-[10px] text-emerald-400 font-semibold mt-1 inline-block">
-            Inflow for {monthLabel}
-          </span>
+          <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] text-neutral-400 font-medium">
+            <span className="text-emerald-400/90 font-semibold">Income</span>
+            <span>•</span>
+            <span className="truncate">{monthLabel}</span>
+          </div>
         </div>
 
         {/* 2. Total Expenses */}
-        <div className="bg-[#181b22] border border-white/5 rounded-3xl p-5 shadow-sm relative">
-          <div className="flex items-center justify-between text-neutral-400 mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Total Expenses</span>
-            <div className="h-7 w-7 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center">
+        <div className="glass-card rounded-3xl p-4 sm:p-5 relative overflow-hidden group transition duration-200">
+          <div className="flex items-center justify-between text-neutral-400 mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+              Total Outflow
+            </span>
+            <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center">
               <TrendingDown className="h-3.5 w-3.5" />
             </div>
           </div>
-          <p className="text-xl sm:text-2xl font-black text-white font-mono">
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white font-mono tracking-tight">
             {formatCurrency(summary.totalExpense, user.currency)}
           </p>
-          <span className="text-[10px] text-rose-400 font-semibold mt-1 inline-block">
-            Outflow for {monthLabel}
-          </span>
+          <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] text-neutral-400 font-medium">
+            <span className="text-rose-400/90 font-semibold">Expenses</span>
+            <span>•</span>
+            <span className="truncate">{monthLabel}</span>
+          </div>
         </div>
 
         {/* 3. Net Savings */}
-        <div className="bg-[#181b22] border border-white/5 rounded-3xl p-5 shadow-sm relative">
-          <div className="flex items-center justify-between text-neutral-400 mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Net Cash Flow</span>
-            <div className="h-7 w-7 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center">
+        <div className="glass-card rounded-3xl p-4 sm:p-5 relative overflow-hidden group transition duration-200">
+          <div className="flex items-center justify-between text-neutral-400 mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+              Net Cash Flow
+            </span>
+            <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center">
               <PiggyBank className="h-3.5 w-3.5" />
             </div>
           </div>
           <p
-            className={`text-xl sm:text-2xl font-black font-mono ${
-              summary.netSavings >= 0 ? "text-emerald-400" : "text-rose-400"
+            className={`text-xl sm:text-2xl lg:text-3xl font-bold font-mono tracking-tight ${
+              summary.netSavings > 0
+                ? "text-emerald-400"
+                : summary.netSavings < 0
+                ? "text-rose-400"
+                : "text-white"
             }`}
           >
             {formatCurrency(summary.netSavings, user.currency)}
           </p>
-          <span className="text-[10px] text-neutral-400 font-semibold mt-1 inline-block">
-            Savings Rate: {summary.savingsRate}%
-          </span>
+          <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] text-neutral-400 font-medium">
+            <span className="text-neutral-300 font-semibold">Savings Rate:</span>
+            <span className="font-mono text-emerald-400/90 font-semibold">{summary.savingsRate}%</span>
+          </div>
         </div>
 
         {/* 4. Spend Velocity */}
-        <div className="bg-[#181b22] border border-white/5 rounded-3xl p-5 shadow-sm relative">
-          <div className="flex items-center justify-between text-neutral-400 mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Daily Velocity</span>
-            <div className="h-7 w-7 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+        <div className="glass-card rounded-3xl p-4 sm:p-5 relative overflow-hidden group transition duration-200">
+          <div className="flex items-center justify-between text-neutral-400 mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+              Daily Velocity
+            </span>
+            <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
               <Flame className="h-3.5 w-3.5" />
             </div>
           </div>
-          <p className="text-xl sm:text-2xl font-black text-white font-mono">
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white font-mono tracking-tight">
             {formatCurrency(summary.avgDailyExpense, user.currency)}
-            <span className="text-xs font-normal text-neutral-500">/day</span>
+            <span className="text-xs sm:text-sm font-normal text-neutral-500 ml-1">/day</span>
           </p>
-          <span className="text-[10px] text-neutral-400 font-semibold mt-1 inline-block">
-            Projected: {formatCurrency(summary.projectedMonthEndExpense, user.currency)}
-          </span>
+          <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] text-neutral-400 font-medium truncate">
+            <span>Est. Month End:</span>
+            <span className="font-mono text-neutral-300 font-semibold truncate">
+              {formatCurrency(summary.projectedMonthEndExpense, user.currency)}
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Category Budgets Tracker */}
       {analytics && analytics.budgetHealth.length > 0 && (
-        <div className="bg-[#181b22] border border-white/5 rounded-3xl p-6 shadow-sm">
+        <div className="glass-card rounded-3xl p-5 sm:p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+              <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
                 Monthly Category Budgets
               </h3>
-              <p className="text-xs text-neutral-400">Real-time spend vs budget limits</p>
+              <p className="text-xs text-neutral-400 mt-0.5">Real-time spend vs monthly limits</p>
             </div>
             <button
               onClick={() => setIsBudgetOpen(true)}
-              className="text-xs font-bold text-emerald-400 hover:text-emerald-300"
+              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition"
             >
               + Adjust Budgets
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {analytics.budgetHealth.map((item) => {
               const isOver = item.status === "EXCEEDED";
               const isWarn = item.status === "WARNING";
               return (
                 <div
                   key={item.category}
-                  className="bg-[#101216] p-3.5 rounded-2xl border border-white/5 space-y-2"
+                  className="bg-[#090a0d] p-3.5 rounded-2xl border border-white/[0.06] space-y-2"
                 >
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-white">{item.category}</span>
+                    <span className="font-semibold text-white">{item.category}</span>
                     <span
                       className={`font-mono font-bold ${
                         isOver ? "text-rose-400" : isWarn ? "text-amber-400" : "text-emerald-400"
@@ -314,16 +334,16 @@ export function PersonalHub({ user }: PersonalHubProps) {
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="w-full bg-[#181b22] rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-[#161820] rounded-full h-1.5 overflow-hidden">
                     <div
-                      className={`h-full transition-all rounded-full ${
+                      className={`h-full transition-all duration-300 rounded-full ${
                         isOver ? "bg-rose-500" : isWarn ? "bg-amber-500" : "bg-emerald-500"
                       }`}
                       style={{ width: `${Math.min(item.percentUsed, 100)}%` }}
                     />
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-neutral-400">
+                  <div className="flex items-center justify-between text-[10px] text-neutral-400 font-mono">
                     <span>Spent: {formatCurrency(item.spent, user.currency)}</span>
                     <span>Cap: {formatCurrency(item.monthlyLimit, user.currency)}</span>
                   </div>
