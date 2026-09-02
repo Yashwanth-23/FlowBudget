@@ -2,6 +2,7 @@ export interface TransactionData {
   id: string;
   type: string; // "INCOME" | "EXPENSE"
   amount: number;
+  currency?: string;
   category: string;
   paymentMethod: string;
   date: Date | string;
@@ -45,7 +46,18 @@ export interface BudgetHealthItem {
   isOverBudget: boolean;
 }
 
+export interface CurrencySummary {
+  currency: string;
+  totalIncome: number;
+  totalExpense: number;
+  netSavings: number;
+  transactionCount: number;
+}
+
 export interface PersonalAnalyticsResult {
+  activeCurrency: string;
+  availableCurrencies: string[];
+  multiCurrencySummaries: Record<string, CurrencySummary>;
   summary: {
     totalIncome: number;
     totalExpense: number;
@@ -70,10 +82,72 @@ export interface PersonalAnalyticsResult {
 export function calculatePersonalAnalytics(
   transactions: TransactionData[],
   budgets: BudgetData[] = [],
-  targetMonthYear?: string // e.g. "2026-09"
+  targetMonthYear?: string, // e.g. "2026-09"
+  targetCurrency?: string // e.g. "USD", "INR", or undefined
 ): PersonalAnalyticsResult {
   const currentMonth = targetMonthYear || new Date().toISOString().slice(0, 7);
 
+  // 1. Discover all currencies present across user transactions
+  const currencySet = new Set<string>();
+  for (const tx of transactions) {
+    const c = tx.currency || "USD";
+    currencySet.add(c);
+  }
+  const availableCurrencies = Array.from(currencySet);
+
+  // Determine active currency: targetCurrency if present in set, or first available, or "USD"
+  const activeCurrency =
+    targetCurrency && (currencySet.has(targetCurrency) || availableCurrencies.length === 0)
+      ? targetCurrency
+      : availableCurrencies[0] || targetCurrency || "USD";
+
+  // 2. Compute multi-currency summaries for target month across all currencies
+  const multiCurrencySummaries: Record<string, CurrencySummary> = {};
+  for (const c of availableCurrencies) {
+    multiCurrencySummaries[c] = {
+      currency: c,
+      totalIncome: 0,
+      totalExpense: 0,
+      netSavings: 0,
+      transactionCount: 0,
+    };
+  }
+
+  for (const tx of transactions) {
+    const dateObj = new Date(tx.date);
+    const txMonth = dateObj.toISOString().slice(0, 7);
+    if (txMonth === currentMonth) {
+      const c = tx.currency || "USD";
+      if (!multiCurrencySummaries[c]) {
+        multiCurrencySummaries[c] = {
+          currency: c,
+          totalIncome: 0,
+          totalExpense: 0,
+          netSavings: 0,
+          transactionCount: 0,
+        };
+      }
+      const amt = Number(tx.amount) || 0;
+      multiCurrencySummaries[c].transactionCount += 1;
+      if (tx.type === "INCOME") {
+        multiCurrencySummaries[c].totalIncome += amt;
+      } else {
+        multiCurrencySummaries[c].totalExpense += amt;
+      }
+      multiCurrencySummaries[c].netSavings =
+        multiCurrencySummaries[c].totalIncome - multiCurrencySummaries[c].totalExpense;
+    }
+  }
+
+  // Round multiCurrencySummaries
+  for (const c of Object.keys(multiCurrencySummaries)) {
+    const s = multiCurrencySummaries[c];
+    s.totalIncome = Math.round(s.totalIncome * 100) / 100;
+    s.totalExpense = Math.round(s.totalExpense * 100) / 100;
+    s.netSavings = Math.round(s.netSavings * 100) / 100;
+  }
+
+  // 3. Compute detailed analytics strictly for activeCurrency
   let totalIncome = 0;
   let totalExpense = 0;
   const expenseCatMap = new Map<string, { amount: number; count: number }>();
@@ -81,10 +155,13 @@ export function calculatePersonalAnalytics(
   const monthlyMap = new Map<string, { income: number; expense: number }>();
   const dailyMap = new Map<string, number>();
 
-  // Filter transactions for target month or process all for trends
   const currentMonthTransactions: TransactionData[] = [];
 
   for (const tx of transactions) {
+    const txCurr = tx.currency || "USD";
+    // Filter to active currency to guarantee zero mixed-currency arithmetic!
+    if (txCurr !== activeCurrency) continue;
+
     const amt = Number(tx.amount) || 0;
     const dateObj = new Date(tx.date);
     const txMonth = dateObj.toISOString().slice(0, 7);
@@ -102,7 +179,6 @@ export function calculatePersonalAnalytics(
       mData.expense += amt;
     }
 
-    // If matches target month, include in current month calculations
     if (txMonth === currentMonth) {
       currentMonthTransactions.push(tx);
 
@@ -147,7 +223,7 @@ export function calculatePersonalAnalytics(
   }
   incomeCategoryBreakdown.sort((a, b) => b.amount - a.amount);
 
-  // Monthly Trends sorted chronologically
+  // Monthly Trends
   const sortedMonths = Array.from(monthlyMap.keys()).sort();
   const monthlyTrends: MonthlyTrend[] = sortedMonths.map((m) => {
     const data = monthlyMap.get(m)!;
@@ -159,7 +235,7 @@ export function calculatePersonalAnalytics(
     };
   });
 
-  // Daily Trends for current month
+  // Daily Trends
   const sortedDays = Array.from(dailyMap.keys()).sort();
   let runningTotal = 0;
   const dailyTrends: DailySpend[] = sortedDays.map((d) => {
@@ -172,7 +248,6 @@ export function calculatePersonalAnalytics(
     };
   });
 
-  // Days in current month and velocity
   const now = new Date();
   const [yearNum, monthNum] = currentMonth.split("-").map(Number);
   const totalDaysInMonth = new Date(yearNum, monthNum, 0).getDate();
@@ -180,7 +255,7 @@ export function calculatePersonalAnalytics(
   const avgDailyExpense = currentDay > 0 ? Math.round((totalExpense / currentDay) * 100) / 100 : 0;
   const projectedMonthEndExpense = Math.round(avgDailyExpense * totalDaysInMonth * 100) / 100;
 
-  // Budget Health & Alerts
+  // Budget Health
   const budgetHealth: BudgetHealthItem[] = [];
   const alerts: { type: "DANGER" | "WARNING" | "INFO"; category: string; message: string }[] = [];
 
@@ -197,14 +272,14 @@ export function calculatePersonalAnalytics(
         alerts.push({
           type: "DANGER",
           category: b.category,
-          message: `Budget Exceeded: You've spent $${spent.toFixed(2)} (${percentUsed}%) of your $${limit.toFixed(2)} limit for ${b.category}.`,
+          message: `Budget Exceeded: You've spent ${spent.toFixed(2)} (${percentUsed}%) of your ${limit.toFixed(2)} limit for ${b.category}.`,
         });
       } else if (percentUsed >= 80) {
         status = "WARNING";
         alerts.push({
           type: "WARNING",
           category: b.category,
-          message: `Budget Warning: You've reached ${percentUsed}% of your $${limit.toFixed(2)} limit for ${b.category}.`,
+          message: `Budget Warning: You've reached ${percentUsed}% of your ${limit.toFixed(2)} limit for ${b.category}.`,
         });
       }
 
@@ -221,6 +296,9 @@ export function calculatePersonalAnalytics(
   }
 
   return {
+    activeCurrency,
+    availableCurrencies,
+    multiCurrencySummaries,
     summary: {
       totalIncome: Math.round(totalIncome * 100) / 100,
       totalExpense: Math.round(totalExpense * 100) / 100,

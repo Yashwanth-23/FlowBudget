@@ -16,6 +16,7 @@ export async function POST(
     const body = await req.json();
     const {
       amount,
+      currency,
       description,
       category,
       date,
@@ -154,6 +155,7 @@ export async function POST(
           groupId: id,
           paidById: payersToCreate[0]?.userId || session.id,
           amount: Math.round(numAmount * 100) / 100,
+          currency: currency || group.currency || "USD",
           description: description.trim(),
           category: category || "General",
           date: expenseDate,

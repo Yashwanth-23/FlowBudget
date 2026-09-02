@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, Receipt, Check, Users, User, AlertCircle, Calendar } from "lucide-react";
-import { getCurrencySymbol } from "@/lib/currencies";
+import { getCurrencySymbol, SUPPORTED_CURRENCIES } from "@/lib/currencies";
 
 interface AddGroupExpenseModalProps {
   isOpen: boolean;
@@ -45,6 +45,7 @@ export function AddGroupExpenseModal({
   const [mounted, setMounted] = useState(false);
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
+  const [expCurrency, setExpCurrency] = useState(currency || "USD");
   const [category, setCategory] = useState(TRIP_CATEGORIES[0]);
   const [date, setDate] = useState(() => getLocalDateString());
 
@@ -72,13 +73,14 @@ export function AddGroupExpenseModal({
   useEffect(() => {
     if (isOpen) {
       setDate(getLocalDateString());
+      setExpCurrency(currency || "USD");
       setError(null);
     }
-  }, [isOpen]);
+  }, [isOpen, currency]);
 
   if (!isOpen || !mounted) return null;
 
-  const symbol = getCurrencySymbol(currency);
+  const symbol = getCurrencySymbol(expCurrency);
   const numAmount = parseFloat(amount) || 0;
 
   // Calculate sum of multiple payers entered so far
@@ -173,6 +175,7 @@ export function AddGroupExpenseModal({
         body: JSON.stringify({
           description: description.trim(),
           amount: numAmount,
+          currency: expCurrency,
           category,
           date,
           payerMode,
@@ -244,12 +247,27 @@ export function AddGroupExpenseModal({
             />
           </div>
 
-          {/* Amount & Category */}
+          {/* Amount & Category with Currency Selector */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
-                Total Bill Amount ({currency})
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
+                  Total Amount
+                </label>
+                <div className="flex items-center gap-1">
+                  <select
+                    value={expCurrency}
+                    onChange={(e) => setExpCurrency(e.target.value)}
+                    className="bg-[#090a0d] border border-white/10 rounded-lg px-2 py-0.5 text-[11px] font-bold text-emerald-400 focus:outline-none focus:border-emerald-500/60 cursor-pointer"
+                  >
+                    {Object.values(SUPPORTED_CURRENCIES).map((c) => (
+                      <option key={c.code} value={c.code} className="bg-[#12141a] text-white">
+                        {c.code} ({c.symbol})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-neutral-400 font-bold text-sm pointer-events-none">
                   {symbol}

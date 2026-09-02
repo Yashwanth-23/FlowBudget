@@ -185,14 +185,19 @@ export function TransactionList({
 
                 {/* Right amount & delete */}
                 <div className="flex items-center gap-2.5 shrink-0">
-                  <span
-                    className={`text-xs sm:text-sm font-bold font-mono ${
-                      isIncome ? "text-emerald-400" : "text-rose-400"
-                    }`}
-                  >
-                    {isIncome ? "+" : "-"}
-                    {formatCurrency(tx.amount, currency)}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      className={`text-xs sm:text-sm font-bold font-mono ${
+                        isIncome ? "text-emerald-400" : "text-rose-400"
+                      }`}
+                    >
+                      {isIncome ? "+" : "-"}
+                      {formatCurrency(tx.amount, tx.currency || currency)}
+                    </span>
+                    <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/[0.05] text-neutral-400 border border-white/[0.08]">
+                      {tx.currency || currency}
+                    </span>
+                  </div>
 
                   <button
                     onClick={() => onDelete(tx.id)}

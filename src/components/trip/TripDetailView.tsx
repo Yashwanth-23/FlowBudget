@@ -406,7 +406,7 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
                 let payersLabel = "";
                 if (exp.payers && exp.payers.length > 1) {
                   payersLabel = `Paid by ${exp.payers
-                    .map((p: any) => `@${p.username} (${formatCurrency(p.amountPaid, currency)})`)
+                    .map((p: any) => `@${p.username} (${formatCurrency(p.amountPaid, exp.currency || currency)})`)
                     .join(", ")}`;
                 } else if (exp.payers && exp.payers.length === 1) {
                   payersLabel = `Paid by @${exp.payers[0].username}`;
@@ -449,9 +449,14 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
                     </div>
 
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-sm sm:text-base font-bold font-mono text-white">
-                        {formatCurrency(exp.amount, currency)}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-sm sm:text-base font-bold font-mono text-white">
+                          {formatCurrency(exp.amount, exp.currency || currency)}
+                        </span>
+                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/[0.05] text-neutral-400 border border-white/[0.08]">
+                          {exp.currency || currency}
+                        </span>
+                      </div>
 
                       {canDelete && (
                         <button

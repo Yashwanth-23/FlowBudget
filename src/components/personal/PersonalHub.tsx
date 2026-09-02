@@ -12,8 +12,9 @@ import {
   ChevronRight,
   Flame,
   Calendar,
+  Coins,
 } from "lucide-react";
-import { formatCurrency } from "@/lib/currencies";
+import { formatCurrency, getCurrencySymbol } from "@/lib/currencies";
 import { PersonalAnalyticsResult, TransactionData } from "@/lib/analytics";
 import { AddTransactionModal } from "./AddTransactionModal";
 import { BudgetModal } from "./BudgetModal";
@@ -39,6 +40,7 @@ function getCurrentMonthString() {
 
 export function PersonalHub({ user }: PersonalHubProps) {
   const [currentMonth, setCurrentMonth] = useState(() => getCurrentMonthString());
+  const [selectedCurrency, setSelectedCurrency] = useState(user.currency || "USD");
 
   const [transactions, setTransactions] = useState<TransactionData[]>([]);
   const [analytics, setAnalytics] = useState<PersonalAnalyticsResult | null>(null);
@@ -50,10 +52,18 @@ export function PersonalHub({ user }: PersonalHubProps) {
   const [isBudgetOpen, setIsBudgetOpen] = useState(false);
   const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
 
+  useEffect(() => {
+    if (user.currency) {
+      setSelectedCurrency(user.currency);
+    }
+  }, [user.currency]);
+
   const fetchPersonalData = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/transactions?month=${currentMonth}`);
+      const res = await fetch(
+        `/api/transactions?month=${currentMonth}&currency=${selectedCurrency}`
+      );
       const data = await res.json();
       if (res.ok) {
         setTransactions(data.transactions || []);
@@ -65,7 +75,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
     } finally {
       setLoading(false);
     }
-  }, [currentMonth]);
+  }, [currentMonth, selectedCurrency]);
 
   useEffect(() => {
     fetchPersonalData();
@@ -109,7 +119,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
       t.id,
       t.type,
       t.amount,
-      user.currency,
+      t.currency || selectedCurrency,
       `"${t.category}"`,
       t.paymentMethod,
       new Date(t.date).toISOString().slice(0, 10),
@@ -133,6 +143,8 @@ export function PersonalHub({ user }: PersonalHubProps) {
     year: "numeric",
   });
 
+  const activeCurr = analytics?.activeCurrency || selectedCurrency;
+
   const summary = analytics?.summary || {
     totalIncome: 0,
     totalExpense: 0,
@@ -141,6 +153,10 @@ export function PersonalHub({ user }: PersonalHubProps) {
     avgDailyExpense: 0,
     projectedMonthEndExpense: 0,
   };
+
+  const multiSummaries = analytics?.multiCurrencySummaries || {};
+  const hasMultipleCurrencies =
+    analytics?.availableCurrencies && analytics.availableCurrencies.length > 1;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8 animate-tab-switch pb-24 md:pb-12">
@@ -151,7 +167,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
             <span>Personal Finance Ledger</span>
           </h1>
           <p className="text-xs sm:text-sm text-neutral-400 mt-0.5">
-            Daily income, expenditures, category budget caps & analytics.
+            Multi-currency tracking, category budget caps & real-time analytics.
           </p>
         </div>
 
@@ -205,6 +221,56 @@ export function PersonalHub({ user }: PersonalHubProps) {
         </div>
       </div>
 
+      {/* MULTI-CURRENCY SEGREGATION CONTROLLER (Shows when transactions exist in >1 currency) */}
+      {hasMultipleCurrencies && (
+        <div className="glass-card rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 border border-emerald-500/20 shadow-lg">
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-300">
+              <Coins className="h-4 w-4 text-emerald-400" />
+              <span>Multi-Currency Active ({analytics.availableCurrencies.length}):</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              {analytics.availableCurrencies.map((curr) => (
+                <button
+                  key={curr}
+                  onClick={() => setSelectedCurrency(curr)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition duration-150 flex items-center gap-1.5 ${
+                    activeCurr === curr
+                      ? "bg-emerald-500 text-[#04130c] shadow-md shadow-emerald-500/20"
+                      : "bg-[#090a0d] border border-white/10 text-neutral-300 hover:text-white"
+                  }`}
+                >
+                  <span>{curr}</span>
+                  <span className="opacity-75">({getCurrencySymbol(curr)})</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Monthly Net Balances per Currency */}
+          <div className="flex items-center gap-2 flex-wrap text-xs">
+            <span className="text-[10px] uppercase font-bold text-neutral-500">Totals:</span>
+            {Object.values(multiSummaries).map((s: any) => (
+              <div
+                key={s.currency}
+                onClick={() => setSelectedCurrency(s.currency)}
+                className={`px-2.5 py-1 rounded-lg border font-mono text-xs cursor-pointer transition ${
+                  activeCurr === s.currency
+                    ? "bg-white/10 border-white/20 text-white font-bold"
+                    : "bg-[#090a0d] border-white/5 text-neutral-400 hover:text-neutral-200"
+                }`}
+                title={`Click to switch dashboard to ${s.currency}`}
+              >
+                <span className="text-neutral-400 font-semibold">{s.currency}: </span>
+                <span className={s.netSavings >= 0 ? "text-emerald-400 font-bold" : "text-rose-400 font-bold"}>
+                  {formatCurrency(s.netSavings, s.currency)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Active Budget Alerts */}
       {analytics && analytics.alerts.length > 0 && (
         <div className="space-y-2">
@@ -224,20 +290,20 @@ export function PersonalHub({ user }: PersonalHubProps) {
         </div>
       )}
 
-      {/* Summary KPI Grid - Apple Wallet Inspired */}
+      {/* Summary KPI Grid - Cleanly Segregated by Currency */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* 1. Total Income */}
         <div className="glass-card rounded-3xl p-4 sm:p-5 relative overflow-hidden group transition duration-200">
           <div className="flex items-center justify-between text-neutral-400 mb-2 sm:mb-3">
             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
-              Total Inflow
+              Total Inflow ({activeCurr})
             </span>
             <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
               <TrendingUp className="h-3.5 w-3.5" />
             </div>
           </div>
           <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white font-mono tracking-tight">
-            {formatCurrency(summary.totalIncome, user.currency)}
+            {formatCurrency(summary.totalIncome, activeCurr)}
           </p>
           <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] text-neutral-400 font-medium">
             <span className="text-emerald-400/90 font-semibold">Income</span>
@@ -250,14 +316,14 @@ export function PersonalHub({ user }: PersonalHubProps) {
         <div className="glass-card rounded-3xl p-4 sm:p-5 relative overflow-hidden group transition duration-200">
           <div className="flex items-center justify-between text-neutral-400 mb-2 sm:mb-3">
             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
-              Total Outflow
+              Total Outflow ({activeCurr})
             </span>
             <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center">
               <TrendingDown className="h-3.5 w-3.5" />
             </div>
           </div>
           <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white font-mono tracking-tight">
-            {formatCurrency(summary.totalExpense, user.currency)}
+            {formatCurrency(summary.totalExpense, activeCurr)}
           </p>
           <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] text-neutral-400 font-medium">
             <span className="text-rose-400/90 font-semibold">Expenses</span>
@@ -270,7 +336,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
         <div className="glass-card rounded-3xl p-4 sm:p-5 relative overflow-hidden group transition duration-200">
           <div className="flex items-center justify-between text-neutral-400 mb-2 sm:mb-3">
             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
-              Net Cash Flow
+              Net Cash Flow ({activeCurr})
             </span>
             <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center">
               <PiggyBank className="h-3.5 w-3.5" />
@@ -285,7 +351,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
                 : "text-white"
             }`}
           >
-            {formatCurrency(summary.netSavings, user.currency)}
+            {formatCurrency(summary.netSavings, activeCurr)}
           </p>
           <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] text-neutral-400 font-medium">
             <span className="text-neutral-300 font-semibold">Savings Rate:</span>
@@ -297,20 +363,20 @@ export function PersonalHub({ user }: PersonalHubProps) {
         <div className="glass-card rounded-3xl p-4 sm:p-5 relative overflow-hidden group transition duration-200">
           <div className="flex items-center justify-between text-neutral-400 mb-2 sm:mb-3">
             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
-              Daily Velocity
+              Daily Velocity ({activeCurr})
             </span>
             <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
               <Flame className="h-3.5 w-3.5" />
             </div>
           </div>
           <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white font-mono tracking-tight">
-            {formatCurrency(summary.avgDailyExpense, user.currency)}
+            {formatCurrency(summary.avgDailyExpense, activeCurr)}
             <span className="text-xs sm:text-sm font-normal text-neutral-500 ml-1">/day</span>
           </p>
           <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] text-neutral-400 font-medium truncate">
             <span>Est. Month End:</span>
             <span className="font-mono text-neutral-300 font-semibold truncate">
-              {formatCurrency(summary.projectedMonthEndExpense, user.currency)}
+              {formatCurrency(summary.projectedMonthEndExpense, activeCurr)}
             </span>
           </div>
         </div>
@@ -322,7 +388,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
-                Monthly Category Budgets
+                Monthly Category Budgets ({activeCurr})
               </h3>
               <p className="text-xs text-neutral-400 mt-0.5">Real-time spend vs monthly limits</p>
             </div>
@@ -365,8 +431,8 @@ export function PersonalHub({ user }: PersonalHubProps) {
                   </div>
 
                   <div className="flex items-center justify-between text-[10px] text-neutral-400 font-mono">
-                    <span>Spent: {formatCurrency(item.spent, user.currency)}</span>
-                    <span>Cap: {formatCurrency(item.monthlyLimit, user.currency)}</span>
+                    <span>Spent: {formatCurrency(item.spent, activeCurr)}</span>
+                    <span>Cap: {formatCurrency(item.monthlyLimit, activeCurr)}</span>
                   </div>
                 </div>
               );
@@ -381,14 +447,14 @@ export function PersonalHub({ user }: PersonalHubProps) {
           monthlyTrends={analytics.monthlyTrends}
           categoryBreakdown={analytics.categoryBreakdown}
           dailyTrends={analytics.dailyTrends}
-          currency={user.currency}
+          currency={activeCurr}
         />
       )}
 
       {/* Daily Transaction Ledger Table */}
       <TransactionList
         transactions={transactions}
-        currency={user.currency}
+        currency={activeCurr}
         onDelete={handleDeleteTx}
         onExportCSV={exportCSV}
       />
@@ -398,14 +464,14 @@ export function PersonalHub({ user }: PersonalHubProps) {
         isOpen={isAddTxOpen}
         onClose={() => setIsAddTxOpen(false)}
         onSuccess={fetchPersonalData}
-        currency={user.currency}
+        currency={activeCurr}
       />
 
       <BudgetModal
         isOpen={isBudgetOpen}
         onClose={() => setIsBudgetOpen(false)}
         onSuccess={fetchPersonalData}
-        currency={user.currency}
+        currency={activeCurr}
         currentMonth={currentMonth}
         existingBudgets={budgets}
       />

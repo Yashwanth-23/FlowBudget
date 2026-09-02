@@ -13,7 +13,7 @@ import {
   Check,
   AlertCircle,
 } from "lucide-react";
-import { getCurrencySymbol } from "@/lib/currencies";
+import { getCurrencySymbol, SUPPORTED_CURRENCIES } from "@/lib/currencies";
 
 interface AddTransactionModalProps {
   isOpen: boolean;
@@ -69,6 +69,7 @@ export function AddTransactionModal({
   const [mounted, setMounted] = useState(false);
   const [type, setType] = useState<"EXPENSE" | "INCOME">("EXPENSE");
   const [amount, setAmount] = useState("");
+  const [txCurrency, setTxCurrency] = useState(currency || "USD");
   const [category, setCategory] = useState(EXPENSE_CATEGORIES[0]);
   const [paymentMethod, setPaymentMethod] = useState("CARD");
   const [date, setDate] = useState(() => getLocalDateString());
@@ -82,17 +83,18 @@ export function AddTransactionModal({
     setMounted(true);
   }, []);
 
-  // Update date dynamically when modal opens
+  // Update date and currency dynamically when modal opens
   useEffect(() => {
     if (isOpen) {
       setDate(getLocalDateString());
+      setTxCurrency(currency || "USD");
       setError(null);
     }
-  }, [isOpen]);
+  }, [isOpen, currency]);
 
   if (!isOpen || !mounted) return null;
 
-  const symbol = getCurrencySymbol(currency);
+  const symbol = getCurrencySymbol(txCurrency);
   const categories = type === "EXPENSE" ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
 
   const handleQuickAdd = (increment: number) => {
@@ -125,6 +127,7 @@ export function AddTransactionModal({
         body: JSON.stringify({
           type,
           amount: numAmount,
+          currency: txCurrency,
           category,
           paymentMethod,
           date,
@@ -204,11 +207,27 @@ export function AddTransactionModal({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Amount */}
+          {/* Amount & Currency Selector */}
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
-              Amount ({currency})
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
+                Amount
+              </label>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] text-neutral-500 font-semibold">Currency:</span>
+                <select
+                  value={txCurrency}
+                  onChange={(e) => setTxCurrency(e.target.value)}
+                  className="bg-[#090a0d] border border-white/10 rounded-lg px-2 py-0.5 text-xs font-bold text-emerald-400 focus:outline-none focus:border-emerald-500/60 cursor-pointer"
+                >
+                  {Object.values(SUPPORTED_CURRENCIES).map((c) => (
+                    <option key={c.code} value={c.code} className="bg-[#12141a] text-white">
+                      {c.code} ({c.symbol})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-neutral-400 font-bold text-lg pointer-events-none">
                 {symbol}

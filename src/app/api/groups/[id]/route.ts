@@ -63,6 +63,7 @@ export async function GET(
       id: e.id,
       paidById: e.paidById,
       amount: e.amount,
+      currency: e.currency || group.currency || "USD",
       description: e.description,
       category: e.category,
       date: e.date,
