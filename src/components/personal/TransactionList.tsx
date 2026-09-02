@@ -7,6 +7,7 @@ import {
   Search,
   Trash2,
   FileSpreadsheet,
+  Printer,
   Receipt,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/currencies";
@@ -40,6 +41,10 @@ export function TransactionList({
     return true;
   });
 
+  const handlePrintPDF = () => {
+    window.print();
+  };
+
   return (
     <div className="glass-card rounded-3xl p-5 sm:p-7 transition duration-200">
       {/* Header & Controls */}
@@ -54,17 +59,28 @@ export function TransactionList({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          {/* Print / Save PDF Button */}
+          <button
+            onClick={handlePrintPDF}
+            title="Print or Save Statement as PDF"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-[#090a0d] hover:bg-white/[0.06] text-neutral-300 border border-white/[0.08] transition duration-150 active:scale-95 no-print"
+          >
+            <Printer className="h-3.5 w-3.5 text-cyan-400" />
+            <span>Print / PDF</span>
+          </button>
+
           {/* CSV Export Button */}
           <button
             onClick={onExportCSV}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-[#090a0d] hover:bg-white/[0.06] text-neutral-300 border border-white/[0.08] transition duration-150 active:scale-95"
+            title="Export Raw Data to CSV Spreadsheet"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-[#090a0d] hover:bg-white/[0.06] text-neutral-300 border border-white/[0.08] transition duration-150 active:scale-95 no-print"
           >
             <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-400" />
             <span>Export CSV</span>
           </button>
 
           {/* Type Filter - iOS Segmented Style */}
-          <div className="flex bg-[#090a0d] p-1 rounded-xl border border-white/[0.08]">
+          <div className="flex bg-[#090a0d] p-1 rounded-xl border border-white/[0.08] no-print">
             <button
               onClick={() => setFilterType("ALL")}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition duration-150 ${
@@ -100,7 +116,7 @@ export function TransactionList({
       </div>
 
       {/* Search Input */}
-      <div className="relative mb-4">
+      <div className="relative mb-4 no-print">
         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500">
           <Search className="h-4 w-4" />
         </div>
@@ -181,7 +197,7 @@ export function TransactionList({
                   <button
                     onClick={() => onDelete(tx.id)}
                     title="Delete transaction"
-                    className="p-1.5 text-neutral-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition duration-150"
+                    className="p-1.5 text-neutral-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition duration-150 no-print"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>

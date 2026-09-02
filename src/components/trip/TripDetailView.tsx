@@ -12,6 +12,7 @@ import {
   Trash2,
   UserX,
   Crown,
+  Printer,
 } from "lucide-react";
 import { formatCurrency, getCurrencySymbol } from "@/lib/currencies";
 import { AddGroupExpenseModal } from "./AddGroupExpenseModal";
@@ -65,7 +66,7 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
   }, [fetchGroupDetails]);
 
   const handleDeleteExpense = async (expenseId: string) => {
-    if (!confirm("Are you sure you want to delete this trip expense?")) return;
+    if (!confirm("Are you sure you want to delete this group expense?")) return;
     try {
       const res = await fetch(`/api/groups/${groupId}/expenses/${expenseId}`, {
         method: "DELETE",
@@ -79,7 +80,7 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
   };
 
   const handleRemoveMember = async (memberId: string, memberUsername: string) => {
-    if (!confirm(`Are you sure you want to remove @${memberUsername} from this trip group?`)) {
+    if (!confirm(`Are you sure you want to remove @${memberUsername} from this group?`)) {
       return;
     }
 
@@ -98,6 +99,10 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
     }
   };
 
+  const handlePrintPDF = () => {
+    window.print();
+  };
+
   if (loading && !data) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center">
@@ -109,12 +114,12 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
   if (!data || !data.group) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-12 text-center">
-        <p className="text-sm text-neutral-400">Trip group not found or you are not a member.</p>
+        <p className="text-sm text-neutral-400">Group not found or you are not a member.</p>
         <button
           onClick={onBack}
           className="btn-secondary mt-4 px-4 py-2 text-xs rounded-xl"
         >
-          Back to Trips
+          Back to Groups
         </button>
       </div>
     );
@@ -133,8 +138,8 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="p-2 bg-[#12141a] hover:bg-white/[0.06] border border-white/[0.08] text-neutral-300 rounded-xl transition duration-150 active:scale-95"
-            title="Back to All Trips"
+            className="p-2 bg-[#12141a] hover:bg-white/[0.06] border border-white/[0.08] text-neutral-300 rounded-xl transition duration-150 active:scale-95 no-print"
+            title="Back to All Groups"
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
@@ -146,19 +151,29 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
               </span>
             </div>
             <p className="text-xs text-neutral-400 mt-0.5">
-              Trip code: <span className="font-mono text-emerald-400 font-semibold">{group.code}</span>
+              Group code: <span className="font-mono text-emerald-400 font-semibold">{group.code}</span>
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5 no-print">
+          {/* Print PDF Button */}
+          <button
+            onClick={handlePrintPDF}
+            title="Print or Export Group Statement as PDF"
+            className="btn-secondary flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 text-xs font-medium rounded-2xl"
+          >
+            <Printer className="h-3.5 w-3.5 text-cyan-400" />
+            <span>Print / PDF</span>
+          </button>
+
           {/* Share Invite Link */}
           <button
             onClick={() => setIsShareOpen(true)}
             className="btn-secondary flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 text-xs font-medium rounded-2xl"
           >
             <Share2 className="h-3.5 w-3.5 text-emerald-400/90" />
-            <span>Invite Friends</span>
+            <span>Invite Members</span>
           </button>
 
           {/* Add Group Expense */}
@@ -167,7 +182,7 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
             className="btn-primary flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 text-xs font-bold rounded-2xl"
           >
             <Plus className="h-4 w-4" />
-            <span>Add Trip Expense</span>
+            <span>Add Expense</span>
           </button>
         </div>
       </div>
@@ -186,7 +201,7 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
 
           <div>
             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
-              Group Budget
+              Group Budget Cap
             </span>
             <span className="text-2xl sm:text-3xl font-bold text-neutral-300 font-mono tracking-tight">
               {totalBudget > 0 ? formatCurrency(totalBudget, currency) : "No Limit Set"}
@@ -206,7 +221,7 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
         {totalBudget > 0 && (
           <div className="space-y-1.5 pt-2 border-t border-white/[0.06]">
             <div className="flex items-center justify-between text-xs font-semibold">
-              <span className="text-neutral-400">Trip Budget Consumed</span>
+              <span className="text-neutral-400">Group Budget Consumed</span>
               <span
                 className={`font-mono font-bold ${
                   budgetPercent > 100
@@ -241,7 +256,7 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-emerald-400" />
             <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-              Trip Participants ({members.length})
+              Group Participants ({members.length})
             </h3>
           </div>
           {group.isAdmin && (
@@ -280,7 +295,7 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
                   <button
                     onClick={() => handleRemoveMember(m.id, m.username)}
                     title={`Remove @${m.username} from group`}
-                    className="p-1 text-neutral-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-md transition duration-150"
+                    className="p-1 text-neutral-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-md transition duration-150 no-print"
                   >
                     <UserX className="h-3.5 w-3.5" />
                   </button>
@@ -291,8 +306,8 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
         </div>
       </div>
 
-      {/* iOS Segmented Sub-Navigation (Frosted Platinum) */}
-      <div className="flex items-center bg-[#12141a] p-1 rounded-2xl border border-white/[0.08] max-w-md">
+      {/* iOS Segmented Sub-Navigation */}
+      <div className="flex items-center bg-[#12141a] p-1 rounded-2xl border border-white/[0.08] max-w-md no-print">
         <button
           onClick={() => setActiveTab("expenses")}
           className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold transition-all duration-150 ${
@@ -334,10 +349,10 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
       {activeTab === "expenses" && (
         <div className="glass-card rounded-3xl p-5 sm:p-7">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Trip Expense Feed</h3>
+            <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Group Expense Feed</h3>
             <button
               onClick={() => setIsAddExpenseOpen(true)}
-              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition"
+              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition no-print"
             >
               + Add Expense
             </button>
@@ -346,8 +361,8 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
           {expenses.length === 0 ? (
             <div className="py-12 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.06] rounded-2xl bg-[#090a0d]">
               <Receipt className="h-6 w-6 text-neutral-600 mb-2" />
-              <p className="text-xs text-neutral-400 font-medium">No trip expenses logged yet</p>
-              <p className="text-[10px] text-neutral-500 mt-0.5">Click &ldquo;Add Trip Expense&rdquo; to start recording shared costs</p>
+              <p className="text-xs text-neutral-400 font-medium">No group expenses logged yet</p>
+              <p className="text-[10px] text-neutral-500 mt-0.5">Click &ldquo;Add Expense&rdquo; to start recording shared costs</p>
             </div>
           ) : (
             <div className="divide-y divide-white/[0.05]">
@@ -411,7 +426,7 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
                         <button
                           onClick={() => handleDeleteExpense(exp.id)}
                           title="Delete Expense"
-                          className="p-1.5 text-neutral-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition duration-150"
+                          className="p-1.5 text-neutral-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition duration-150 no-print"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
@@ -436,16 +451,16 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
         />
       )}
 
-      {/* Tab 3: Trip Analytics View */}
+      {/* Tab 3: Group Analytics View */}
       {activeTab === "analytics" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="glass-card rounded-3xl p-5 sm:p-6">
             <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider mb-4">
-              Trip Spending by Category
+              Group Spending by Category
             </h3>
             {calculations.categoryBreakdown.length === 0 ? (
               <div className="h-44 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.06] rounded-2xl bg-[#090a0d]">
-                <p className="text-xs text-neutral-400">No trip expense data yet</p>
+                <p className="text-xs text-neutral-400">No group expense data yet</p>
               </div>
             ) : (
               <div className="h-52 flex flex-col sm:flex-row items-center">

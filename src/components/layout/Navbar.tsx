@@ -16,8 +16,8 @@ import { SecuritySettingsModal } from "../auth/SecuritySettingsModal";
 import { HelpSupportModal } from "../support/HelpSupportModal";
 
 interface NavbarProps {
-  currentTab: "personal" | "trips" | "reports";
-  onTabChange: (tab: "personal" | "trips" | "reports") => void;
+  currentTab: "personal" | "groups" | "reports";
+  onTabChange: (tab: "personal" | "groups" | "reports") => void;
   user: {
     id: string;
     username: string;
@@ -43,7 +43,7 @@ export function Navbar({
   return (
     <>
       {/* Top Navbar */}
-      <header className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-[#090a0d]/80 backdrop-blur-2xl">
+      <header className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-[#090a0d]/80 backdrop-blur-2xl no-print">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Brand Logo */}
@@ -77,15 +77,15 @@ export function Navbar({
                 </button>
 
                 <button
-                  onClick={() => onTabChange("trips")}
+                  onClick={() => onTabChange("groups")}
                   className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
-                    currentTab === "trips"
+                    currentTab === "groups"
                       ? "bg-white/10 text-white border border-white/15 shadow-sm backdrop-blur-md"
                       : "text-neutral-400 hover:text-white hover:bg-white/[0.04]"
                   }`}
                 >
                   <Users className="h-3.5 w-3.5" />
-                  <span>Trips & Groups</span>
+                  <span>Shared Groups</span>
                 </button>
 
                 <button
@@ -188,7 +188,7 @@ export function Navbar({
 
       {/* Floating Bottom Navigation Dock for Mobile (iOS Native Feel) */}
       {user && (
-        <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 max-w-sm mx-auto">
+        <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 max-w-sm mx-auto no-print">
           <div className="bg-[#12141a]/90 backdrop-blur-2xl border border-white/[0.12] rounded-full p-1.5 shadow-[0_12px_36px_rgba(0,0,0,0.8)] flex items-center justify-around">
             <button
               onClick={() => onTabChange("personal")}
@@ -203,15 +203,15 @@ export function Navbar({
             </button>
 
             <button
-              onClick={() => onTabChange("trips")}
+              onClick={() => onTabChange("groups")}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-full text-xs font-medium transition-all duration-200 ${
-                currentTab === "trips"
+                currentTab === "groups"
                   ? "bg-white/10 text-white font-semibold border border-white/15 shadow-sm"
                   : "text-neutral-400 hover:text-white"
               }`}
             >
               <Users className="h-3.5 w-3.5" />
-              <span>Trips</span>
+              <span>Groups</span>
             </button>
 
             <button

@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  Plane,
+  Users,
   Plus,
   UserPlus,
-  Users,
   ChevronRight,
   Crown,
+  Receipt,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/currencies";
 import { CreateGroupModal } from "./CreateGroupModal";
@@ -69,10 +69,10 @@ export function GroupsHub({ user }: GroupsHubProps) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white flex items-center gap-2">
-            <span>Trip & Shared Ledgers</span>
+            <span>Shared Groups & Expense Splitter</span>
           </h1>
           <p className="text-xs sm:text-sm text-neutral-400 mt-0.5">
-            Split expenses with friends, track trip budgets & settle debts.
+            Split expenses for dinners, roommates, events & group trips.
           </p>
         </div>
 
@@ -92,7 +92,7 @@ export function GroupsHub({ user }: GroupsHubProps) {
             className="btn-primary flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 text-xs font-bold rounded-2xl"
           >
             <Plus className="h-4 w-4" />
-            <span>Create New Trip</span>
+            <span>Create New Group</span>
           </button>
         </div>
       </div>
@@ -105,11 +105,11 @@ export function GroupsHub({ user }: GroupsHubProps) {
       ) : groups.length === 0 ? (
         <div className="py-16 text-center glass-card rounded-3xl p-8 space-y-4 max-w-lg mx-auto">
           <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mb-1">
-            <Plane className="h-7 w-7" />
+            <Users className="h-7 w-7" />
           </div>
-          <h3 className="text-base font-bold text-white">No Trips or Groups Yet</h3>
+          <h3 className="text-base font-bold text-white">No Shared Groups Yet</h3>
           <p className="text-xs text-neutral-400 max-w-sm mx-auto leading-relaxed">
-            Heading on a trip with friends? Create a group, share the invite link,
+            Going to dinner, sharing rent with roommates, or planning an event? Create a group, share the invite code,
             and log shared expenses together!
           </p>
           <div className="pt-2 flex items-center justify-center gap-3">
@@ -117,13 +117,13 @@ export function GroupsHub({ user }: GroupsHubProps) {
               onClick={() => setIsCreateOpen(true)}
               className="btn-primary px-4 py-2 text-xs rounded-xl"
             >
-              + Create Trip Group
+              + Create Group
             </button>
             <button
               onClick={() => setIsJoinOpen(true)}
               className="btn-secondary px-4 py-2 text-xs rounded-xl"
             >
-              Join Friend&apos;s Trip
+              Join Group
             </button>
           </div>
         </div>
@@ -140,7 +140,7 @@ export function GroupsHub({ user }: GroupsHubProps) {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
-                      <Plane className="h-5 w-5" />
+                      <Receipt className="h-5 w-5" />
                     </div>
                     <div>
                       <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-emerald-300 transition">
@@ -183,7 +183,7 @@ export function GroupsHub({ user }: GroupsHubProps) {
                 </div>
 
                 <div className="flex items-center justify-between text-xs text-neutral-400 font-medium">
-                  <span>Open Trip Ledger</span>
+                  <span>Open Group Ledger</span>
                   <ChevronRight className="h-4 w-4 text-emerald-400 group-hover:translate-x-1 transition duration-150" />
                 </div>
               </div>

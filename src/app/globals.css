@@ -123,3 +123,35 @@ body {
 .animate-tab-switch {
   animation: fadeInScale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* High-Contrast Print / PDF Export Stylesheet */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  header,
+  nav,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  .glass-card,
+  .glass-panel {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+  }
+
+  p,
+  span,
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: #000000 !important;
+  }
+}
