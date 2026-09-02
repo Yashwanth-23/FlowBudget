@@ -106,7 +106,7 @@ export function Navbar({
               {/* Help & Support Button */}
               <button
                 onClick={() => setIsHelpOpen(true)}
-                title="Help & Support"
+                title="Help & Support Desk"
                 className="p-2 text-neutral-400 hover:text-white bg-[#181b22] hover:bg-white/5 border border-white/10 rounded-xl transition"
               >
                 <HelpCircle className="h-4 w-4 text-emerald-400" />
@@ -230,11 +230,11 @@ export function Navbar({
         />
       )}
 
-      {/* Help & Support / Contact Modal */}
+      {/* Help & Support In-App Ticket Modal */}
       <HelpSupportModal
         isOpen={isHelpOpen}
         onClose={() => setIsHelpOpen(false)}
-        adminContact="https://github.com/Yashwanth-23/FlowBudget/issues"
+        defaultUsername={user?.username}
       />
     </>
   );

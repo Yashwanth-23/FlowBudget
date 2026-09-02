@@ -166,7 +166,6 @@ function MainAppContent() {
         <HelpSupportModal
           isOpen={isLandingHelpOpen}
           onClose={() => setIsLandingHelpOpen(false)}
-          adminContact="https://github.com/Yashwanth-23/FlowBudget/issues"
         />
       </div>
     );

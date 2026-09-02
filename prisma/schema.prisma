@@ -130,3 +130,14 @@ model GroupSettlement {
   settledAt  DateTime?
   createdAt  DateTime  @default(now())
 }
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  userId    String?
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    String   @default("OPEN") // "OPEN" | "RESOLVED"
+  createdAt DateTime @default(now())
+}
