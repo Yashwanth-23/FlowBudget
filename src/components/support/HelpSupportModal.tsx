@@ -34,11 +34,18 @@ const TICKET_CATEGORIES = [
   "Feature Suggestion / Feedback",
 ];
 
+// Master Admins who have access to the system-wide support inbox
+const SUPERADMIN_USERNAMES = ["yash", "admin", "yashwanth"];
+
 export function HelpSupportModal({
   isOpen,
   onClose,
   defaultUsername,
 }: HelpSupportModalProps) {
+  const isSuperAdmin = defaultUsername
+    ? SUPERADMIN_USERNAMES.includes(defaultUsername.toLowerCase())
+    : false;
+
   const [activeTab, setActiveTab] = useState<"ticket" | "faq" | "inbox">("ticket");
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
@@ -53,11 +60,12 @@ export function HelpSupportModal({
   const [error, setError] = useState<string | null>(null);
   const [submittedTicketId, setSubmittedTicketId] = useState<string | null>(null);
 
-  // Admin Inbox State
+  // Admin Inbox State (Only loaded for SuperAdmin)
   const [tickets, setTickets] = useState<any[]>([]);
   const [loadingTickets, setLoadingTickets] = useState(false);
 
   const fetchTickets = async () => {
+    if (!isSuperAdmin) return;
     try {
       setLoadingTickets(true);
       const res = await fetch("/api/support/tickets");
@@ -73,10 +81,10 @@ export function HelpSupportModal({
   };
 
   useEffect(() => {
-    if (isOpen && defaultUsername) {
+    if (isOpen && isSuperAdmin) {
       fetchTickets();
     }
-  }, [isOpen, defaultUsername]);
+  }, [isOpen, isSuperAdmin]);
 
   if (!isOpen) return null;
 
@@ -152,7 +160,7 @@ export function HelpSupportModal({
       setSubmittedTicketId(data.ticketId);
       setSubject("");
       setMessage("");
-      fetchTickets();
+      if (isSuperAdmin) fetchTickets();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error submitting ticket");
     } finally {
@@ -212,7 +220,7 @@ export function HelpSupportModal({
         {/* Segmented iOS Toggle */}
         <div
           className={`grid gap-1 bg-[#101216] p-1 rounded-2xl border border-white/5 mb-5 ${
-            defaultUsername ? "grid-cols-3" : "grid-cols-2"
+            isSuperAdmin ? "grid-cols-3" : "grid-cols-2"
           }`}
         >
           <button
@@ -241,7 +249,8 @@ export function HelpSupportModal({
             <span>FAQs</span>
           </button>
 
-          {defaultUsername && (
+          {/* SuperAdmin Only Tab */}
+          {isSuperAdmin && (
             <button
               type="button"
               onClick={() => {
@@ -255,7 +264,7 @@ export function HelpSupportModal({
               }`}
             >
               <Inbox className="h-3.5 w-3.5" />
-              <span>Inbox ({tickets.length})</span>
+              <span>Admin Inbox ({tickets.length})</span>
             </button>
           )}
         </div>
@@ -424,8 +433,8 @@ export function HelpSupportModal({
           </div>
         )}
 
-        {/* TAB 3: ADMIN TICKET INBOX */}
-        {activeTab === "inbox" && (
+        {/* TAB 3: ADMIN TICKET INBOX (SuperAdmin Only) */}
+        {activeTab === "inbox" && isSuperAdmin && (
           <div className="space-y-3">
             <div className="flex items-center justify-between text-xs text-neutral-400 pb-1">
               <span>All Received Support Tickets ({tickets.length})</span>

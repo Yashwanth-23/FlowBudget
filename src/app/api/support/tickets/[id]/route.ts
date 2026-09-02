@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
+const ADMIN_USERNAMES = ["yash", "admin", "yashwanth"];
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -10,6 +12,11 @@ export async function PATCH(
     const session = await getAuthUser(req);
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const isSuperAdmin = ADMIN_USERNAMES.includes(session.username.toLowerCase());
+    if (!isSuperAdmin) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     const { id } = await params;
@@ -36,6 +43,11 @@ export async function DELETE(
     const session = await getAuthUser(req);
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const isSuperAdmin = ADMIN_USERNAMES.includes(session.username.toLowerCase());
+    if (!isSuperAdmin) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     const { id } = await params;
