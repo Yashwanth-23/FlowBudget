@@ -12,7 +12,9 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url);
-    const month = searchParams.get("month") || new Date().toISOString().slice(0, 7); // e.g. "2026-09"
+    const month = searchParams.get("month"); // e.g. "2026-09", "ALL", or null
+    const startDate = searchParams.get("startDate"); // e.g. "2026-01-01"
+    const endDate = searchParams.get("endDate"); // e.g. "2026-03-31"
     const type = searchParams.get("type"); // "INCOME" | "EXPENSE" | null
     const category = searchParams.get("category");
     const search = searchParams.get("search");
@@ -32,20 +34,30 @@ export async function GET(req: NextRequest) {
     // Determine target active currency for analytics calculation
     const targetCurrency = currencyFilter || session.currency || "USD";
 
+    // Date range filter
+    const dateRange = startDate && endDate ? { startDate, endDate } : undefined;
+    const resolvedMonth = dateRange ? undefined : month || new Date().toISOString().slice(0, 7);
+
     // Compute analytics with strict currency segregation
     const analytics = calculatePersonalAnalytics(
       allTransactions,
       budgets,
-      month,
-      targetCurrency
+      resolvedMonth,
+      targetCurrency,
+      dateRange
     );
 
     // Apply filters for the transaction table list
     let filteredTransactions = allTransactions;
 
-    if (month && month !== "ALL") {
+    if (dateRange) {
+      filteredTransactions = filteredTransactions.filter((tx) => {
+        const d = new Date(tx.date).toISOString().slice(0, 10);
+        return d >= dateRange.startDate && d <= dateRange.endDate;
+      });
+    } else if (resolvedMonth && resolvedMonth !== "ALL") {
       filteredTransactions = filteredTransactions.filter(
-        (tx) => new Date(tx.date).toISOString().slice(0, 7) === month
+        (tx) => new Date(tx.date).toISOString().slice(0, 7) === resolvedMonth
       );
     }
 
@@ -77,9 +89,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       transactions: filteredTransactions,
       analytics,
-      budgets: budgets.filter((b) => b.monthYear === month),
-      selectedMonth: month,
+      budgets: resolvedMonth ? budgets.filter((b) => b.monthYear === resolvedMonth) : budgets,
+      selectedMonth: resolvedMonth,
       selectedCurrency: targetCurrency,
+      dateRange,
     });
   } catch (err) {
     console.error("Fetch transactions error:", err);

@@ -12,6 +12,7 @@ import {
   HelpCircle,
   Calendar,
 } from "lucide-react";
+import { CustomSelect } from "@/components/ui/CustomSelect";
 
 interface SecuritySettingsModalProps {
   isOpen: boolean;
@@ -270,17 +271,12 @@ export function SecuritySettingsModal({
                 <HelpCircle className="h-3.5 w-3.5 text-emerald-400" />
                 <span>Select Security Question</span>
               </label>
-              <select
+              <CustomSelect
+                options={SECURITY_QUESTIONS}
                 value={securityQuestion}
-                onChange={(e) => setSecurityQuestion(e.target.value)}
-                className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
-              >
-                {SECURITY_QUESTIONS.map((q) => (
-                  <option key={q} value={q}>
-                    {q}
-                  </option>
-                ))}
-              </select>
+                onChange={setSecurityQuestion}
+                size="md"
+              />
             </div>
 
             <div>

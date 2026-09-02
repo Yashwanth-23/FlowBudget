@@ -20,6 +20,7 @@ import {
   Trash2,
   Check,
 } from "lucide-react";
+import { CustomSelect } from "@/components/ui/CustomSelect";
 
 interface HelpSupportModalProps {
   isOpen: boolean;
@@ -341,17 +342,12 @@ export function HelpSupportModal({
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1">
                       Category
                     </label>
-                    <select
+                    <CustomSelect
+                      options={TICKET_CATEGORIES}
                       value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                      className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
-                    >
-                      {TICKET_CATEGORIES.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={setCategory}
+                      size="sm"
+                    />
                   </div>
 
                   <div>

@@ -13,7 +13,9 @@ import {
   Check,
   AlertCircle,
 } from "lucide-react";
-import { getCurrencySymbol, SUPPORTED_CURRENCIES } from "@/lib/currencies";
+import { getCurrencySymbol } from "@/lib/currencies";
+import { CustomSelect } from "@/components/ui/CustomSelect";
+import { CurrencySelect } from "@/components/ui/CurrencySelect";
 
 interface AddTransactionModalProps {
   isOpen: boolean;
@@ -51,7 +53,6 @@ const PAYMENT_METHODS = [
   { id: "BANK_TRANSFER", label: "Bank Transfer" },
 ];
 
-// Helper for dynamic local date YYYY-MM-DD
 function getLocalDateString() {
   const d = new Date();
   const year = d.getFullYear();
@@ -83,7 +84,6 @@ export function AddTransactionModal({
     setMounted(true);
   }, []);
 
-  // Update date and currency dynamically when modal opens
   useEffect(() => {
     if (isOpen) {
       setDate(getLocalDateString());
@@ -154,7 +154,6 @@ export function AddTransactionModal({
   const modalContent = (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
       <div className="w-full max-w-lg bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
-        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition"
@@ -207,31 +206,21 @@ export function AddTransactionModal({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Amount & Currency Selector */}
+          {/* Amount with Integrated Currency Selector */}
           <div>
-            <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center justify-between h-5 mb-1.5">
               <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
-                Amount
+                Amount & Currency
               </label>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[10px] text-neutral-500 font-semibold">Currency:</span>
-                <select
-                  value={txCurrency}
-                  onChange={(e) => setTxCurrency(e.target.value)}
-                  className="bg-[#090a0d] border border-white/10 rounded-lg px-2 py-0.5 text-xs font-bold text-emerald-400 focus:outline-none focus:border-emerald-500/60 cursor-pointer"
-                >
-                  {Object.values(SUPPORTED_CURRENCIES).map((c) => (
-                    <option key={c.code} value={c.code} className="bg-[#12141a] text-white">
-                      {c.code} ({c.symbol})
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <span className="text-[10px] text-neutral-500 font-mono">Select currency</span>
             </div>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-neutral-400 font-bold text-lg pointer-events-none">
-                {symbol}
-              </span>
+            <div className="flex items-center h-12 rounded-xl bg-[#090a0d] border border-white/10 focus-within:border-emerald-500/60 transition overflow-hidden">
+              <CurrencySelect
+                value={txCurrency}
+                onChange={setTxCurrency}
+                variant="inline"
+              />
+              <div className="h-6 w-[1px] bg-white/10 shrink-0" />
               <input
                 type="number"
                 step="0.01"
@@ -241,7 +230,7 @@ export function AddTransactionModal({
                 placeholder="0.00"
                 required
                 autoFocus
-                className="w-full bg-[#090a0d] border border-white/10 rounded-2xl pl-10 pr-4 py-3 text-xl font-bold text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
+                className="h-full flex-1 bg-transparent px-3 text-base font-bold font-mono text-white placeholder-neutral-600 focus:outline-none"
               />
             </div>
 
@@ -261,23 +250,21 @@ export function AddTransactionModal({
             </div>
           </div>
 
-          {/* Category */}
+          {/* Category with Premium CustomSelect */}
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-              <Tag className="h-3.5 w-3.5 text-emerald-400" />
-              <span>Category</span>
-            </label>
-            <select
+            <div className="flex items-center justify-between h-5 mb-1.5">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
+                <Tag className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Category</span>
+              </label>
+              <span className="text-[10px] text-neutral-500">Expense classification</span>
+            </div>
+            <CustomSelect
+              options={categories}
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
-            >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
+              onChange={setCategory}
+              size="md"
+            />
           </div>
 
           {/* Payment Method */}
@@ -306,7 +293,7 @@ export function AddTransactionModal({
 
           {/* Date Picker (No future dates allowed) */}
           <div>
-            <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center justify-between h-5 mb-1.5">
               <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
                 <Calendar className="h-3.5 w-3.5 text-emerald-400" />
                 <span>Date</span>
@@ -318,22 +305,25 @@ export function AddTransactionModal({
               max={todayStr}
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition font-mono"
+              className="w-full h-12 bg-[#090a0d] border border-white/10 rounded-xl px-3.5 text-xs sm:text-sm text-white focus:outline-none focus:border-emerald-500/60 transition font-mono"
             />
           </div>
 
           {/* Notes */}
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-              <FileText className="h-3.5 w-3.5 text-emerald-400" />
-              <span>Notes / Description (Optional)</span>
-            </label>
+            <div className="flex items-center justify-between h-5 mb-1.5">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
+                <FileText className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Notes / Description (Optional)</span>
+              </label>
+              <span className="text-[10px] text-neutral-500">Memo</span>
+            </div>
             <input
               type="text"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Dinner, Grocery run, Gas"
-              className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+              placeholder="e.g. Dinner with team, Grocery run, Gas"
+              className="w-full h-12 bg-[#090a0d] border border-white/10 rounded-xl px-3.5 text-xs sm:text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
             />
           </div>
 
@@ -342,14 +332,14 @@ export function AddTransactionModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#090a0d] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
+              className="flex-1 h-12 rounded-xl text-xs sm:text-sm font-bold bg-[#090a0d] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg ${
+              className={`flex-1 h-12 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition shadow-lg ${
                 type === "EXPENSE"
                   ? "bg-rose-500 hover:bg-rose-400 text-white shadow-rose-500/20"
                   : "btn-primary"

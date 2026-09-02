@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, Receipt, Check, Users, User, AlertCircle, Calendar } from "lucide-react";
-import { getCurrencySymbol, SUPPORTED_CURRENCIES } from "@/lib/currencies";
+import { getCurrencySymbol } from "@/lib/currencies";
+import { CustomSelect } from "@/components/ui/CustomSelect";
+import { CurrencySelect } from "@/components/ui/CurrencySelect";
 
 interface AddGroupExpenseModalProps {
   isOpen: boolean;
@@ -203,6 +205,11 @@ export function AddGroupExpenseModal({
     }
   };
 
+  const payerOptions = members.map((m) => ({
+    value: m.userId,
+    label: m.userId === currentUserId ? `You (@${m.username}) paid full` : `@${m.username} paid full`,
+  }));
+
   const modal = (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
       <div className="w-full max-w-lg bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
@@ -213,7 +220,7 @@ export function AddGroupExpenseModal({
           <X className="h-5 w-5" />
         </button>
 
-        <div className="flex items-center gap-3 mb-5">
+        <div className="flex items-center gap-3 mb-6">
           <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
             <Receipt className="h-5 w-5" />
           </div>
@@ -233,45 +240,40 @@ export function AddGroupExpenseModal({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Description */}
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
-              Description / Expense Item
-            </label>
+            <div className="flex items-center justify-between h-5 mb-1.5">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
+                Description / Item
+              </label>
+              <span className="text-[10px] text-neutral-500">What was purchased?</span>
+            </div>
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g. Dinner, Rent Bill, Grocery Run, Tickets"
+              placeholder="e.g. Dinner, Grocery Run, Gas, Tickets"
               required
               autoFocus
-              className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+              className="w-full h-12 bg-[#090a0d] border border-white/10 rounded-xl px-3.5 text-xs sm:text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
             />
           </div>
 
-          {/* Amount & Category with Currency Selector */}
+          {/* Amount & Category: 100% Geometrically Aligned */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* Amount with Integrated Currency Selector */}
             <div>
-              <div className="flex items-center justify-between mb-1.5">
+              <div className="flex items-center justify-between h-5 mb-1.5">
                 <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
                   Total Amount
                 </label>
-                <div className="flex items-center gap-1">
-                  <select
-                    value={expCurrency}
-                    onChange={(e) => setExpCurrency(e.target.value)}
-                    className="bg-[#090a0d] border border-white/10 rounded-lg px-2 py-0.5 text-[11px] font-bold text-emerald-400 focus:outline-none focus:border-emerald-500/60 cursor-pointer"
-                  >
-                    {Object.values(SUPPORTED_CURRENCIES).map((c) => (
-                      <option key={c.code} value={c.code} className="bg-[#12141a] text-white">
-                        {c.code} ({c.symbol})
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <span className="text-[10px] text-neutral-500 font-mono">Currency</span>
               </div>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-neutral-400 font-bold text-sm pointer-events-none">
-                  {symbol}
-                </span>
+              <div className="flex items-center h-12 rounded-xl bg-[#090a0d] border border-white/10 focus-within:border-emerald-500/60 transition overflow-hidden">
+                <CurrencySelect
+                  value={expCurrency}
+                  onChange={setExpCurrency}
+                  variant="inline"
+                />
+                <div className="h-6 w-[1px] bg-white/10 shrink-0" />
                 <input
                   type="number"
                   step="0.01"
@@ -280,32 +282,31 @@ export function AddGroupExpenseModal({
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
                   required
-                  className="w-full bg-[#090a0d] border border-white/10 rounded-xl pl-7 pr-3 py-2.5 text-base font-bold text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
+                  className="h-full flex-1 bg-transparent px-3 text-base font-bold font-mono text-white placeholder-neutral-600 focus:outline-none"
                 />
               </div>
             </div>
 
+            {/* Category Custom Select */}
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
-                Category
-              </label>
-              <select
+              <div className="flex items-center justify-between h-5 mb-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
+                  Category
+                </label>
+                <span className="text-[10px] text-neutral-500">Classification</span>
+              </div>
+              <CustomSelect
+                options={TRIP_CATEGORIES}
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
-              >
-                {TRIP_CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
+                onChange={setCategory}
+                size="md"
+              />
             </div>
           </div>
 
           {/* Date Picker (No future dates allowed) */}
           <div>
-            <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center justify-between h-5 mb-1.5">
               <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
                 <Calendar className="h-3.5 w-3.5 text-emerald-400" />
                 <span>Date</span>
@@ -317,7 +318,7 @@ export function AddGroupExpenseModal({
               max={todayStr}
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition font-mono"
+              className="w-full h-12 bg-[#090a0d] border border-white/10 rounded-xl px-3.5 text-xs sm:text-sm text-white focus:outline-none focus:border-emerald-500/60 transition font-mono"
             />
           </div>
 
@@ -347,23 +348,18 @@ export function AddGroupExpenseModal({
                     payerMode === "MULTIPLE" ? "bg-white/10 text-emerald-400 font-bold" : "text-neutral-400"
                   }`}
                 >
-                  Multiple People Paid
+                  Multiple People
                 </button>
               </div>
             </div>
 
             {payerMode === "SINGLE" ? (
-              <select
+              <CustomSelect
+                options={payerOptions}
                 value={singlePaidById}
-                onChange={(e) => setSinglePaidById(e.target.value)}
-                className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition font-semibold"
-              >
-                {members.map((m) => (
-                  <option key={m.userId} value={m.userId}>
-                    {m.userId === currentUserId ? `You (@${m.username}) paid full amount` : `@${m.username} paid full amount`}
-                  </option>
-                ))}
-              </select>
+                onChange={setSinglePaidById}
+                size="md"
+              />
             ) : (
               /* Multiple Payers Entry */
               <div className="space-y-1.5 bg-[#090a0d] p-3 rounded-2xl border border-white/5">
@@ -512,14 +508,14 @@ export function AddGroupExpenseModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#090a0d] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
+              className="flex-1 h-12 rounded-xl text-xs sm:text-sm font-bold bg-[#090a0d] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold btn-primary flex items-center justify-center gap-2 transition"
+              className="flex-1 h-12 rounded-xl text-xs sm:text-sm font-bold btn-primary flex items-center justify-center gap-2 transition"
             >
               {loading ? (
                 <div className="h-4 w-4 border-2 border-[#04130c] border-t-transparent rounded-full animate-spin" />

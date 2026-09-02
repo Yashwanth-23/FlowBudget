@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, Target, Check, AlertCircle } from "lucide-react";
 import { getCurrencySymbol } from "@/lib/currencies";
+import { CustomSelect } from "@/components/ui/CustomSelect";
 
 interface BudgetModalProps {
   isOpen: boolean;
@@ -128,17 +129,12 @@ export function BudgetModal({
             <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
               Select Category
             </label>
-            <select
+            <CustomSelect
+              options={EXPENSE_CATEGORIES}
               value={category}
-              onChange={(e) => handleCategoryChange(e.target.value)}
-              className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-teal-500/60 transition"
-            >
-              {EXPENSE_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
+              onChange={handleCategoryChange}
+              size="md"
+            />
           </div>
 
           <div>

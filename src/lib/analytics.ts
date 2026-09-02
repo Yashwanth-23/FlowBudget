@@ -54,6 +54,11 @@ export interface CurrencySummary {
   transactionCount: number;
 }
 
+export interface DateRangeFilter {
+  startDate: string; // "YYYY-MM-DD"
+  endDate: string; // "YYYY-MM-DD"
+}
+
 export interface PersonalAnalyticsResult {
   activeCurrency: string;
   availableCurrencies: string[];
@@ -82,10 +87,12 @@ export interface PersonalAnalyticsResult {
 export function calculatePersonalAnalytics(
   transactions: TransactionData[],
   budgets: BudgetData[] = [],
-  targetMonthYear?: string, // e.g. "2026-09"
-  targetCurrency?: string // e.g. "USD", "INR", or undefined
+  targetMonthYear?: string, // e.g. "2026-09" or "ALL"
+  targetCurrency?: string, // e.g. "USD", "INR", or undefined
+  dateRange?: DateRangeFilter
 ): PersonalAnalyticsResult {
-  const currentMonth = targetMonthYear || new Date().toISOString().slice(0, 7);
+  const isLifetime = targetMonthYear === "ALL" && !dateRange;
+  const currentMonth = !isLifetime && !dateRange ? (targetMonthYear || new Date().toISOString().slice(0, 7)) : "";
 
   // 1. Discover all currencies present across user transactions
   const currencySet = new Set<string>();
@@ -101,7 +108,18 @@ export function calculatePersonalAnalytics(
       ? targetCurrency
       : availableCurrencies[0] || targetCurrency || "USD";
 
-  // 2. Compute multi-currency summaries for target month across all currencies
+  // Helper to check if a transaction falls within the requested period
+  const matchesPeriod = (txDay: string, txMonth: string) => {
+    if (dateRange) {
+      return txDay >= dateRange.startDate && txDay <= dateRange.endDate;
+    }
+    if (isLifetime) {
+      return true;
+    }
+    return txMonth === currentMonth;
+  };
+
+  // 2. Compute multi-currency summaries across all currencies for the period
   const multiCurrencySummaries: Record<string, CurrencySummary> = {};
   for (const c of availableCurrencies) {
     multiCurrencySummaries[c] = {
@@ -116,7 +134,9 @@ export function calculatePersonalAnalytics(
   for (const tx of transactions) {
     const dateObj = new Date(tx.date);
     const txMonth = dateObj.toISOString().slice(0, 7);
-    if (txMonth === currentMonth) {
+    const txDay = dateObj.toISOString().slice(0, 10);
+
+    if (matchesPeriod(txDay, txMonth)) {
       const c = tx.currency || "USD";
       if (!multiCurrencySummaries[c]) {
         multiCurrencySummaries[c] = {
@@ -155,11 +175,10 @@ export function calculatePersonalAnalytics(
   const monthlyMap = new Map<string, { income: number; expense: number }>();
   const dailyMap = new Map<string, number>();
 
-  const currentMonthTransactions: TransactionData[] = [];
+  const periodTransactions: TransactionData[] = [];
 
   for (const tx of transactions) {
     const txCurr = tx.currency || "USD";
-    // Filter to active currency to guarantee zero mixed-currency arithmetic!
     if (txCurr !== activeCurrency) continue;
 
     const amt = Number(tx.amount) || 0;
@@ -167,20 +186,20 @@ export function calculatePersonalAnalytics(
     const txMonth = dateObj.toISOString().slice(0, 7);
     const txDay = dateObj.toISOString().slice(0, 10);
 
-    // Monthly trends
+    // Monthly trends (all months for active currency)
     if (!monthlyMap.has(txMonth)) {
       monthlyMap.set(txMonth, { income: 0, expense: 0 });
     }
     const mData = monthlyMap.get(txMonth)!;
-
     if (tx.type === "INCOME") {
       mData.income += amt;
     } else {
       mData.expense += amt;
     }
 
-    if (txMonth === currentMonth) {
-      currentMonthTransactions.push(tx);
+    // In-period metrics
+    if (matchesPeriod(txDay, txMonth)) {
+      periodTransactions.push(tx);
 
       if (tx.type === "INCOME") {
         totalIncome += amt;
@@ -248,50 +267,61 @@ export function calculatePersonalAnalytics(
     };
   });
 
-  const now = new Date();
-  const [yearNum, monthNum] = currentMonth.split("-").map(Number);
-  const totalDaysInMonth = new Date(yearNum, monthNum, 0).getDate();
-  const currentDay = currentMonth === now.toISOString().slice(0, 7) ? Math.max(1, now.getDate()) : totalDaysInMonth;
-  const avgDailyExpense = currentDay > 0 ? Math.round((totalExpense / currentDay) * 100) / 100 : 0;
-  const projectedMonthEndExpense = Math.round(avgDailyExpense * totalDaysInMonth * 100) / 100;
+  // Calculate day count in period for velocity calculation
+  let totalDaysInPeriod = 30;
+  if (dateRange) {
+    const startMs = new Date(dateRange.startDate).getTime();
+    const endMs = new Date(dateRange.endDate).getTime();
+    totalDaysInPeriod = Math.max(1, Math.round((endMs - startMs) / (1000 * 60 * 60 * 24)) + 1);
+  } else if (!isLifetime && currentMonth) {
+    const [yearNum, monthNum] = currentMonth.split("-").map(Number);
+    totalDaysInPeriod = new Date(yearNum, monthNum, 0).getDate();
+  } else if (sortedDays.length > 0) {
+    totalDaysInPeriod = Math.max(1, sortedDays.length);
+  }
 
-  // Budget Health
+  const avgDailyExpense = totalDaysInPeriod > 0 ? Math.round((totalExpense / totalDaysInPeriod) * 100) / 100 : 0;
+  const projectedMonthEndExpense = Math.round(avgDailyExpense * totalDaysInPeriod * 100) / 100;
+
+  // Budget Health (only evaluated when viewing a specific month)
   const budgetHealth: BudgetHealthItem[] = [];
   const alerts: { type: "DANGER" | "WARNING" | "INFO"; category: string; message: string }[] = [];
 
-  for (const b of budgets) {
-    if (b.monthYear === currentMonth) {
-      const spent = expenseCatMap.get(b.category)?.amount || 0;
-      const limit = b.monthlyLimit;
-      const remaining = limit - spent;
-      const percentUsed = limit > 0 ? Math.round((spent / limit) * 1000) / 10 : 0;
+  if (currentMonth) {
+    for (const b of budgets) {
+      if (b.monthYear === currentMonth) {
+        const spent = expenseCatMap.get(b.category)?.amount || 0;
+        const limit = b.monthlyLimit;
+        const remaining = limit - spent;
+        const percentUsed = limit > 0 ? Math.round((spent / limit) * 1000) / 10 : 0;
 
-      let status: "SAFE" | "WARNING" | "EXCEEDED" = "SAFE";
-      if (percentUsed >= 100) {
-        status = "EXCEEDED";
-        alerts.push({
-          type: "DANGER",
+        let status: "SAFE" | "WARNING" | "EXCEEDED" = "SAFE";
+        if (percentUsed >= 100) {
+          status = "EXCEEDED";
+          alerts.push({
+            type: "DANGER",
+            category: b.category,
+            message: `Budget Exceeded: You've spent ${spent.toFixed(2)} (${percentUsed}%) of your ${limit.toFixed(2)} limit for ${b.category}.`,
+          });
+        } else if (percentUsed >= 80) {
+          status = "WARNING";
+          alerts.push({
+            type: "WARNING",
+            category: b.category,
+            message: `Budget Warning: You've reached ${percentUsed}% of your ${limit.toFixed(2)} limit for ${b.category}.`,
+          });
+        }
+
+        budgetHealth.push({
           category: b.category,
-          message: `Budget Exceeded: You've spent ${spent.toFixed(2)} (${percentUsed}%) of your ${limit.toFixed(2)} limit for ${b.category}.`,
-        });
-      } else if (percentUsed >= 80) {
-        status = "WARNING";
-        alerts.push({
-          type: "WARNING",
-          category: b.category,
-          message: `Budget Warning: You've reached ${percentUsed}% of your ${limit.toFixed(2)} limit for ${b.category}.`,
+          monthlyLimit: limit,
+          spent: Math.round(spent * 100) / 100,
+          remaining: Math.round(remaining * 100) / 100,
+          percentUsed,
+          status,
+          isOverBudget: percentUsed >= 100,
         });
       }
-
-      budgetHealth.push({
-        category: b.category,
-        monthlyLimit: limit,
-        spent: Math.round(spent * 100) / 100,
-        remaining: Math.round(remaining * 100) / 100,
-        percentUsed,
-        status,
-        isOverBudget: percentUsed >= 100,
-      });
     }
   }
 
@@ -304,7 +334,7 @@ export function calculatePersonalAnalytics(
       totalExpense: Math.round(totalExpense * 100) / 100,
       netSavings: Math.round(netSavings * 100) / 100,
       savingsRate,
-      transactionCount: currentMonthTransactions.length,
+      transactionCount: periodTransactions.length,
       avgDailyExpense,
       projectedMonthEndExpense,
     },
