@@ -1,0 +1,130 @@
+// Prisma Schema for FlowBudget - PostgreSQL (Neon Cloud & Production Ready)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id               String            @id @default(cuid())
+  username         String            @unique
+  pinHash          String
+  currency         String            @default("USD")
+  createdAt        DateTime          @default(now())
+  
+  // Relations
+  transactions     Transaction[]
+  budgets          Budget[]
+  createdGroups    TripGroup[]       @relation("CreatedGroups")
+  groupMemberships GroupMember[]
+  paidExpenses     GroupExpense[]    @relation("PaidExpenses")
+  expensePayments  ExpensePayer[]    @relation("UserPaid")
+  expenseSplits    ExpenseSplit[]    @relation("UserSplits")
+}
+
+model Transaction {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          String   // "INCOME" | "EXPENSE"
+  amount        Float
+  category      String   // "Food & Dining", "Transportation", "Housing", "Shopping", "Entertainment", "Health", "Salary", "Investment", "Other"
+  paymentMethod String   @default("CASH") // "CASH", "CARD", "UPI", "BANK_TRANSFER"
+  date          DateTime @default(now())
+  notes         String?  @default("")
+  createdAt     DateTime @default(now())
+}
+
+model Budget {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category     String
+  monthlyLimit Float
+  monthYear    String   // Format: "YYYY-MM"
+  createdAt    DateTime @default(now())
+
+  @@unique([userId, category, monthYear])
+}
+
+model TripGroup {
+  id          String            @id @default(cuid())
+  name        String            // e.g. "CO fall 26"
+  code        String            @unique // Shareable code e.g. "CO-FALL-26"
+  currency    String            @default("USD")
+  totalBudget Float?            @default(0)
+  createdById String
+  creator     User              @relation("CreatedGroups", fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt   DateTime          @default(now())
+  
+  members     GroupMember[]
+  expenses    GroupExpense[]
+  settlements GroupSettlement[]
+}
+
+model GroupMember {
+  id       String    @id @default(cuid())
+  groupId  String
+  group    TripGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role     String    @default("MEMBER") // "ADMIN" | "MEMBER"
+  joinedAt DateTime  @default(now())
+
+  @@unique([groupId, userId])
+}
+
+model GroupExpense {
+  id          String         @id @default(cuid())
+  groupId     String
+  group       TripGroup      @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  paidById    String?
+  paidBy      User?          @relation("PaidExpenses", fields: [paidById], references: [id], onDelete: Cascade)
+  amount      Float
+  description String
+  category    String         @default("General") // "Accommodation", "Food & Drinks", "Transportation", "Activities", "Groceries", "Other"
+  date        DateTime       @default(now())
+  createdAt   DateTime       @default(now())
+  
+  payers      ExpensePayer[] // Supports multiple payers
+  splits      ExpenseSplit[] // Supports multiple beneficiaries
+}
+
+model ExpensePayer {
+  id          String       @id @default(cuid())
+  expenseId   String
+  expense     GroupExpense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User         @relation("UserPaid", fields: [userId], references: [id], onDelete: Cascade)
+  amountPaid  Float
+
+  @@unique([expenseId, userId])
+}
+
+model ExpenseSplit {
+  id          String       @id @default(cuid())
+  expenseId   String
+  expense     GroupExpense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User         @relation("UserSplits", fields: [userId], references: [id], onDelete: Cascade)
+  shareAmount Float
+
+  @@unique([expenseId, userId])
+}
+
+model GroupSettlement {
+  id         String    @id @default(cuid())
+  groupId    String
+  group      TripGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  fromUserId String
+  toUserId   String
+  amount     Float
+  isSettled  Boolean   @default(false)
+  settledAt  DateTime?
+  createdAt  DateTime  @default(now())
+}
