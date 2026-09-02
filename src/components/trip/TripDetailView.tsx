@@ -18,6 +18,7 @@ import { formatCurrency, SUPPORTED_CURRENCIES } from "@/lib/currencies";
 import { AddGroupExpenseModal } from "./AddGroupExpenseModal";
 import { SettlementView } from "./SettlementView";
 import { ShareModal } from "./ShareModal";
+import { CurrencySelect } from "@/components/ui/CurrencySelect";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 
 interface TripDetailViewProps {
@@ -163,18 +164,11 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
             <div className="flex items-center gap-2.5">
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{group.name}</h1>
               {group.isAdmin ? (
-                <select
+                <CurrencySelect
                   value={currency}
-                  onChange={(e) => handleUpdateGroupCurrency(e.target.value)}
-                  title="Change group currency (Admin setting)"
-                  className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-500/60 focus:outline-none cursor-pointer transition"
-                >
-                  {Object.values(SUPPORTED_CURRENCIES).map((c) => (
-                    <option key={c.code} value={c.code} className="bg-[#12141a] text-white">
-                      {c.code} ({c.symbol})
-                    </option>
-                  ))}
-                </select>
+                  onChange={handleUpdateGroupCurrency}
+                  variant="badge"
+                />
               ) : (
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                   {currency}

@@ -39,6 +39,27 @@ export function Navbar({
   const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
   const [isSecurityOpen, setIsSecurityOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const currencyMenuRef = React.useRef<HTMLDivElement>(null);
+
+  // Close currency dropdown on outside click or touch
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
+      if (
+        currencyMenuRef.current &&
+        !currencyMenuRef.current.contains(event.target as Node)
+      ) {
+        setCurrencyDropdownOpen(false);
+      }
+    }
+    if (currencyDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [currencyDropdownOpen]);
 
   // Close currency dropdown on Escape
   React.useEffect(() => {
@@ -127,24 +148,22 @@ export function Navbar({
               {user && (
                 <>
                   {/* Currency Dropdown */}
-                  <div className="relative">
+                  <div ref={currencyMenuRef} className="relative">
                     <button
                       onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-[#12141a] border border-white/[0.08] text-neutral-300 hover:text-white hover:border-white/20 transition duration-150 active:scale-95"
                     >
                       <Globe className="h-3.5 w-3.5 text-emerald-400" />
                       <span className="font-mono">{user.currency || "USD"}</span>
-                      <ChevronDown className="h-3 w-3 text-neutral-500" />
+                      <ChevronDown
+                        className={`h-3 w-3 text-neutral-500 transition-transform duration-200 ${
+                          currencyDropdownOpen ? "rotate-180 text-emerald-400" : ""
+                        }`}
+                      />
                     </button>
 
                     {currencyDropdownOpen && (
-                      <>
-                        {/* Fixed transparent overlay: click anywhere on screen closes dropdown */}
-                        <div
-                          className="fixed inset-0 z-40"
-                          onClick={() => setCurrencyDropdownOpen(false)}
-                        />
-                        <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-[#12141a] border border-white/10 shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-[#12141a] border border-white/10 shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
                           <div className="px-3 py-1.5 text-[10px] font-bold text-neutral-500 uppercase tracking-wider">
                             Select Currency
                           </div>
@@ -168,7 +187,6 @@ export function Navbar({
                             </button>
                           ))}
                         </div>
-                      </>
                     )}
                   </div>
 

@@ -53,6 +53,17 @@ export function MonthYearPickerModal({
     }
   }, [isOpen, currentMonth]);
 
+  // Close on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen || !mounted) return null;
 
   const [activeYearStr, activeMonthStr] = currentMonth.split("-");
@@ -70,17 +81,6 @@ export function MonthYearPickerModal({
 
   // Quick years around current
   const quickYears = [selectedYear - 2, selectedYear - 1, selectedYear, selectedYear + 1, selectedYear + 2];
-
-  // Close on Escape key press
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    if (isOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
 
   const modal = (
     <div

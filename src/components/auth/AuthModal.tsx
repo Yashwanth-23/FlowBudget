@@ -13,6 +13,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { SUPPORTED_CURRENCIES } from "@/lib/currencies";
+import { CustomSelect } from "@/components/ui/CustomSelect";
 
 interface AuthModalProps {
   onSuccess: (user: { id: string; username: string; currency: string }) => void;
@@ -430,17 +431,15 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                     <Globe className="h-3.5 w-3.5 text-emerald-400" />
                     <span>Primary Currency</span>
                   </label>
-                  <select
+                  <CustomSelect
+                    options={Object.values(SUPPORTED_CURRENCIES).map((c) => ({
+                      value: c.code,
+                      label: `${c.symbol} ${c.code} - ${c.name}`,
+                    }))}
                     value={currency}
-                    onChange={(e) => setCurrency(e.target.value)}
-                    className="w-full bg-[#101216] border border-white/10 rounded-2xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition"
-                  >
-                    {Object.values(SUPPORTED_CURRENCIES).map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.symbol} {c.name} ({c.code})
-                      </option>
-                    ))}
-                  </select>
+                    onChange={setCurrency}
+                    size="md"
+                  />
                 </div>
 
                 {/* Security Question */}
@@ -449,17 +448,12 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                     <HelpCircle className="h-3.5 w-3.5 text-emerald-400" />
                     <span>PIN Recovery Question</span>
                   </label>
-                  <select
+                  <CustomSelect
+                    options={SECURITY_QUESTIONS}
                     value={securityQuestion}
-                    onChange={(e) => setSecurityQuestion(e.target.value)}
-                    className="w-full bg-[#101216] border border-white/10 rounded-2xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
-                  >
-                    {SECURITY_QUESTIONS.map((q) => (
-                      <option key={q} value={q}>
-                        {q}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={setSecurityQuestion}
+                    size="md"
+                  />
                 </div>
 
                 {/* Secret Backup Word */}
