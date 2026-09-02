@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   X,
   Shield,
@@ -11,7 +12,6 @@ import {
   HelpCircle,
   Calendar,
 } from "lucide-react";
-import { SUPPORTED_CURRENCIES } from "@/lib/currencies";
 
 interface SecuritySettingsModalProps {
   isOpen: boolean;
@@ -38,7 +38,8 @@ export function SecuritySettingsModal({
   user,
   onUserUpdated,
 }: SecuritySettingsModalProps) {
-  const [activeSection, setActiveSection] = useState<"backup_word" | "change_pin" | "preferences">("backup_word");
+  const [mounted, setMounted] = useState(false);
+  const [activeSection, setActiveSection] = useState<"backup_word" | "change_pin">("backup_word");
 
   // Profile Data
   const [hasBackupConfigured, setHasBackupConfigured] = useState(false);
@@ -50,12 +51,13 @@ export function SecuritySettingsModal({
   const [newPin, setNewPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
 
-  // Currency
-  const [selectedCurrency, setSelectedCurrency] = useState(user.currency || "USD");
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -70,14 +72,13 @@ export function SecuritySettingsModal({
             if (data.user.securityQuestion) {
               setSecurityQuestion(data.user.securityQuestion);
             }
-            setSelectedCurrency(data.user.currency || "USD");
           }
         })
         .catch(console.error);
     }
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const handleSaveBackupWord = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,9 +159,9 @@ export function SecuritySettingsModal({
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-150">
-      <div className="w-full max-w-lg bg-[#181b22] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+  const modal = (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="w-full max-w-lg bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition"
@@ -170,17 +171,17 @@ export function SecuritySettingsModal({
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
+          <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
             <Shield className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-lg font-black text-white">Profile & Security Settings</h2>
+            <h2 className="text-lg font-bold text-white">Profile & Security Settings</h2>
             <p className="text-xs text-neutral-400">Manage PIN, backup recovery word & profile options</p>
           </div>
         </div>
 
         {/* Status Badge */}
-        <div className="mb-5 p-3 rounded-2xl bg-[#101216] border border-white/5 flex items-center justify-between">
+        <div className="mb-5 p-3 rounded-2xl bg-[#090a0d] border border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="h-7 w-7 rounded-xl bg-white/5 text-neutral-300 font-bold text-xs flex items-center justify-center">
               @{user.username.charAt(0).toUpperCase()}
@@ -202,13 +203,13 @@ export function SecuritySettingsModal({
                   : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
               }`}
             >
-              {hasBackupConfigured ? "✓ Backup Word Protected" : "⚠️ No Backup Word Set"}
+              {hasBackupConfigured ? "✓ Backup Protected" : "⚠️ No Backup Word Set"}
             </span>
           </div>
         </div>
 
         {/* Section Navigation */}
-        <div className="grid grid-cols-2 gap-1 bg-[#101216] p-1 rounded-2xl border border-white/5 mb-5">
+        <div className="grid grid-cols-2 gap-1 bg-[#090a0d] p-1 rounded-2xl border border-white/5 mb-5">
           <button
             type="button"
             onClick={() => {
@@ -218,7 +219,7 @@ export function SecuritySettingsModal({
             }}
             className={`py-2 text-xs font-bold rounded-xl transition ${
               activeSection === "backup_word"
-                ? "bg-emerald-500 text-[#0b1410] font-black shadow-sm"
+                ? "bg-white/10 text-white font-semibold border border-white/15"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
@@ -234,7 +235,7 @@ export function SecuritySettingsModal({
             }}
             className={`py-2 text-xs font-bold rounded-xl transition ${
               activeSection === "change_pin"
-                ? "bg-emerald-500 text-[#0b1410] font-black shadow-sm"
+                ? "bg-white/10 text-white font-semibold border border-white/15"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
@@ -272,7 +273,7 @@ export function SecuritySettingsModal({
               <select
                 value={securityQuestion}
                 onChange={(e) => setSecurityQuestion(e.target.value)}
-                className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
+                className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
               >
                 {SECURITY_QUESTIONS.map((q) => (
                   <option key={q} value={q}>
@@ -293,7 +294,7 @@ export function SecuritySettingsModal({
                 value={securityAnswer}
                 onChange={(e) => setSecurityAnswer(e.target.value)}
                 placeholder="e.g. Chicago, Max, or Sunrise"
-                className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+                className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
               />
               <p className="text-[10px] text-neutral-500 mt-1">
                 Answers are case-insensitive and hashed with salted Bcrypt.
@@ -303,10 +304,10 @@ export function SecuritySettingsModal({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-[#0b1410] text-xs font-black rounded-xl shadow-lg shadow-emerald-500/15 transition flex items-center justify-center gap-2"
+              className="w-full py-2.5 px-4 btn-primary text-xs font-bold rounded-xl transition flex items-center justify-center gap-2"
             >
               {loading ? (
-                <div className="h-4 w-4 border-2 border-[#0b1410] border-t-transparent rounded-full animate-spin" />
+                <div className="h-4 w-4 border-2 border-[#04130c] border-t-transparent rounded-full animate-spin" />
               ) : (
                 <span>Save Secret Backup Word</span>
               )}
@@ -330,7 +331,7 @@ export function SecuritySettingsModal({
                 value={currentPin}
                 onChange={(e) => setCurrentPin(e.target.value.replace(/\D/g, ""))}
                 placeholder="••••"
-                className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
+                className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
               />
             </div>
 
@@ -347,7 +348,7 @@ export function SecuritySettingsModal({
                   value={newPin}
                   onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ""))}
                   placeholder="••••"
-                  className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
+                  className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
                 />
               </div>
 
@@ -363,7 +364,7 @@ export function SecuritySettingsModal({
                   value={confirmPin}
                   onChange={(e) => setConfirmPin(e.target.value.replace(/\D/g, ""))}
                   placeholder="••••"
-                  className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
+                  className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
                 />
               </div>
             </div>
@@ -371,10 +372,10 @@ export function SecuritySettingsModal({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-[#0b1410] text-xs font-black rounded-xl shadow-lg shadow-emerald-500/15 transition flex items-center justify-center gap-2"
+              className="w-full py-2.5 px-4 btn-primary text-xs font-bold rounded-xl transition flex items-center justify-center gap-2"
             >
               {loading ? (
-                <div className="h-4 w-4 border-2 border-[#0b1410] border-t-transparent rounded-full animate-spin" />
+                <div className="h-4 w-4 border-2 border-[#04130c] border-t-transparent rounded-full animate-spin" />
               ) : (
                 <span>Update PIN</span>
               )}
@@ -384,4 +385,6 @@ export function SecuritySettingsModal({
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }

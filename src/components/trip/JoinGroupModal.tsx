@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, UserPlus, ArrowRight, AlertCircle } from "lucide-react";
 
 interface JoinGroupModalProps {
@@ -10,11 +11,16 @@ interface JoinGroupModalProps {
 }
 
 export function JoinGroupModal({ isOpen, onClose, onSuccess }: JoinGroupModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,9 +55,9 @@ export function JoinGroupModal({ isOpen, onClose, onSuccess }: JoinGroupModalPro
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-150">
-      <div className="w-full max-w-md bg-[#181b22] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative">
+  const modal = (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="w-full max-w-md bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto">
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition"
@@ -64,8 +70,8 @@ export function JoinGroupModal({ isOpen, onClose, onSuccess }: JoinGroupModalPro
             <UserPlus className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-lg font-black text-white">Join Trip Group</h2>
-            <p className="text-xs text-neutral-400">Enter the code shared by your friend</p>
+            <h2 className="text-lg font-bold text-white">Join Shared Group</h2>
+            <p className="text-xs text-neutral-400">Enter the invite code shared by your friend</p>
           </div>
         </div>
 
@@ -79,16 +85,16 @@ export function JoinGroupModal({ isOpen, onClose, onSuccess }: JoinGroupModalPro
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
-              Trip Invite Code
+              Group Invite Code
             </label>
             <input
               type="text"
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
-              placeholder="e.g. SUMMER-TRIP-4A9"
+              placeholder="e.g. DINNER-4A9"
               required
               autoFocus
-              className="w-full bg-[#101216] border border-white/10 rounded-xl px-4 py-3 text-center text-base font-black text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono uppercase"
+              className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-4 py-3 text-center text-base font-bold text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono uppercase"
             />
           </div>
 
@@ -96,20 +102,20 @@ export function JoinGroupModal({ isOpen, onClose, onSuccess }: JoinGroupModalPro
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#101216] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
+              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#090a0d] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-black bg-emerald-500 hover:bg-emerald-400 text-[#0b1410] flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-500/20"
+              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold btn-primary flex items-center justify-center gap-2"
             >
               {loading ? (
-                <div className="h-4 w-4 border-2 border-[#0b1410] border-t-transparent rounded-full animate-spin" />
+                <div className="h-4 w-4 border-2 border-[#04130c] border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  <span>Join Trip</span>
+                  <span>Join Group</span>
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
@@ -119,4 +125,6 @@ export function JoinGroupModal({ isOpen, onClose, onSuccess }: JoinGroupModalPro
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }

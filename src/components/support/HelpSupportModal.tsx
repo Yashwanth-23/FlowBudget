@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   X,
   HelpCircle,
@@ -29,7 +30,7 @@ interface HelpSupportModalProps {
 const TICKET_CATEGORIES = [
   "General Question / Help",
   "Forgot PIN / Account Recovery",
-  "Trip Group & Splits Issue",
+  "Shared Group & Splits Issue",
   "Bug Report / Calculation Glitch",
   "Feature Suggestion / Feedback",
 ];
@@ -42,6 +43,7 @@ export function HelpSupportModal({
   onClose,
   defaultUsername,
 }: HelpSupportModalProps) {
+  const [mounted, setMounted] = useState(false);
   const isSuperAdmin = defaultUsername
     ? SUPERADMIN_USERNAMES.includes(defaultUsername.toLowerCase())
     : false;
@@ -63,6 +65,10 @@ export function HelpSupportModal({
   // Admin Inbox State (Only loaded for SuperAdmin)
   const [tickets, setTickets] = useState<any[]>([]);
   const [loadingTickets, setLoadingTickets] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const fetchTickets = async () => {
     if (!isSuperAdmin) return;
@@ -86,7 +92,7 @@ export function HelpSupportModal({
     }
   }, [isOpen, isSuperAdmin]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const handleToggleResolve = async (ticketId: string, currentStatus: string) => {
     const newStatus = currentStatus === "RESOLVED" ? "OPEN" : "RESOLVED";
@@ -180,8 +186,8 @@ export function HelpSupportModal({
       icon: KeyRound,
     },
     {
-      q: "How do I invite friends to a trip group?",
-      a: "Open your trip group, click 'Invite Friends', and copy the 1-click link or share via WhatsApp. Friends simply open the link, login or create a profile in 5 seconds, and join the group.",
+      q: "How do I invite friends to a shared group?",
+      a: "Open your group, click 'Invite Members', and copy the 1-click link or share via WhatsApp. Friends simply open the link, login or create a profile in 5 seconds, and join the group.",
       icon: Users,
     },
     {
@@ -196,9 +202,9 @@ export function HelpSupportModal({
     },
   ];
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-150">
-      <div className="w-full max-w-lg bg-[#181b22] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+  const modal = (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="w-full max-w-lg bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition"
@@ -212,14 +218,14 @@ export function HelpSupportModal({
             <HelpCircle className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-lg font-black text-white">Help & Support Desk</h2>
+            <h2 className="text-lg font-bold text-white">Help & Support Desk</h2>
             <p className="text-xs text-neutral-400">Submit a support ticket or view user guides</p>
           </div>
         </div>
 
         {/* Segmented iOS Toggle */}
         <div
-          className={`grid gap-1 bg-[#101216] p-1 rounded-2xl border border-white/5 mb-5 ${
+          className={`grid gap-1 bg-[#090a0d] p-1 rounded-2xl border border-white/5 mb-5 ${
             isSuperAdmin ? "grid-cols-3" : "grid-cols-2"
           }`}
         >
@@ -228,7 +234,7 @@ export function HelpSupportModal({
             onClick={() => setActiveTab("ticket")}
             className={`flex items-center justify-center gap-1.5 py-2 text-xs font-bold rounded-xl transition ${
               activeTab === "ticket"
-                ? "bg-emerald-500 text-[#0b1410] font-black shadow-sm"
+                ? "bg-white/10 text-white font-bold border border-white/15 shadow-sm"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
@@ -241,7 +247,7 @@ export function HelpSupportModal({
             onClick={() => setActiveTab("faq")}
             className={`flex items-center justify-center gap-1.5 py-2 text-xs font-bold rounded-xl transition ${
               activeTab === "faq"
-                ? "bg-emerald-500 text-[#0b1410] font-black shadow-sm"
+                ? "bg-white/10 text-white font-bold border border-white/15 shadow-sm"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
@@ -259,7 +265,7 @@ export function HelpSupportModal({
               }}
               className={`flex items-center justify-center gap-1.5 py-2 text-xs font-bold rounded-xl transition ${
                 activeTab === "inbox"
-                  ? "bg-emerald-500 text-[#0b1410] font-black shadow-sm"
+                  ? "bg-emerald-500 text-[#0b1410] font-bold shadow-sm"
                   : "text-neutral-400 hover:text-white"
               }`}
             >
@@ -273,11 +279,11 @@ export function HelpSupportModal({
         {activeTab === "ticket" && (
           <div>
             {submittedTicketId ? (
-              <div className="py-8 text-center bg-[#101216] rounded-2xl border border-white/5 p-6 space-y-3">
+              <div className="py-8 text-center bg-[#090a0d] rounded-2xl border border-white/5 p-6 space-y-3">
                 <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-emerald-500/10 text-emerald-400">
                   <CheckCircle2 className="h-6 w-6" />
                 </div>
-                <h3 className="text-base font-black text-white">Ticket Submitted Successfully!</h3>
+                <h3 className="text-base font-bold text-white">Ticket Submitted Successfully!</h3>
                 <p className="text-xs text-neutral-400 max-w-sm mx-auto leading-relaxed">
                   Your ticket <span className="font-mono text-emerald-400 font-bold">#{submittedTicketId.slice(-6)}</span> has been recorded in the support desk. We will review and reply to your email shortly.
                 </p>
@@ -285,7 +291,7 @@ export function HelpSupportModal({
                   <button
                     type="button"
                     onClick={handleResetForm}
-                    className="px-4 py-2 bg-[#181b22] hover:bg-white/5 border border-white/10 text-neutral-200 text-xs font-bold rounded-xl transition"
+                    className="px-4 py-2 bg-[#12141a] hover:bg-white/5 border border-white/10 text-neutral-200 text-xs font-bold rounded-xl transition"
                   >
                     Submit Another Question
                   </button>
@@ -311,7 +317,7 @@ export function HelpSupportModal({
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Alex"
-                      className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+                      className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
                     />
                   </div>
 
@@ -325,7 +331,7 @@ export function HelpSupportModal({
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@email.com"
-                      className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+                      className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
                     />
                   </div>
                 </div>
@@ -338,7 +344,7 @@ export function HelpSupportModal({
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      className="w-full bg-[#101216] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
+                      className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
                     >
                       {TICKET_CATEGORIES.map((cat) => (
                         <option key={cat} value={cat}>
@@ -357,7 +363,7 @@ export function HelpSupportModal({
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
                       placeholder="e.g. Question on bill split"
-                      className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+                      className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
                     />
                   </div>
                 </div>
@@ -372,17 +378,17 @@ export function HelpSupportModal({
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Provide details so we can assist you quickly..."
-                    className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition resize-none"
+                    className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-2.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-[#0b1410] font-black text-xs rounded-xl shadow-lg shadow-emerald-500/15 transition flex items-center justify-center gap-2 active:scale-[0.99]"
+                  className="w-full py-2.5 px-4 btn-primary text-xs font-bold rounded-xl transition flex items-center justify-center gap-2 active:scale-[0.99]"
                 >
                   {loading ? (
-                    <div className="h-4 w-4 border-2 border-[#0b1410] border-t-transparent rounded-full animate-spin" />
+                    <div className="h-4 w-4 border-2 border-[#04130c] border-t-transparent rounded-full animate-spin" />
                   ) : (
                     <>
                       <Send className="h-3.5 w-3.5" />
@@ -405,7 +411,7 @@ export function HelpSupportModal({
               return (
                 <div
                   key={idx}
-                  className="bg-[#101216] border border-white/5 rounded-2xl overflow-hidden transition"
+                  className="bg-[#090a0d] border border-white/5 rounded-2xl overflow-hidden transition"
                 >
                   <button
                     onClick={() => setActiveFaq(isOpen ? null : idx)}
@@ -448,7 +454,7 @@ export function HelpSupportModal({
                 <div className="h-6 w-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
               </div>
             ) : tickets.length === 0 ? (
-              <div className="py-12 text-center text-xs text-neutral-500 bg-[#101216] rounded-2xl border border-white/5">
+              <div className="py-12 text-center text-xs text-neutral-500 bg-[#090a0d] rounded-2xl border border-white/5">
                 No tickets received yet.
               </div>
             ) : (
@@ -466,8 +472,8 @@ export function HelpSupportModal({
                       key={t.id}
                       className={`p-3.5 rounded-2xl border transition space-y-2 ${
                         isResolved
-                          ? "bg-[#101216]/50 border-white/5 opacity-70"
-                          : "bg-[#101216] border-emerald-500/20"
+                          ? "bg-[#090a0d]/50 border-white/5 opacity-70"
+                          : "bg-[#090a0d] border-emerald-500/20"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
@@ -494,7 +500,7 @@ export function HelpSupportModal({
                         </span>
                       </div>
 
-                      <div className="bg-[#181b22] p-2.5 rounded-xl border border-white/5 text-xs text-neutral-300 leading-relaxed font-sans">
+                      <div className="bg-[#12141a] p-2.5 rounded-xl border border-white/5 text-xs text-neutral-300 leading-relaxed font-sans">
                         &ldquo;{t.message}&rdquo;
                       </div>
 
@@ -512,7 +518,7 @@ export function HelpSupportModal({
                           <a
                             href={replyMailto}
                             title="Reply to user"
-                            className="flex items-center gap-1 px-2.5 py-1 bg-emerald-500 hover:bg-emerald-400 text-[#0b1410] font-bold rounded-lg text-[11px] transition"
+                            className="flex items-center gap-1 px-2.5 py-1 btn-primary text-[#04130c] font-bold rounded-lg text-[11px] transition"
                           >
                             <Mail className="h-3 w-3" />
                             <span>Reply</span>
@@ -521,7 +527,7 @@ export function HelpSupportModal({
                           <button
                             onClick={() => handleToggleResolve(t.id, t.status)}
                             title="Toggle Resolved"
-                            className="p-1 text-neutral-400 hover:text-white bg-[#181b22] hover:bg-white/10 rounded-lg transition"
+                            className="p-1 text-neutral-400 hover:text-white bg-[#12141a] hover:bg-white/10 rounded-lg transition"
                           >
                             <Check className="h-3.5 w-3.5" />
                           </button>
@@ -545,4 +551,6 @@ export function HelpSupportModal({
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }

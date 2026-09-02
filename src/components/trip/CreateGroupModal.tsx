@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, Users, Check, AlertCircle } from "lucide-react";
 import { SUPPORTED_CURRENCIES, getCurrencySymbol } from "@/lib/currencies";
 
@@ -17,13 +18,18 @@ export function CreateGroupModal({
   onSuccess,
   defaultCurrency,
 }: CreateGroupModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [name, setName] = useState("");
   const [currency, setCurrency] = useState(defaultCurrency || "USD");
   const [totalBudget, setTotalBudget] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
 
   const symbol = getCurrencySymbol(currency);
 
@@ -64,9 +70,9 @@ export function CreateGroupModal({
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-150">
-      <div className="w-full max-w-md bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative">
+  const modal = (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="w-full max-w-md bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto">
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition"
@@ -173,4 +179,6 @@ export function CreateGroupModal({
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }

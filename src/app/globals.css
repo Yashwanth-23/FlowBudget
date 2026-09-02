@@ -108,20 +108,18 @@ body {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Micro animations */
-@keyframes fadeInScale {
+/* Micro animations - Pure Opacity Fade (No transform so position: fixed modals never break) */
+@keyframes fadeInFade {
   from {
     opacity: 0;
-    transform: scale(0.98);
   }
   to {
     opacity: 1;
-    transform: scale(1);
   }
 }
 
 .animate-tab-switch {
-  animation: fadeInScale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInFade 0.2s ease-out;
 }
 
 /* High-Contrast Print / PDF Export Stylesheet */

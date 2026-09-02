@@ -19,6 +19,7 @@ import { AddTransactionModal } from "./AddTransactionModal";
 import { BudgetModal } from "./BudgetModal";
 import { AnalyticsCharts } from "./AnalyticsCharts";
 import { TransactionList } from "./TransactionList";
+import { MonthYearPickerModal } from "./MonthYearPickerModal";
 
 interface PersonalHubProps {
   user: {
@@ -28,10 +29,16 @@ interface PersonalHubProps {
   };
 }
 
+// Dynamic current month formatted as YYYY-MM
+function getCurrentMonthString() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  return `${year}-${month}`;
+}
+
 export function PersonalHub({ user }: PersonalHubProps) {
-  const [currentMonth, setCurrentMonth] = useState(() => {
-    return new Date().toISOString().slice(0, 7);
-  });
+  const [currentMonth, setCurrentMonth] = useState(() => getCurrentMonthString());
 
   const [transactions, setTransactions] = useState<TransactionData[]>([]);
   const [analytics, setAnalytics] = useState<PersonalAnalyticsResult | null>(null);
@@ -41,6 +48,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
   // Modals
   const [isAddTxOpen, setIsAddTxOpen] = useState(false);
   const [isBudgetOpen, setIsBudgetOpen] = useState(false);
+  const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
 
   const fetchPersonalData = useCallback(async () => {
     try {
@@ -78,13 +86,17 @@ export function PersonalHub({ user }: PersonalHubProps) {
   const handlePrevMonth = () => {
     const [y, m] = currentMonth.split("-").map(Number);
     const prevDate = new Date(y, m - 2, 1);
-    setCurrentMonth(prevDate.toISOString().slice(0, 7));
+    const prevY = prevDate.getFullYear();
+    const prevM = String(prevDate.getMonth() + 1).padStart(2, "0");
+    setCurrentMonth(`${prevY}-${prevM}`);
   };
 
   const handleNextMonth = () => {
     const [y, m] = currentMonth.split("-").map(Number);
     const nextDate = new Date(y, m, 1);
-    setCurrentMonth(nextDate.toISOString().slice(0, 7));
+    const nextY = nextDate.getFullYear();
+    const nextM = String(nextDate.getMonth() + 1).padStart(2, "0");
+    setCurrentMonth(`${nextY}-${nextM}`);
   };
 
   const exportCSV = () => {
@@ -114,7 +126,9 @@ export function PersonalHub({ user }: PersonalHubProps) {
     document.body.removeChild(link);
   };
 
-  const monthLabel = new Date(`${currentMonth}-01T00:00:00`).toLocaleDateString("en-US", {
+  const [yearNum, monthNum] = currentMonth.split("-").map(Number);
+  const monthDate = new Date(yearNum, monthNum - 1, 1);
+  const monthLabel = monthDate.toLocaleDateString("en-US", {
     month: "long",
     year: "numeric",
   });
@@ -141,8 +155,8 @@ export function PersonalHub({ user }: PersonalHubProps) {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
-          {/* Month Controller */}
+        <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 no-print">
+          {/* Month Controller with Quick Calendar Picker Popover */}
           <div className="flex items-center bg-[#12141a] border border-white/[0.08] rounded-2xl p-1 shadow-sm">
             <button
               onClick={handlePrevMonth}
@@ -151,10 +165,17 @@ export function PersonalHub({ user }: PersonalHubProps) {
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
-            <div className="px-2.5 sm:px-3 text-xs font-semibold text-white flex items-center gap-1.5 min-w-[110px] sm:min-w-[130px] justify-center select-none">
+
+            {/* Clickable Month Capsule -> Opens Calendar Month-Year Picker */}
+            <button
+              onClick={() => setIsMonthPickerOpen(true)}
+              title="Click to jump to any Month or Year"
+              className="px-2.5 sm:px-3 py-1 hover:bg-white/[0.06] rounded-xl text-xs font-semibold text-white flex items-center gap-1.5 min-w-[120px] sm:min-w-[140px] justify-center select-none transition duration-150"
+            >
               <Calendar className="h-3.5 w-3.5 text-emerald-400" />
               <span>{monthLabel}</span>
-            </div>
+            </button>
+
             <button
               onClick={handleNextMonth}
               className="p-1.5 text-neutral-400 hover:text-white hover:bg-white/[0.06] rounded-xl transition duration-150 active:scale-95"
@@ -387,6 +408,14 @@ export function PersonalHub({ user }: PersonalHubProps) {
         currency={user.currency}
         currentMonth={currentMonth}
         existingBudgets={budgets}
+      />
+
+      {/* Quick Month-Year Calendar Picker */}
+      <MonthYearPickerModal
+        isOpen={isMonthPickerOpen}
+        onClose={() => setIsMonthPickerOpen(false)}
+        currentMonth={currentMonth}
+        onSelectMonth={(newMonth) => setCurrentMonth(newMonth)}
       />
     </div>
   );

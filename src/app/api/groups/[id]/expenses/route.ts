@@ -50,6 +50,17 @@ export async function POST(
       return NextResponse.json({ error: "Description is required" }, { status: 400 });
     }
 
+    // Strict future date prevention
+    const expenseDate = date ? new Date(date) : new Date();
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+    if (expenseDate > endOfToday) {
+      return NextResponse.json(
+        { error: "Expenses cannot be recorded for future dates." },
+        { status: 400 }
+      );
+    }
+
     // 1. Process Payers
     const payersToCreate: { userId: string; amountPaid: number }[] = [];
 
@@ -145,7 +156,7 @@ export async function POST(
           amount: Math.round(numAmount * 100) / 100,
           description: description.trim(),
           category: category || "General",
-          date: date ? new Date(date) : new Date(),
+          date: expenseDate,
         },
       });
 

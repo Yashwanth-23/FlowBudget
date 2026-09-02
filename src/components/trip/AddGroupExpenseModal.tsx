@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { X, Receipt, Check, Users, User, AlertCircle, PlusCircle } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { X, Receipt, Check, Users, User, AlertCircle, Calendar } from "lucide-react";
 import { getCurrencySymbol } from "@/lib/currencies";
 
 interface AddGroupExpenseModalProps {
@@ -24,6 +25,14 @@ const TRIP_CATEGORIES = [
   "General / Other",
 ];
 
+function getLocalDateString() {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export function AddGroupExpenseModal({
   isOpen,
   onClose,
@@ -33,10 +42,11 @@ export function AddGroupExpenseModal({
   members,
   currentUserId,
 }: AddGroupExpenseModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState(TRIP_CATEGORIES[0]);
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(() => getLocalDateString());
 
   // Payer Mode: SINGLE or MULTIPLE
   const [payerMode, setPayerMode] = useState<"SINGLE" | "MULTIPLE">("SINGLE");
@@ -53,7 +63,20 @@ export function AddGroupExpenseModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!isOpen) return null;
+  const todayStr = getLocalDateString();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      setDate(getLocalDateString());
+      setError(null);
+    }
+  }, [isOpen]);
+
+  if (!isOpen || !mounted) return null;
 
   const symbol = getCurrencySymbol(currency);
   const numAmount = parseFloat(amount) || 0;
@@ -110,6 +133,12 @@ export function AddGroupExpenseModal({
       return;
     }
 
+    // Strict future date check
+    if (date > todayStr) {
+      setError("Expenses cannot be recorded for future dates.");
+      return;
+    }
+
     // Validate multiple payers sum
     if (payerMode === "MULTIPLE") {
       if (Math.abs(currentPayersSum - numAmount) > 0.05) {
@@ -157,7 +186,7 @@ export function AddGroupExpenseModal({
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Failed to log trip expense");
+        throw new Error(data.error || "Failed to log group expense");
       }
 
       setDescription("");
@@ -171,9 +200,9 @@ export function AddGroupExpenseModal({
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-150">
-      <div className="w-full max-w-lg bg-[#181b22] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+  const modal = (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="w-full max-w-lg bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition"
@@ -186,7 +215,7 @@ export function AddGroupExpenseModal({
             <Receipt className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-lg font-black text-white">Log Group Expense</h2>
+            <h2 className="text-lg font-bold text-white">Log Group Expense</h2>
             <p className="text-xs text-neutral-400">Single or multi-payer with flexible splits</p>
           </div>
         </div>
@@ -208,10 +237,10 @@ export function AddGroupExpenseModal({
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g. Dinner, Airbnb Booking, Rental Car Gas"
+              placeholder="e.g. Dinner, Rent Bill, Grocery Run, Tickets"
               required
               autoFocus
-              className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+              className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
             />
           </div>
 
@@ -233,7 +262,7 @@ export function AddGroupExpenseModal({
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
                   required
-                  className="w-full bg-[#101216] border border-white/10 rounded-xl pl-7 pr-3 py-2.5 text-base font-black text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
+                  className="w-full bg-[#090a0d] border border-white/10 rounded-xl pl-7 pr-3 py-2.5 text-base font-bold text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
                 />
               </div>
             </div>
@@ -245,7 +274,7 @@ export function AddGroupExpenseModal({
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
+                className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
               >
                 {TRIP_CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -254,6 +283,24 @@ export function AddGroupExpenseModal({
                 ))}
               </select>
             </div>
+          </div>
+
+          {/* Date Picker (No future dates allowed) */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
+                <Calendar className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Date</span>
+              </label>
+              <span className="text-[10px] text-neutral-500">Future dates disabled</span>
+            </div>
+            <input
+              type="date"
+              max={todayStr}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition font-mono"
+            />
           </div>
 
           {/* SECTION 1: WHO PAID? (Single vs Multiple Payers) */}
@@ -265,12 +312,12 @@ export function AddGroupExpenseModal({
               </label>
 
               {/* iOS Segmented Toggle */}
-              <div className="flex bg-[#101216] p-0.5 rounded-lg border border-white/5 text-[10px]">
+              <div className="flex bg-[#090a0d] p-0.5 rounded-lg border border-white/5 text-[10px]">
                 <button
                   type="button"
                   onClick={() => setPayerMode("SINGLE")}
                   className={`px-2.5 py-1 rounded-md font-bold transition ${
-                    payerMode === "SINGLE" ? "bg-white/10 text-emerald-400 font-black" : "text-neutral-400"
+                    payerMode === "SINGLE" ? "bg-white/10 text-emerald-400 font-bold" : "text-neutral-400"
                   }`}
                 >
                   Single Person
@@ -279,7 +326,7 @@ export function AddGroupExpenseModal({
                   type="button"
                   onClick={() => setPayerMode("MULTIPLE")}
                   className={`px-2.5 py-1 rounded-md font-bold transition ${
-                    payerMode === "MULTIPLE" ? "bg-white/10 text-emerald-400 font-black" : "text-neutral-400"
+                    payerMode === "MULTIPLE" ? "bg-white/10 text-emerald-400 font-bold" : "text-neutral-400"
                   }`}
                 >
                   Multiple People Paid
@@ -291,7 +338,7 @@ export function AddGroupExpenseModal({
               <select
                 value={singlePaidById}
                 onChange={(e) => setSinglePaidById(e.target.value)}
-                className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition font-semibold"
+                className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition font-semibold"
               >
                 {members.map((m) => (
                   <option key={m.userId} value={m.userId}>
@@ -301,7 +348,7 @@ export function AddGroupExpenseModal({
               </select>
             ) : (
               /* Multiple Payers Entry */
-              <div className="space-y-1.5 bg-[#101216] p-3 rounded-2xl border border-white/5">
+              <div className="space-y-1.5 bg-[#090a0d] p-3 rounded-2xl border border-white/5">
                 <div className="flex items-center justify-between text-[10px] text-neutral-400 pb-1">
                   <span>Enter what each contributor paid:</span>
                   <span
@@ -317,7 +364,7 @@ export function AddGroupExpenseModal({
                   {members.map((m) => (
                     <div
                       key={m.userId}
-                      className="flex items-center justify-between bg-[#181b22] p-2 rounded-xl border border-white/5"
+                      className="flex items-center justify-between bg-[#12141a] p-2 rounded-xl border border-white/5"
                     >
                       <span className="text-xs font-semibold text-neutral-200">
                         @{m.username} {m.userId === currentUserId && <span className="text-emerald-400">(You)</span>}
@@ -330,7 +377,7 @@ export function AddGroupExpenseModal({
                           placeholder="0.00"
                           value={customPayers[m.userId] || ""}
                           onChange={(e) => handleCustomPayerChange(m.userId, e.target.value)}
-                          className="w-full bg-[#101216] border border-white/10 rounded-lg px-2 py-1 text-xs text-white font-mono text-right focus:outline-none focus:border-emerald-500/60"
+                          className="w-full bg-[#090a0d] border border-white/10 rounded-lg px-2 py-1 text-xs text-white font-mono text-right focus:outline-none focus:border-emerald-500/60"
                         />
                       </div>
                     </div>
@@ -349,12 +396,12 @@ export function AddGroupExpenseModal({
               </label>
 
               {/* iOS Segmented Toggle */}
-              <div className="flex bg-[#101216] p-0.5 rounded-lg border border-white/5 text-[10px]">
+              <div className="flex bg-[#090a0d] p-0.5 rounded-lg border border-white/5 text-[10px]">
                 <button
                   type="button"
                   onClick={() => setSplitMode("EQUAL")}
                   className={`px-2.5 py-1 rounded-md font-bold transition ${
-                    splitMode === "EQUAL" ? "bg-white/10 text-emerald-400 font-black" : "text-neutral-400"
+                    splitMode === "EQUAL" ? "bg-white/10 text-emerald-400 font-bold" : "text-neutral-400"
                   }`}
                 >
                   Split Equally
@@ -363,7 +410,7 @@ export function AddGroupExpenseModal({
                   type="button"
                   onClick={() => setSplitMode("CUSTOM")}
                   className={`px-2.5 py-1 rounded-md font-bold transition ${
-                    splitMode === "CUSTOM" ? "bg-white/10 text-emerald-400 font-black" : "text-neutral-400"
+                    splitMode === "CUSTOM" ? "bg-white/10 text-emerald-400 font-bold" : "text-neutral-400"
                   }`}
                 >
                   Custom Unequal
@@ -393,7 +440,7 @@ export function AddGroupExpenseModal({
                         className={`py-1.5 px-2.5 rounded-xl border text-xs font-semibold flex items-center justify-between transition ${
                           isSelected
                             ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-300"
-                            : "bg-[#101216] border-white/5 text-neutral-500 hover:text-neutral-400"
+                            : "bg-[#090a0d] border-white/5 text-neutral-500 hover:text-neutral-400"
                         }`}
                       >
                         <span className="truncate">@{m.username}</span>
@@ -405,7 +452,7 @@ export function AddGroupExpenseModal({
               </div>
             ) : (
               /* Custom Unequal Split Shares */
-              <div className="space-y-1.5 bg-[#101216] p-3 rounded-2xl border border-white/5">
+              <div className="space-y-1.5 bg-[#090a0d] p-3 rounded-2xl border border-white/5">
                 <div className="flex items-center justify-between text-[10px] text-neutral-400 pb-1">
                   <span>Enter each person&apos;s share owed:</span>
                   <span
@@ -421,7 +468,7 @@ export function AddGroupExpenseModal({
                   {members.map((m) => (
                     <div
                       key={m.userId}
-                      className="flex items-center justify-between bg-[#181b22] p-2 rounded-xl border border-white/5"
+                      className="flex items-center justify-between bg-[#12141a] p-2 rounded-xl border border-white/5"
                     >
                       <span className="text-xs font-semibold text-neutral-200">@{m.username}</span>
                       <div className="flex items-center gap-1 w-28">
@@ -432,7 +479,7 @@ export function AddGroupExpenseModal({
                           placeholder="0.00"
                           value={customSplits[m.userId] || ""}
                           onChange={(e) => handleCustomSplitChange(m.userId, e.target.value)}
-                          className="w-full bg-[#101216] border border-white/10 rounded-lg px-2 py-1 text-xs text-white font-mono text-right focus:outline-none focus:border-emerald-500/60"
+                          className="w-full bg-[#090a0d] border border-white/10 rounded-lg px-2 py-1 text-xs text-white font-mono text-right focus:outline-none focus:border-emerald-500/60"
                         />
                       </div>
                     </div>
@@ -447,17 +494,17 @@ export function AddGroupExpenseModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#101216] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
+              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#090a0d] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-black bg-emerald-500 hover:bg-emerald-400 text-[#0b1410] flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-500/20"
+              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold btn-primary flex items-center justify-center gap-2 transition"
             >
               {loading ? (
-                <div className="h-4 w-4 border-2 border-[#0b1410] border-t-transparent rounded-full animate-spin" />
+                <div className="h-4 w-4 border-2 border-[#04130c] border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
                   <Check className="h-4 w-4" />
@@ -470,4 +517,6 @@ export function AddGroupExpenseModal({
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }

@@ -92,6 +92,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Category is required" }, { status: 400 });
     }
 
+    // Strict future date prevention
+    const txDate = date ? new Date(date) : new Date();
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+    if (txDate > endOfToday) {
+      return NextResponse.json(
+        { error: "Transactions cannot be recorded for future dates." },
+        { status: 400 }
+      );
+    }
+
     const newTx = await prisma.transaction.create({
       data: {
         userId: session.id,
@@ -99,7 +110,7 @@ export async function POST(req: NextRequest) {
         amount: numAmount,
         category: category.trim(),
         paymentMethod: paymentMethod || "CASH",
-        date: date ? new Date(date) : new Date(),
+        date: txDate,
         notes: notes ? notes.trim() : "",
       },
     });
