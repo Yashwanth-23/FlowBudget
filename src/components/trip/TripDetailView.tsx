@@ -14,7 +14,7 @@ import {
   Crown,
   Printer,
 } from "lucide-react";
-import { formatCurrency, getCurrencySymbol } from "@/lib/currencies";
+import { formatCurrency, SUPPORTED_CURRENCIES } from "@/lib/currencies";
 import { AddGroupExpenseModal } from "./AddGroupExpenseModal";
 import { SettlementView } from "./SettlementView";
 import { ShareModal } from "./ShareModal";
@@ -24,6 +24,7 @@ interface TripDetailViewProps {
   groupId: string;
   onBack: () => void;
   currentUserId: string;
+  userCurrency: string;
 }
 
 const PALETTE = [
@@ -37,7 +38,7 @@ const PALETTE = [
   "#14b8a6",
 ];
 
-export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailViewProps) {
+export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }: TripDetailViewProps) {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"expenses" | "settlement" | "analytics">("expenses");
@@ -63,7 +64,22 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
 
   useEffect(() => {
     fetchGroupDetails();
-  }, [fetchGroupDetails]);
+  }, [fetchGroupDetails, userCurrency]);
+
+  const handleUpdateGroupCurrency = async (newCurr: string) => {
+    try {
+      const res = await fetch(`/api/groups/${groupId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currency: newCurr }),
+      });
+      if (res.ok) {
+        fetchGroupDetails();
+      }
+    } catch (err) {
+      console.error("Failed to update group currency:", err);
+    }
+  };
 
   const handleDeleteExpense = async (expenseId: string) => {
     if (!confirm("Are you sure you want to delete this group expense?")) return;
@@ -126,7 +142,7 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
   }
 
   const { group, members, expenses, calculations } = data;
-  const currency = group.currency || "USD";
+  const currency = group.currency || userCurrency || "USD";
   const totalSpent = calculations.totalSpent || 0;
   const totalBudget = group.totalBudget || 0;
   const budgetPercent = totalBudget > 0 ? Math.round((totalSpent / totalBudget) * 100) : 0;
@@ -144,11 +160,26 @@ export function TripDetailView({ groupId, onBack, currentUserId }: TripDetailVie
             <ArrowLeft className="h-4 w-4" />
           </button>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{group.name}</h1>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                {currency}
-              </span>
+              {group.isAdmin ? (
+                <select
+                  value={currency}
+                  onChange={(e) => handleUpdateGroupCurrency(e.target.value)}
+                  title="Change group currency (Admin setting)"
+                  className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-500/60 focus:outline-none cursor-pointer transition"
+                >
+                  {Object.values(SUPPORTED_CURRENCIES).map((c) => (
+                    <option key={c.code} value={c.code} className="bg-[#12141a] text-white">
+                      {c.code} ({c.symbol})
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  {currency}
+                </span>
+              )}
             </div>
             <p className="text-xs text-neutral-400 mt-0.5">
               Group code: <span className="font-mono text-emerald-400 font-semibold">{group.code}</span>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { calculateGroupSettlement } from "@/lib/settlement";
+import { SUPPORTED_CURRENCIES } from "@/lib/currencies";
 
 export async function GET(
   req: NextRequest,
@@ -48,7 +49,7 @@ export async function GET(
     });
 
     if (!group) {
-      return NextResponse.json({ error: "Trip group not found" }, { status: 404 });
+      return NextResponse.json({ error: "Group not found" }, { status: 404 });
     }
 
     // Check membership
@@ -111,6 +112,59 @@ export async function GET(
   } catch (err) {
     console.error("Fetch group detail error:", err);
     return NextResponse.json({ error: "Failed to fetch group details" }, { status: 500 });
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getAuthUser(req);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const body = await req.json();
+    const { currency, name, totalBudget } = body;
+
+    const group = await prisma.tripGroup.findUnique({
+      where: { id },
+      include: { members: true },
+    });
+
+    if (!group) {
+      return NextResponse.json({ error: "Group not found" }, { status: 404 });
+    }
+
+    const membership = group.members.find((m) => m.userId === session.id);
+    const isAdmin = membership?.role === "ADMIN" || group.createdById === session.id;
+
+    if (!isAdmin) {
+      return NextResponse.json({ error: "Only group admins can update group settings" }, { status: 403 });
+    }
+
+    const updateData: any = {};
+    if (currency && SUPPORTED_CURRENCIES[currency]) {
+      updateData.currency = currency;
+    }
+    if (name && typeof name === "string" && name.trim()) {
+      updateData.name = name.trim();
+    }
+    if (typeof totalBudget === "number") {
+      updateData.totalBudget = totalBudget;
+    }
+
+    const updated = await prisma.tripGroup.update({
+      where: { id },
+      data: updateData,
+    });
+
+    return NextResponse.json({ success: true, group: updated });
+  } catch (err) {
+    console.error("Update group error:", err);
+    return NextResponse.json({ error: "Failed to update group" }, { status: 500 });
   }
 }
 

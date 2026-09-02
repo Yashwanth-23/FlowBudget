@@ -48,7 +48,7 @@ export function GroupsHub({ user }: GroupsHubProps) {
 
   useEffect(() => {
     fetchGroups();
-  }, [fetchGroups]);
+  }, [fetchGroups, user.currency]);
 
   if (selectedGroupId) {
     return (
@@ -59,6 +59,7 @@ export function GroupsHub({ user }: GroupsHubProps) {
           fetchGroups();
         }}
         currentUserId={user.id}
+        userCurrency={user.currency}
       />
     );
   }

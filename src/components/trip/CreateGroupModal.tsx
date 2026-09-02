@@ -29,6 +29,12 @@ export function CreateGroupModal({
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    if (defaultCurrency) {
+      setCurrency(defaultCurrency);
+    }
+  }, [defaultCurrency, isOpen]);
+
   if (!isOpen || !mounted) return null;
 
   const symbol = getCurrencySymbol(currency);

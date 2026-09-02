@@ -15,10 +15,17 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Invalid currency code" }, { status: 400 });
     }
 
+    // 1. Update user's personal currency preference
     const updatedUser = await prisma.user.update({
       where: { id: session.id },
       data: { currency },
       select: { id: true, username: true, currency: true },
+    });
+
+    // 2. Synchronize currency across all groups where this user is the creator/admin
+    await prisma.tripGroup.updateMany({
+      where: { createdById: session.id },
+      data: { currency },
     });
 
     return NextResponse.json({ success: true, user: updatedUser });
