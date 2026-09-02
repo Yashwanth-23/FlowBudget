@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { Resend } from "resend";
 
-const ADMIN_EMAIL = "yashwanthv@proton.me";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "yashwanthv@proton.me";
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,27 +39,47 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // 2. Forward notification to Admin's Proton Mailbox without exposing the email
-    try {
-      // Using FormSubmit / Web3Forms server-side relay
-      await fetch("https://formsubmit.co/ajax/" + ADMIN_EMAIL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          _subject: `[FlowBudget Support] ${subject.trim()} (Ticket #${ticket.id.slice(-6)})`,
-          name: name.trim(),
-          email: email.trim(),
-          message: message.trim(),
-          ticket_id: ticket.id,
-          user_account: session ? `@${session.username}` : "Guest / Not logged in",
-        }),
-      });
-    } catch (forwardErr) {
-      console.warn("Email forwarding notice:", forwardErr);
-      // Non-blocking: Ticket is safely persisted in the database!
+    // 2. Send Real-Time Email Alert to Admin
+    // Method A: Resend API (Official Next.js Standard - 100% Proton Mail Delivery)
+    if (process.env.RESEND_API_KEY) {
+      try {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        await resend.emails.send({
+          from: "FlowBudget Support <onboarding@resend.dev>",
+          to: ADMIN_EMAIL,
+          replyTo: email.trim(),
+          subject: `[FlowBudget Ticket #${ticket.id.slice(-6)}] ${subject.trim()}`,
+          html: `
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #101216; color: #ffffff; border-radius: 16px; border: 1px solid #27272a;">
+              <h2 style="color: #10b981; margin-bottom: 8px;">New FlowBudget Support Ticket</h2>
+              <p style="color: #a1a1aa; font-size: 13px; margin-top: 0;">Ticket ID: <strong style="color: #ffffff;">#${ticket.id}</strong></p>
+              <hr style="border: none; border-top: 1px solid #27272a; margin: 16px 0;" />
+              
+              <div style="margin-bottom: 12px;">
+                <span style="color: #71717a; font-size: 11px; text-transform: uppercase; font-weight: bold;">From:</span>
+                <p style="margin: 2px 0; font-size: 14px; font-weight: bold;">${name.trim()} &lt;${email.trim()}&gt;</p>
+                <p style="margin: 2px 0; font-size: 12px; color: #10b981;">Account: ${session ? `@${session.username}` : "Guest / Not Logged In"}</p>
+              </div>
+
+              <div style="margin-bottom: 16px;">
+                <span style="color: #71717a; font-size: 11px; text-transform: uppercase; font-weight: bold;">Subject:</span>
+                <p style="margin: 2px 0; font-size: 14px; font-weight: bold;">${subject.trim()}</p>
+              </div>
+
+              <div style="background-color: #181b22; padding: 14px; border-radius: 12px; border: 1px solid #27272a; margin-bottom: 16px;">
+                <span style="color: #71717a; font-size: 11px; text-transform: uppercase; font-weight: bold;">Message:</span>
+                <p style="margin: 6px 0 0 0; font-size: 13px; line-height: 1.5; color: #e4e4e7;">${message.trim().replace(/\n/g, "<br/>")}</p>
+              </div>
+
+              <a href="mailto:${email.trim()}?subject=Re: ${encodeURIComponent(subject.trim())}" style="display: inline-block; padding: 10px 18px; background-color: #10b981; color: #0b1410; font-weight: bold; text-decoration: none; border-radius: 10px; font-size: 13px;">
+                Reply to ${name.trim()}
+              </a>
+            </div>
+          `,
+        });
+      } catch (resendErr) {
+        console.error("Resend delivery error:", resendErr);
+      }
     }
 
     return NextResponse.json({
