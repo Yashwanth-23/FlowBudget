@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   X,
   HelpCircle,
@@ -14,6 +14,10 @@ import {
   ChevronRight,
   MessageSquarePlus,
   BookOpen,
+  Inbox,
+  Mail,
+  Trash2,
+  Check,
 } from "lucide-react";
 
 interface HelpSupportModalProps {
@@ -35,7 +39,7 @@ export function HelpSupportModal({
   onClose,
   defaultUsername,
 }: HelpSupportModalProps) {
-  const [activeTab, setActiveTab] = useState<"ticket" | "faq">("ticket");
+  const [activeTab, setActiveTab] = useState<"ticket" | "faq" | "inbox">("ticket");
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   // Ticket Form
@@ -49,7 +53,62 @@ export function HelpSupportModal({
   const [error, setError] = useState<string | null>(null);
   const [submittedTicketId, setSubmittedTicketId] = useState<string | null>(null);
 
+  // Admin Inbox State
+  const [tickets, setTickets] = useState<any[]>([]);
+  const [loadingTickets, setLoadingTickets] = useState(false);
+
+  const fetchTickets = async () => {
+    try {
+      setLoadingTickets(true);
+      const res = await fetch("/api/support/tickets");
+      const data = await res.json();
+      if (res.ok) {
+        setTickets(data.tickets || []);
+      }
+    } catch (err) {
+      console.error("Fetch tickets error:", err);
+    } finally {
+      setLoadingTickets(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen && defaultUsername) {
+      fetchTickets();
+    }
+  }, [isOpen, defaultUsername]);
+
   if (!isOpen) return null;
+
+  const handleToggleResolve = async (ticketId: string, currentStatus: string) => {
+    const newStatus = currentStatus === "RESOLVED" ? "OPEN" : "RESOLVED";
+    try {
+      const res = await fetch(`/api/support/tickets/${ticketId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (res.ok) {
+        fetchTickets();
+      }
+    } catch (err) {
+      console.error("Update ticket status error:", err);
+    }
+  };
+
+  const handleDeleteTicket = async (ticketId: string) => {
+    if (!confirm("Delete this support ticket record?")) return;
+    try {
+      const res = await fetch(`/api/support/tickets/${ticketId}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        fetchTickets();
+      }
+    } catch (err) {
+      console.error("Delete ticket error:", err);
+    }
+  };
 
   const handleTicketSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,6 +152,7 @@ export function HelpSupportModal({
       setSubmittedTicketId(data.ticketId);
       setSubject("");
       setMessage("");
+      fetchTickets();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error submitting ticket");
     } finally {
@@ -150,7 +210,11 @@ export function HelpSupportModal({
         </div>
 
         {/* Segmented iOS Toggle */}
-        <div className="grid grid-cols-2 gap-1 bg-[#101216] p-1 rounded-2xl border border-white/5 mb-5">
+        <div
+          className={`grid gap-1 bg-[#101216] p-1 rounded-2xl border border-white/5 mb-5 ${
+            defaultUsername ? "grid-cols-3" : "grid-cols-2"
+          }`}
+        >
           <button
             type="button"
             onClick={() => setActiveTab("ticket")}
@@ -161,7 +225,7 @@ export function HelpSupportModal({
             }`}
           >
             <MessageSquarePlus className="h-3.5 w-3.5" />
-            <span>Open Support Ticket</span>
+            <span>Open Ticket</span>
           </button>
 
           <button
@@ -174,8 +238,26 @@ export function HelpSupportModal({
             }`}
           >
             <BookOpen className="h-3.5 w-3.5" />
-            <span>FAQs & Guide</span>
+            <span>FAQs</span>
           </button>
+
+          {defaultUsername && (
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTab("inbox");
+                fetchTickets();
+              }}
+              className={`flex items-center justify-center gap-1.5 py-2 text-xs font-bold rounded-xl transition ${
+                activeTab === "inbox"
+                  ? "bg-emerald-500 text-[#0b1410] font-black shadow-sm"
+                  : "text-neutral-400 hover:text-white"
+              }`}
+            >
+              <Inbox className="h-3.5 w-3.5" />
+              <span>Inbox ({tickets.length})</span>
+            </button>
+          )}
         </div>
 
         {/* TAB 1: IN-APP SUPPORT TICKET FORM */}
@@ -188,7 +270,7 @@ export function HelpSupportModal({
                 </div>
                 <h3 className="text-base font-black text-white">Ticket Submitted Successfully!</h3>
                 <p className="text-xs text-neutral-400 max-w-sm mx-auto leading-relaxed">
-                  Your ticket <span className="font-mono text-emerald-400 font-bold">#{submittedTicketId.slice(-6)}</span> has been delivered directly to the developer&apos;s mailbox. We will review and reply to your email shortly.
+                  Your ticket <span className="font-mono text-emerald-400 font-bold">#{submittedTicketId.slice(-6)}</span> has been recorded in the support desk. We will review and reply to your email shortly.
                 </p>
                 <div className="pt-2">
                   <button
@@ -339,6 +421,116 @@ export function HelpSupportModal({
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* TAB 3: ADMIN TICKET INBOX */}
+        {activeTab === "inbox" && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-xs text-neutral-400 pb-1">
+              <span>All Received Support Tickets ({tickets.length})</span>
+              <button onClick={fetchTickets} className="text-emerald-400 hover:underline">
+                Refresh
+              </button>
+            </div>
+
+            {loadingTickets ? (
+              <div className="py-10 flex items-center justify-center">
+                <div className="h-6 w-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : tickets.length === 0 ? (
+              <div className="py-12 text-center text-xs text-neutral-500 bg-[#101216] rounded-2xl border border-white/5">
+                No tickets received yet.
+              </div>
+            ) : (
+              <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+                {tickets.map((t) => {
+                  const isResolved = t.status === "RESOLVED";
+                  const replyMailto = `mailto:${t.email}?subject=Re: ${encodeURIComponent(
+                    t.subject
+                  )}&body=Hi ${encodeURIComponent(t.name)},%0D%0A%0D%0ARegarding your FlowBudget ticket (#${t.id.slice(
+                    -6
+                  )}):%0D%0A`;
+
+                  return (
+                    <div
+                      key={t.id}
+                      className={`p-3.5 rounded-2xl border transition space-y-2 ${
+                        isResolved
+                          ? "bg-[#101216]/50 border-white/5 opacity-70"
+                          : "bg-[#101216] border-emerald-500/20"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-white">{t.name}</span>
+                            <span className="text-[10px] text-neutral-500 font-mono">
+                              ({t.email})
+                            </span>
+                          </div>
+                          <p className="text-xs font-semibold text-emerald-400 mt-0.5">
+                            {t.subject}
+                          </p>
+                        </div>
+
+                        <span
+                          className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                            isResolved
+                              ? "bg-white/5 text-neutral-400"
+                              : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                          }`}
+                        >
+                          {t.status}
+                        </span>
+                      </div>
+
+                      <div className="bg-[#181b22] p-2.5 rounded-xl border border-white/5 text-xs text-neutral-300 leading-relaxed font-sans">
+                        &ldquo;{t.message}&rdquo;
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1 text-[11px]">
+                        <span className="text-neutral-500 font-mono text-[10px]">
+                          {new Date(t.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+
+                        <div className="flex items-center gap-2">
+                          <a
+                            href={replyMailto}
+                            title="Reply to user"
+                            className="flex items-center gap-1 px-2.5 py-1 bg-emerald-500 hover:bg-emerald-400 text-[#0b1410] font-bold rounded-lg text-[11px] transition"
+                          >
+                            <Mail className="h-3 w-3" />
+                            <span>Reply</span>
+                          </a>
+
+                          <button
+                            onClick={() => handleToggleResolve(t.id, t.status)}
+                            title="Toggle Resolved"
+                            className="p-1 text-neutral-400 hover:text-white bg-[#181b22] hover:bg-white/10 rounded-lg transition"
+                          >
+                            <Check className="h-3.5 w-3.5" />
+                          </button>
+
+                          <button
+                            onClick={() => handleDeleteTicket(t.id)}
+                            title="Delete Ticket"
+                            className="p-1 text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
       </div>
