@@ -7,7 +7,8 @@ import { AuthModal } from "@/components/auth/AuthModal";
 import { PersonalHub } from "@/components/personal/PersonalHub";
 import { GroupsHub } from "@/components/trip/GroupsHub";
 import { ReportsView } from "@/components/reports/ReportsView";
-import { Wallet, Sparkles, Users, BarChart3 } from "lucide-react";
+import { HelpSupportModal } from "@/components/support/HelpSupportModal";
+import { Wallet, Sparkles, Users, BarChart3, HelpCircle } from "lucide-react";
 
 interface UserProfile {
   id: string;
@@ -22,6 +23,7 @@ function MainAppContent() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentTab, setCurrentTab] = useState<"personal" | "trips" | "reports">(initialTab);
+  const [isLandingHelpOpen, setIsLandingHelpOpen] = useState(false);
 
   useEffect(() => {
     async function loadUser() {
@@ -88,6 +90,15 @@ function MainAppContent() {
                 Flow<span className="text-emerald-400">Budget</span>
               </span>
             </div>
+
+            {/* Help & Support Button */}
+            <button
+              onClick={() => setIsLandingHelpOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#181b22] hover:bg-white/5 border border-white/10 text-neutral-300 hover:text-white rounded-xl text-xs font-bold transition"
+            >
+              <HelpCircle className="h-3.5 w-3.5 text-emerald-400" />
+              <span>Help & Support</span>
+            </button>
           </div>
         </header>
 
@@ -150,6 +161,13 @@ function MainAppContent() {
         <footer className="border-t border-white/5 py-6 text-center text-xs text-neutral-500">
           FlowBudget • Personal & Trip Expense Management
         </footer>
+
+        {/* Help & Support Modal */}
+        <HelpSupportModal
+          isOpen={isLandingHelpOpen}
+          onClose={() => setIsLandingHelpOpen(false)}
+          adminContact="https://github.com/Yashwanth-23/FlowBudget/issues"
+        />
       </div>
     );
   }
@@ -163,6 +181,7 @@ function MainAppContent() {
         user={user}
         onLogout={handleLogout}
         onCurrencyChange={handleCurrencyChange}
+        onUserUpdated={(updated) => setUser(updated)}
       />
 
       <main className="max-w-7xl mx-auto">
