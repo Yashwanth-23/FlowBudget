@@ -11,20 +11,22 @@ datasource db {
 }
 
 model User {
-  id               String            @id @default(cuid())
-  username         String            @unique
-  pinHash          String
-  currency         String            @default("USD")
-  createdAt        DateTime          @default(now())
+  id                 String            @id @default(cuid())
+  username           String            @unique
+  pinHash            String
+  securityQuestion   String?           @default("What is your secret backup word?")
+  securityAnswerHash String?
+  currency           String            @default("USD")
+  createdAt          DateTime          @default(now())
   
   // Relations
-  transactions     Transaction[]
-  budgets          Budget[]
-  createdGroups    TripGroup[]       @relation("CreatedGroups")
-  groupMemberships GroupMember[]
-  paidExpenses     GroupExpense[]    @relation("PaidExpenses")
-  expensePayments  ExpensePayer[]    @relation("UserPaid")
-  expenseSplits    ExpenseSplit[]    @relation("UserSplits")
+  transactions       Transaction[]
+  budgets            Budget[]
+  createdGroups      TripGroup[]       @relation("CreatedGroups")
+  groupMemberships   GroupMember[]
+  paidExpenses       GroupExpense[]    @relation("PaidExpenses")
+  expensePayments    ExpensePayer[]    @relation("UserPaid")
+  expenseSplits      ExpenseSplit[]    @relation("UserSplits")
 }
 
 model Transaction {
