@@ -85,7 +85,7 @@ export function JoinGroupModal({ isOpen, onClose, onSuccess }: JoinGroupModalPro
               type="text"
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
-              placeholder="e.g. CO-FALL-26-4A9"
+              placeholder="e.g. SUMMER-TRIP-4A9"
               required
               autoFocus
               className="w-full bg-[#101216] border border-white/10 rounded-xl px-4 py-3 text-center text-base font-black text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono uppercase"

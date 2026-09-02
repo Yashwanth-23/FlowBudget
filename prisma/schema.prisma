@@ -54,8 +54,8 @@ model Budget {
 
 model TripGroup {
   id          String            @id @default(cuid())
-  name        String            // e.g. "CO fall 26"
-  code        String            @unique // Shareable code e.g. "CO-FALL-26"
+  name        String            // e.g. "Summer Vacation"
+  code        String            @unique // Shareable code e.g. "SUMMER-TRIP-4A9"
   currency    String            @default("USD")
   totalBudget Float?            @default(0)
   createdById String

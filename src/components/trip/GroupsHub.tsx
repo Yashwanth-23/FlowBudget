@@ -109,7 +109,7 @@ export function GroupsHub({ user }: GroupsHubProps) {
           </div>
           <h3 className="text-base font-black text-white">No Trips or Groups Yet</h3>
           <p className="text-xs text-neutral-400 max-w-md mx-auto">
-            Heading on a trip with friends (e.g. CO fall 26)? Create a group, share the invite link,
+            Heading on a trip with friends? Create a group, share the invite link,
             and log shared expenses together!
           </p>
           <div className="pt-2 flex items-center justify-center gap-3">
@@ -117,7 +117,7 @@ export function GroupsHub({ user }: GroupsHubProps) {
               onClick={() => setIsCreateOpen(true)}
               className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-[#0b1410] text-xs font-bold rounded-xl transition shadow-lg shadow-emerald-500/15"
             >
-              + Create Trip (e.g. CO fall 26)
+              + Create Trip Group
             </button>
             <button
               onClick={() => setIsJoinOpen(true)}

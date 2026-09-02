@@ -33,7 +33,7 @@ export function CreateGroupModal({
 
     const cleanName = name.trim();
     if (!cleanName) {
-      setError("Please enter a group/trip name (e.g. 'CO fall 26')");
+      setError("Please enter a group or trip name");
       return;
     }
 
@@ -100,7 +100,7 @@ export function CreateGroupModal({
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. CO fall 26, Europe 2026, Roommates"
+              placeholder="e.g. Summer Vacation, Weekend Getaway, Roommates"
               required
               autoFocus
               className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
@@ -115,7 +115,7 @@ export function CreateGroupModal({
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
-                className="w-full bg-[#101216] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
+                className="w-full bg-[#101216] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
               >
                 {Object.values(SUPPORTED_CURRENCIES).map((c) => (
                   <option key={c.code} value={c.code}>

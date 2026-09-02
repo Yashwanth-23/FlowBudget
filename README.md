@@ -2,7 +2,7 @@
 
 **Production-ready Dual-Mode Personal Finance & Group Trip Expense Tracker**
 
-Designed for zero-friction personal budgeting and group trip expense splitting (e.g. 6-person Colorado trip).
+Designed for zero-friction personal budgeting and group trip expense splitting.
 
 ---
 
@@ -21,11 +21,11 @@ Designed for zero-friction personal budgeting and group trip expense splitting (
   - Daily Spending Velocity Burn Curve
 - **Export Statements**: 1-click CSV download and clean Printable / PDF audit view.
 
-### 3. Group Trip Expense Splitter ("CO fall 26" Use Case)
-- **1-Click Shareable Links & Codes**: Create a group (e.g. `CO fall 26`), share the link (`/trips/join?code=CO-FALL-26-4A9`) via WhatsApp / Telegram / Message.
+### 3. Group Trip Expense Splitter
+- **1-Click Shareable Links & Codes**: Create a group (e.g. `Summer Trip 2026`), share the link (`/trips/join?code=SUMMER-TRIP-4A9`) via WhatsApp / Telegram / Message.
 - **Admin Powers**: Group creator has full administrative controls to manage trip settings, remove unwanted members, or delete expenses.
-- **Multi-Payer Expense Splits**: Any member can log expenses paid on behalf of all or selected trip members (equal or custom exact shares).
-- **Minimum-Cash-Flow Optimal Settlement**: $O(V \log V)$ graph algorithm that computes the absolute minimum transfers needed to settle all debts across members (e.g. turns 15 chaotic cross-debts into 3 clean payments).
+- **Multi-Payer Expense Splits**: Log single or multiple contributors per expense entry with equal or custom split shares.
+- **Minimum-Cash-Flow Optimal Settlement**: $O(V \log V)$ graph algorithm that computes the absolute minimum transfers needed to settle all debts across members.
 - **Mark as Settled**: Track settlements with live balance updates.
 
 ### 4. Multi-Currency Support
@@ -37,8 +37,6 @@ Designed for zero-friction personal budgeting and group trip expense splitting (
 ## 🚀 Quick Start (Local Development)
 
 ```bash
-cd scratch/flowbudget
-
 # Install dependencies
 npm install
 
@@ -55,18 +53,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## ☁️ 1-Click Deployment to Vercel (Live URL)
 
-To send the live link to your friend right now:
-
-### Option A: Via Vercel CLI
-```bash
-npm i -g vercel
-vercel
-```
-
-### Option B: Via GitHub & Vercel Dashboard
-1. Push this directory to a GitHub repository.
-2. Go to [vercel.com](https://vercel.com) and click **"New Project"** -> Select your repo.
-3. Add Environment Variables:
-   - `JWT_SECRET`: Any random 32-character string.
-   - `DATABASE_URL`: Your cloud PostgreSQL URL (e.g. free from [Neon.tech](https://neon.tech) or [Supabase.com](https://supabase.com)) or use Neon Serverless Postgres directly via Vercel Storage.
-4. Click **Deploy**. Vercel will give you a live HTTPS URL (e.g. `https://flowbudget-app.vercel.app`) you can send to your friend!
+### Environment Variables:
+- `DATABASE_URL`: Your PostgreSQL connection string.
+- `DIRECT_URL`: Your direct PostgreSQL migration connection string.
+- `JWT_SECRET`: Random 32-character secure secret string.
