@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FlowBudget • Personal Budgeting & Trip Expense Splitter",
-  description: "Track daily income and expenditures, set category budgets, and split trip expenses with automated Min-Cash-Flow settlements.",
+  title: "FlowBudget • Personal Budgeting & Shared Group Expense Splitter",
+  description: "Track daily income and expenditures, set category budgets, and split shared group expenses with automated Min-Cash-Flow settlements.",
 };
 
 export default function RootLayout({
@@ -27,7 +28,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100">{children}</body>
+      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
