@@ -80,6 +80,17 @@ export function AddGroupExpenseModal({
     }
   }, [isOpen, currency]);
 
+  // Close on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen || !mounted) return null;
 
   const symbol = getCurrencySymbol(expCurrency);
@@ -211,8 +222,14 @@ export function AddGroupExpenseModal({
   }));
 
   const modal = (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <div className="w-full max-w-lg bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto cursor-pointer"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-lg bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition"
@@ -259,7 +276,7 @@ export function AddGroupExpenseModal({
 
           {/* Amount & Category: 100% Geometrically Aligned */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* Amount with Integrated Currency Selector */}
+            {/* Amount with Integrated Currency Selector (No overflow-hidden) */}
             <div>
               <div className="flex items-center justify-between h-5 mb-1.5">
                 <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
@@ -267,7 +284,7 @@ export function AddGroupExpenseModal({
                 </label>
                 <span className="text-[10px] text-neutral-500 font-mono">Currency</span>
               </div>
-              <div className="flex items-center h-12 rounded-xl bg-[#090a0d] border border-white/10 focus-within:border-emerald-500/60 transition overflow-hidden">
+              <div className="flex items-center h-12 rounded-xl bg-[#090a0d] border border-white/10 focus-within:border-emerald-500/60 transition relative">
                 <CurrencySelect
                   value={expCurrency}
                   onChange={setExpCurrency}

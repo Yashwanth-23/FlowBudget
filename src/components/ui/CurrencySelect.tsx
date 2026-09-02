@@ -65,36 +65,43 @@ export function CurrencySelect({
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full mt-1.5 z-[130] w-48 max-h-56 overflow-y-auto rounded-2xl bg-[#12141a] border border-white/15 p-1.5 shadow-2xl backdrop-blur-xl">
-          <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-neutral-500">
-            Select Currency
+        <>
+          {/* Fullscreen transparent click catcher to close immediately on outside click */}
+          <div
+            className="fixed inset-0 z-[190]"
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="absolute left-0 top-full mt-1.5 z-[200] w-52 max-h-60 overflow-y-auto rounded-2xl bg-[#12141a] border border-white/15 p-1.5 shadow-2xl backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-150">
+            <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-neutral-500">
+              Select Currency
+            </div>
+            {Object.values(SUPPORTED_CURRENCIES).map((c) => {
+              const isSelected = c.code === value;
+              return (
+                <button
+                  key={c.code}
+                  type="button"
+                  onClick={() => {
+                    onChange(c.code);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-mono text-left transition duration-150 ${
+                    isSelected
+                      ? "bg-emerald-500/10 text-emerald-400 font-bold"
+                      : "text-neutral-300 hover:bg-white/[0.06] hover:text-white"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 truncate">
+                    <span className="font-bold text-white">{c.code}</span>
+                    <span className="text-emerald-400">({c.symbol})</span>
+                    <span className="text-[10px] text-neutral-500 truncate">{c.name}</span>
+                  </div>
+                  {isSelected && <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />}
+                </button>
+              );
+            })}
           </div>
-          {Object.values(SUPPORTED_CURRENCIES).map((c) => {
-            const isSelected = c.code === value;
-            return (
-              <button
-                key={c.code}
-                type="button"
-                onClick={() => {
-                  onChange(c.code);
-                  setIsOpen(false);
-                }}
-                className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-mono text-left transition duration-150 ${
-                  isSelected
-                    ? "bg-emerald-500/10 text-emerald-400 font-bold"
-                    : "text-neutral-300 hover:bg-white/[0.06] hover:text-white"
-                }`}
-              >
-                <div className="flex items-center gap-2 truncate">
-                  <span className="font-bold text-white">{c.code}</span>
-                  <span className="text-emerald-400">({c.symbol})</span>
-                  <span className="text-[10px] text-neutral-500 truncate">{c.name}</span>
-                </div>
-                {isSelected && <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />}
-              </button>
-            );
-          })}
-        </div>
+        </>
       )}
     </div>
   );

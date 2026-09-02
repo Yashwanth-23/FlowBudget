@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, Users, Check, AlertCircle } from "lucide-react";
 import { SUPPORTED_CURRENCIES, getCurrencySymbol } from "@/lib/currencies";
+import { CustomSelect } from "../ui/CustomSelect";
 
 interface CreateGroupModalProps {
   isOpen: boolean;
@@ -35,9 +36,25 @@ export function CreateGroupModal({
     }
   }, [defaultCurrency, isOpen]);
 
+  // Close on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen || !mounted) return null;
 
   const symbol = getCurrencySymbol(currency);
+
+  const currencyOptions = Object.values(SUPPORTED_CURRENCIES).map((c) => ({
+    value: c.code,
+    label: `${c.symbol} ${c.code} - ${c.name}`,
+  }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,8 +94,14 @@ export function CreateGroupModal({
   };
 
   const modal = (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <div className="w-full max-w-md bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto cursor-pointer"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-md bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition"
@@ -119,22 +142,17 @@ export function CreateGroupModal({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
                 Currency
               </label>
-              <select
+              <CustomSelect
+                options={currencyOptions}
                 value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-                className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/60 transition"
-              >
-                {Object.values(SUPPORTED_CURRENCIES).map((c) => (
-                  <option key={c.code} value={c.code}>
-                    {c.symbol} {c.code}
-                  </option>
-                ))}
-              </select>
+                onChange={setCurrency}
+                size="md"
+              />
             </div>
 
             <div>

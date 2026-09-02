@@ -40,6 +40,17 @@ export function Navbar({
   const [isSecurityOpen, setIsSecurityOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
+  // Close currency dropdown on Escape
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setCurrencyDropdownOpen(false);
+    };
+    if (currencyDropdownOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currencyDropdownOpen]);
+
   return (
     <>
       {/* Top Navbar */}
@@ -127,30 +138,37 @@ export function Navbar({
                     </button>
 
                     {currencyDropdownOpen && (
-                      <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-[#12141a] border border-white/10 shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
-                        <div className="px-3 py-1.5 text-[10px] font-bold text-neutral-500 uppercase tracking-wider">
-                          Select Currency
+                      <>
+                        {/* Fixed transparent overlay: click anywhere on screen closes dropdown */}
+                        <div
+                          className="fixed inset-0 z-40"
+                          onClick={() => setCurrencyDropdownOpen(false)}
+                        />
+                        <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-[#12141a] border border-white/10 shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                          <div className="px-3 py-1.5 text-[10px] font-bold text-neutral-500 uppercase tracking-wider">
+                            Select Currency
+                          </div>
+                          {Object.values(SUPPORTED_CURRENCIES).map((curr) => (
+                            <button
+                              key={curr.code}
+                              onClick={() => {
+                                onCurrencyChange(curr.code);
+                                setCurrencyDropdownOpen(false);
+                              }}
+                              className={`w-full flex items-center justify-between px-3 py-1.5 text-xs rounded-lg text-left transition ${
+                                user.currency === curr.code
+                                  ? "bg-white/10 text-white font-semibold"
+                                  : "text-neutral-300 hover:bg-white/[0.04]"
+                              }`}
+                            >
+                              <span>{curr.name}</span>
+                              <span className="font-mono text-neutral-400 text-[11px]">
+                                {curr.symbol} {curr.code}
+                              </span>
+                            </button>
+                          ))}
                         </div>
-                        {Object.values(SUPPORTED_CURRENCIES).map((curr) => (
-                          <button
-                            key={curr.code}
-                            onClick={() => {
-                              onCurrencyChange(curr.code);
-                              setCurrencyDropdownOpen(false);
-                            }}
-                            className={`w-full flex items-center justify-between px-3 py-1.5 text-xs rounded-lg text-left transition ${
-                              user.currency === curr.code
-                                ? "bg-white/10 text-white font-semibold"
-                                : "text-neutral-300 hover:bg-white/[0.04]"
-                            }`}
-                          >
-                            <span>{curr.name}</span>
-                            <span className="font-mono text-neutral-400 text-[11px]">
-                              {curr.symbol} {curr.code}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
+                      </>
                     )}
                   </div>
 
