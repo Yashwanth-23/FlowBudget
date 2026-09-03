@@ -188,7 +188,7 @@ function MainAppContent() {
         onUserUpdated={(updated) => setUser(updated)}
       />
 
-      <main className="max-w-7xl mx-auto min-h-[calc(100vh-4rem)]">
+      <main className="max-w-7xl mx-auto min-h-[calc(100vh-4rem)] pb-28 md:pb-12">
         {currentTab === "personal" && <PersonalHub user={user} />}
         {currentTab === "groups" && <GroupsHub user={user} />}
         {currentTab === "reports" && <ReportsView user={user} />}

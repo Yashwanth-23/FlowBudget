@@ -315,150 +315,20 @@ input[type="number"] {
 }
 
 /* =========================================================================
-   Apple Intelligence & Gemini Fluid Multicolor Aurora Engine
+   Mobile Floating Liquid Glass Capsule Dock (Deep Frosted Obsidian)
    ========================================================================= */
-
-@keyframes aurora-cloud-shift-1 {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
-    background-color: rgba(16, 185, 129, 0.28); /* Emerald */
-  }
-  20% {
-    transform: translate3d(140px, -50px, 0) scale(1.22) rotate(72deg);
-    background-color: rgba(6, 182, 212, 0.26); /* Cyan */
-  }
-  40% {
-    transform: translate3d(70px, 110px, 0) scale(0.92) rotate(144deg);
-    background-color: rgba(99, 102, 241, 0.28); /* Indigo */
-  }
-  60% {
-    transform: translate3d(-100px, 80px, 0) scale(1.28) rotate(216deg);
-    background-color: rgba(236, 72, 153, 0.24); /* Pink/Rose */
-  }
-  80% {
-    transform: translate3d(-130px, -70px, 0) scale(1.05) rotate(288deg);
-    background-color: rgba(245, 158, 11, 0.26); /* Amber/Gold */
-  }
-  100% {
-    transform: translate3d(50px, 60px, 0) scale(1.15) rotate(360deg);
-    background-color: rgba(239, 68, 68, 0.22); /* Coral Red */
-  }
-}
-
-@keyframes aurora-cloud-shift-2 {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1.1) rotate(0deg);
-    background-color: rgba(244, 63, 94, 0.25); /* Coral/Rose */
-  }
-  25% {
-    transform: translate3d(-160px, 90px, 0) scale(1.3) rotate(-90deg);
-    background-color: rgba(245, 158, 11, 0.28); /* Warm Amber/Yellow */
-  }
-  50% {
-    transform: translate3d(-60px, -130px, 0) scale(0.88) rotate(-180deg);
-    background-color: rgba(16, 185, 129, 0.26); /* Mint/Emerald */
-  }
-  75% {
-    transform: translate3d(130px, -60px, 0) scale(1.22) rotate(-270deg);
-    background-color: rgba(56, 189, 248, 0.26); /* Sky Blue */
-  }
-  100% {
-    transform: translate3d(70px, 90px, 0) scale(1.05) rotate(-360deg);
-    background-color: rgba(168, 85, 247, 0.26); /* Purple */
-  }
-}
-
-@keyframes aurora-cloud-shift-3 {
-  0% {
-    transform: translate3d(0, 0, 0) scale(0.95) rotate(0deg);
-    background-color: rgba(56, 189, 248, 0.28); /* Sky Cyan */
-  }
-  30% {
-    transform: translate3d(120px, 120px, 0) scale(1.25) rotate(120deg);
-    background-color: rgba(139, 92, 246, 0.28); /* Violet */
-  }
-  60% {
-    transform: translate3d(-110px, 50px, 0) scale(1.1) rotate(240deg);
-    background-color: rgba(244, 63, 94, 0.24); /* Crimson/Rose */
-  }
-  85% {
-    transform: translate3d(40px, -100px, 0) scale(0.92) rotate(300deg);
-    background-color: rgba(234, 179, 8, 0.26); /* Sunny Yellow */
-  }
-  100% {
-    transform: translate3d(-50px, -40px, 0) scale(1.18) rotate(360deg);
-    background-color: rgba(16, 185, 129, 0.26); /* Emerald */
-  }
-}
-
-@keyframes aurora-cloud-shift-4 {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1.2) rotate(0deg);
-    background-color: rgba(139, 92, 246, 0.26); /* Deep Violet */
-  }
-  33% {
-    transform: translate3d(-120px, -90px, 0) scale(0.95) rotate(-120deg);
-    background-color: rgba(236, 72, 153, 0.25); /* Magenta */
-  }
-  66% {
-    transform: translate3d(90px, 110px, 0) scale(1.3) rotate(-240deg);
-    background-color: rgba(16, 185, 129, 0.25); /* Mint */
-  }
-  100% {
-    transform: translate3d(-70px, 60px, 0) scale(1.1) rotate(-360deg);
-    background-color: rgba(245, 158, 11, 0.25); /* Amber */
-  }
-}
-
-@keyframes aurora-cloud-shift-5 {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
-    background-color: rgba(245, 158, 11, 0.24); /* Warm Amber/Gold */
-  }
-  25% {
-    transform: translate3d(140px, 60px, 0) scale(1.2) rotate(90deg);
-    background-color: rgba(239, 68, 68, 0.22); /* Sunset Red */
-  }
-  50% {
-    transform: translate3d(-80px, -110px, 0) scale(0.9) rotate(180deg);
-    background-color: rgba(147, 51, 234, 0.24); /* Royal Purple */
-  }
-  75% {
-    transform: translate3d(-120px, 70px, 0) scale(1.25) rotate(270deg);
-    background-color: rgba(6, 182, 212, 0.26); /* Azure/Cyan */
-  }
-  100% {
-    transform: translate3d(60px, -60px, 0) scale(1.1) rotate(360deg);
-    background-color: rgba(34, 197, 94, 0.24); /* Fresh Green */
-  }
-}
-
-.aurora-cloud-1 {
-  animation: aurora-cloud-shift-1 26s ease-in-out infinite alternate;
-  filter: blur(140px);
-  will-change: transform, background-color;
-}
-
-.aurora-cloud-2 {
-  animation: aurora-cloud-shift-2 32s ease-in-out infinite alternate;
-  filter: blur(150px);
-  will-change: transform, background-color;
-}
-
-.aurora-cloud-3 {
-  animation: aurora-cloud-shift-3 24s ease-in-out infinite alternate;
-  filter: blur(145px);
-  will-change: transform, background-color;
-}
-
-.aurora-cloud-4 {
-  animation: aurora-cloud-shift-4 36s ease-in-out infinite alternate;
-  filter: blur(160px);
-  will-change: transform, background-color;
-}
-
-.aurora-cloud-5 {
-  animation: aurora-cloud-shift-5 30s ease-in-out infinite alternate;
-  filter: blur(150px);
-  will-change: transform, background-color;
+.glass-dock-mobile {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  ), rgba(12, 16, 26, 0.90);
+  backdrop-filter: blur(40px) saturate(210%);
+  -webkit-backdrop-filter: blur(40px) saturate(210%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.38);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    0 20px 50px -5px rgba(0, 0, 0, 0.95),
+    0 0 0 1px rgba(0, 0, 0, 0.6);
 }

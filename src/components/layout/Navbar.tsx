@@ -222,45 +222,47 @@ export function Navbar({
         </div>
       </header>
 
-      {/* Floating Bottom Navigation Dock for Mobile (Apple iOS Liquid Glass Capsule) */}
+      {/* Floating Bottom Navigation Dock for Mobile (Apple iOS Liquid Glass Capsule with Scrim) */}
       {user && (
-        <div className="md:hidden fixed bottom-5 left-4 right-4 z-50 max-w-sm mx-auto no-print">
-          <div className="glass-dock p-1.5 rounded-full flex items-center justify-around">
-            <button
-              onClick={() => onTabChange("personal")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all duration-300 ${
-                currentTab === "personal"
-                  ? "glass-dock-item-active"
-                  : "text-neutral-400 hover:text-white"
-              }`}
-            >
-              <Wallet className="h-3.5 w-3.5" />
-              <span>Personal</span>
-            </button>
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 pointer-events-none pb-4 pt-8 px-4 bg-gradient-to-t from-[#080b12] via-[#080b12]/80 to-transparent no-print">
+          <div className="max-w-sm mx-auto pointer-events-auto">
+            <div className="glass-dock-mobile p-1.5 rounded-full flex items-center justify-around">
+              <button
+                onClick={() => onTabChange("personal")}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all duration-300 ${
+                  currentTab === "personal"
+                    ? "glass-dock-item-active"
+                    : "text-neutral-400 hover:text-white"
+                }`}
+              >
+                <Wallet className="h-3.5 w-3.5" />
+                <span>Personal</span>
+              </button>
 
-            <button
-              onClick={() => onTabChange("groups")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all duration-300 ${
-                currentTab === "groups"
-                  ? "glass-dock-item-active"
-                  : "text-neutral-400 hover:text-white"
-              }`}
-            >
-              <Users className="h-3.5 w-3.5" />
-              <span>Groups</span>
-            </button>
+              <button
+                onClick={() => onTabChange("groups")}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all duration-300 ${
+                  currentTab === "groups"
+                    ? "glass-dock-item-active"
+                    : "text-neutral-400 hover:text-white"
+                }`}
+              >
+                <Users className="h-3.5 w-3.5" />
+                <span>Groups</span>
+              </button>
 
-            <button
-              onClick={() => onTabChange("reports")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all duration-300 ${
-                currentTab === "reports"
-                  ? "glass-dock-item-active"
-                  : "text-neutral-400 hover:text-white"
-              }`}
-            >
-              <BarChart3 className="h-3.5 w-3.5" />
-              <span>Reports</span>
-            </button>
+              <button
+                onClick={() => onTabChange("reports")}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all duration-300 ${
+                  currentTab === "reports"
+                    ? "glass-dock-item-active"
+                    : "text-neutral-400 hover:text-white"
+                }`}
+              >
+                <BarChart3 className="h-3.5 w-3.5" />
+                <span>Reports</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
