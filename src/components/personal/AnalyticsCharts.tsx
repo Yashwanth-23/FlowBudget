@@ -65,7 +65,7 @@ export function AnalyticsCharts({
         </div>
 
         {monthlyTrends.length === 0 ? (
-          <div className="h-52 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.06] rounded-2xl bg-[#090a0d]">
+          <div className="h-52 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/10 rounded-2xl bg-black/20 backdrop-blur-md">
             <BarChart3 className="h-6 w-6 text-neutral-600 mb-2" />
             <p className="text-xs text-neutral-400 font-medium">No cash flow data recorded yet</p>
             <p className="text-[10px] text-neutral-500 mt-0.5">Transactions you log will graph automatically here</p>
@@ -117,7 +117,7 @@ export function AnalyticsCharts({
         </div>
 
         {categoryBreakdown.length === 0 ? (
-          <div className="h-52 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.06] rounded-2xl bg-[#090a0d]">
+          <div className="h-52 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/10 rounded-2xl bg-black/20 backdrop-blur-md">
             <PieIcon className="h-6 w-6 text-neutral-600 mb-2" />
             <p className="text-xs text-neutral-400 font-medium">No expenses logged in this month</p>
             <p className="text-[10px] text-neutral-500 mt-0.5">Category breakdown will visualize upon adding expenses</p>
@@ -198,7 +198,7 @@ export function AnalyticsCharts({
         </div>
 
         {dailyTrends.length === 0 ? (
-          <div className="h-40 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.06] rounded-2xl bg-[#090a0d]">
+          <div className="h-40 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/10 rounded-2xl bg-black/20 backdrop-blur-md">
             <Activity className="h-6 w-6 text-neutral-600 mb-2" />
             <p className="text-xs text-neutral-400 font-medium">No daily spend recorded for this month</p>
           </div>

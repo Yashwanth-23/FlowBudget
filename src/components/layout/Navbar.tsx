@@ -75,7 +75,7 @@ export function Navbar({
   return (
     <>
       {/* Top Navbar */}
-      <header className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-[#090a0d]/80 backdrop-blur-2xl no-print">
+      <header className="sticky top-0 z-40 w-full border-b border-white/[0.08] bg-[#090d16]/35 backdrop-blur-2xl no-print">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Brand Logo */}
@@ -93,15 +93,15 @@ export function Navbar({
               </div>
             </div>
 
-            {/* Desktop Navigation Links - Refined Apple Frosted Dock */}
+            {/* Desktop Navigation Links - Apple iOS Liquid Glass Dock */}
             {user && (
-              <nav className="hidden md:flex items-center gap-1 bg-[#12141a]/90 border border-white/[0.08] p-1 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+              <nav className="hidden md:flex items-center gap-1 glass-dock p-1.5 rounded-full">
                 <button
                   onClick={() => onTabChange("personal")}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 ${
                     currentTab === "personal"
-                      ? "bg-white/10 text-white border border-white/15 shadow-sm backdrop-blur-md"
-                      : "text-neutral-400 hover:text-white hover:bg-white/[0.04]"
+                      ? "glass-dock-item-active"
+                      : "text-neutral-400 hover:text-white hover:bg-white/[0.06]"
                   }`}
                 >
                   <Wallet className="h-3.5 w-3.5" />
@@ -110,10 +110,10 @@ export function Navbar({
 
                 <button
                   onClick={() => onTabChange("groups")}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 ${
                     currentTab === "groups"
-                      ? "bg-white/10 text-white border border-white/15 shadow-sm backdrop-blur-md"
-                      : "text-neutral-400 hover:text-white hover:bg-white/[0.04]"
+                      ? "glass-dock-item-active"
+                      : "text-neutral-400 hover:text-white hover:bg-white/[0.06]"
                   }`}
                 >
                   <Users className="h-3.5 w-3.5" />
@@ -122,10 +122,10 @@ export function Navbar({
 
                 <button
                   onClick={() => onTabChange("reports")}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 ${
                     currentTab === "reports"
-                      ? "bg-white/10 text-white border border-white/15 shadow-sm backdrop-blur-md"
-                      : "text-neutral-400 hover:text-white hover:bg-white/[0.04]"
+                      ? "glass-dock-item-active"
+                      : "text-neutral-400 hover:text-white hover:bg-white/[0.06]"
                   }`}
                 >
                   <BarChart3 className="h-3.5 w-3.5" />
@@ -140,7 +140,7 @@ export function Navbar({
               <button
                 onClick={() => setIsHelpOpen(true)}
                 title="Help & Support Desk"
-                className="p-2 text-neutral-400 hover:text-white bg-[#12141a] hover:bg-white/[0.06] border border-white/[0.08] rounded-xl transition duration-150 active:scale-95"
+                className="p-2 text-neutral-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.12] backdrop-blur-2xl border border-white/[0.10] hover:border-white/[0.22] rounded-xl transition duration-200 active:scale-95 cursor-pointer shadow-sm"
               >
                 <HelpCircle className="h-4 w-4 text-emerald-400/90" />
               </button>
@@ -151,42 +151,42 @@ export function Navbar({
                   <div ref={currencyMenuRef} className="relative">
                     <button
                       onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-[#12141a] border border-white/[0.08] text-neutral-300 hover:text-white hover:border-white/20 transition duration-150 active:scale-95"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/[0.04] hover:bg-white/[0.12] backdrop-blur-2xl border border-white/[0.10] hover:border-white/[0.22] text-neutral-200 hover:text-white transition duration-200 active:scale-95 cursor-pointer shadow-sm"
                     >
                       <Globe className="h-3.5 w-3.5 text-emerald-400" />
                       <span className="font-mono">{user.currency || "USD"}</span>
                       <ChevronDown
-                        className={`h-3 w-3 text-neutral-500 transition-transform duration-200 ${
+                        className={`h-3 w-3 text-neutral-400 transition-transform duration-200 ${
                           currencyDropdownOpen ? "rotate-180 text-emerald-400" : ""
                         }`}
                       />
                     </button>
 
                     {currencyDropdownOpen && (
-                      <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-[#12141a] border border-white/10 shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
-                          <div className="px-3 py-1.5 text-[10px] font-bold text-neutral-500 uppercase tracking-wider">
-                            Select Currency
-                          </div>
-                          {Object.values(SUPPORTED_CURRENCIES).map((curr) => (
-                            <button
-                              key={curr.code}
-                              onClick={() => {
-                                onCurrencyChange(curr.code);
-                                setCurrencyDropdownOpen(false);
-                              }}
-                              className={`w-full flex items-center justify-between px-3 py-1.5 text-xs rounded-lg text-left transition ${
-                                user.currency === curr.code
-                                  ? "bg-white/10 text-white font-semibold"
-                                  : "text-neutral-300 hover:bg-white/[0.04]"
-                              }`}
-                            >
-                              <span>{curr.name}</span>
-                              <span className="font-mono text-neutral-400 text-[11px]">
-                                {curr.symbol} {curr.code}
-                              </span>
-                            </button>
-                          ))}
+                      <div className="absolute right-0 mt-2 w-52 rounded-2xl glass-popover p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                        <div className="px-3 py-1.5 text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+                          Select Currency
                         </div>
+                        {Object.values(SUPPORTED_CURRENCIES).map((curr) => (
+                          <button
+                            key={curr.code}
+                            onClick={() => {
+                              onCurrencyChange(curr.code);
+                              setCurrencyDropdownOpen(false);
+                            }}
+                            className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl text-left transition duration-150 ${
+                              user.currency === curr.code
+                                ? "bg-white/[0.08] text-white font-bold border border-white/20 shadow-sm"
+                                : "text-neutral-300 hover:bg-white/[0.06] hover:text-white"
+                            }`}
+                          >
+                            <span className="font-medium">{curr.name}</span>
+                            <span className="font-mono text-neutral-400 text-[11px]">
+                              {curr.symbol} {curr.code}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
                     )}
                   </div>
 
@@ -195,7 +195,7 @@ export function Navbar({
                     <button
                       onClick={() => setIsSecurityOpen(true)}
                       title="Profile & Security Settings"
-                      className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#12141a] hover:bg-[#181b22] border border-white/[0.08] text-neutral-200 transition duration-150 active:scale-95"
+                      className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.12] backdrop-blur-2xl border border-white/[0.10] hover:border-white/[0.22] text-neutral-200 hover:text-white transition duration-200 active:scale-95 cursor-pointer shadow-sm"
                     >
                       <div className="h-5 w-5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-[10px]">
                         {user.username.charAt(0).toUpperCase()}
@@ -210,7 +210,7 @@ export function Navbar({
                     <button
                       onClick={onLogout}
                       title="Logout"
-                      className="p-2 text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition duration-150 active:scale-95"
+                      className="p-2 text-neutral-400 hover:text-rose-400 bg-white/[0.04] hover:bg-white/[0.12] backdrop-blur-2xl border border-white/[0.10] hover:border-rose-500/30 rounded-xl transition duration-200 active:scale-95 cursor-pointer shadow-sm"
                     >
                       <LogOut className="h-4 w-4" />
                     </button>
@@ -222,15 +222,15 @@ export function Navbar({
         </div>
       </header>
 
-      {/* Floating Bottom Navigation Dock for Mobile (iOS Native Feel) */}
+      {/* Floating Bottom Navigation Dock for Mobile (Apple iOS Liquid Glass Capsule) */}
       {user && (
-        <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 max-w-sm mx-auto no-print">
-          <div className="bg-[#12141a]/90 backdrop-blur-2xl border border-white/[0.12] rounded-full p-1.5 shadow-[0_12px_36px_rgba(0,0,0,0.8)] flex items-center justify-around">
+        <div className="md:hidden fixed bottom-5 left-4 right-4 z-50 max-w-sm mx-auto no-print">
+          <div className="glass-dock p-1.5 rounded-full flex items-center justify-around">
             <button
               onClick={() => onTabChange("personal")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-full text-xs font-medium transition-all duration-200 ${
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all duration-300 ${
                 currentTab === "personal"
-                  ? "bg-white/10 text-white font-semibold border border-white/15 shadow-sm"
+                  ? "glass-dock-item-active"
                   : "text-neutral-400 hover:text-white"
               }`}
             >
@@ -240,9 +240,9 @@ export function Navbar({
 
             <button
               onClick={() => onTabChange("groups")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-full text-xs font-medium transition-all duration-200 ${
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all duration-300 ${
                 currentTab === "groups"
-                  ? "bg-white/10 text-white font-semibold border border-white/15 shadow-sm"
+                  ? "glass-dock-item-active"
                   : "text-neutral-400 hover:text-white"
               }`}
             >
@@ -252,9 +252,9 @@ export function Navbar({
 
             <button
               onClick={() => onTabChange("reports")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-full text-xs font-medium transition-all duration-200 ${
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all duration-300 ${
                 currentTab === "reports"
-                  ? "bg-white/10 text-white font-semibold border border-white/15 shadow-sm"
+                  ? "glass-dock-item-active"
                   : "text-neutral-400 hover:text-white"
               }`}
             >

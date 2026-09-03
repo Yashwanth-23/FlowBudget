@@ -61,7 +61,7 @@ export function ShareModal({
 
   const modal = (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto cursor-pointer"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-[#090d16]/40 backdrop-blur-xl overflow-y-auto cursor-pointer"
       onClick={onClose}
     >
       <div

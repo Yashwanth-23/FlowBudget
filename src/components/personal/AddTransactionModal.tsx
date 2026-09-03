@@ -16,6 +16,7 @@ import {
 import { getCurrencySymbol } from "@/lib/currencies";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 import { CurrencySelect } from "@/components/ui/CurrencySelect";
+import { LiquidGlassDatePicker } from "@/components/ui/LiquidGlassDatePicker";
 
 interface AddTransactionModalProps {
   isOpen: boolean;
@@ -164,11 +165,11 @@ export function AddTransactionModal({
 
   const modalContent = (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto cursor-pointer"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-[#090d16]/40 backdrop-blur-xl overflow-y-auto cursor-pointer"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto cursor-default"
+        className="w-full max-w-lg glass-modal rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -180,21 +181,21 @@ export function AddTransactionModal({
 
         <h2 className="text-xl font-bold text-white mb-5">Log New Transaction</h2>
 
-        {/* Type Toggle */}
-        <div className="grid grid-cols-2 gap-2 bg-[#090a0d] p-1 rounded-2xl border border-white/5 mb-6">
+        {/* Type Toggle - Apple iOS Clean Segmented Control */}
+        <div className="grid grid-cols-2 gap-1.5 bg-[#0a0c10] p-1.5 rounded-2xl border border-white/[0.08] mb-6">
           <button
             type="button"
             onClick={() => {
               setType("EXPENSE");
               setCategory(EXPENSE_CATEGORIES[0]);
             }}
-            className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
               type === "EXPENSE"
-                ? "bg-rose-500 text-white shadow-sm font-black"
+                ? "bg-rose-500/20 text-rose-300 border border-rose-500/30 shadow-sm"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            <TrendingDown className="h-4 w-4" />
+            <TrendingDown className="h-4 w-4 text-rose-400" />
             <span>Expense (Spent)</span>
           </button>
 
@@ -204,13 +205,13 @@ export function AddTransactionModal({
               setType("INCOME");
               setCategory(INCOME_CATEGORIES[0]);
             }}
-            className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
               type === "INCOME"
-                ? "bg-emerald-500 text-[#0b1410] shadow-sm font-black"
+                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            <TrendingUp className="h-4 w-4" />
+            <TrendingUp className="h-4 w-4 text-emerald-400" />
             <span>Income (Earned)</span>
           </button>
         </div>
@@ -317,12 +318,11 @@ export function AddTransactionModal({
               </label>
               <span className="text-[10px] text-neutral-500">Future dates disabled</span>
             </div>
-            <input
-              type="date"
-              max={todayStr}
+            <LiquidGlassDatePicker
               value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full h-12 bg-[#090a0d] border border-white/10 rounded-xl px-3.5 text-xs sm:text-sm text-white focus:outline-none focus:border-emerald-500/60 transition font-mono"
+              onChange={setDate}
+              max={todayStr}
+              className="w-full"
             />
           </div>
 

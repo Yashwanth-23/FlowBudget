@@ -182,8 +182,8 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      {/* Matte Dark Glass Card */}
-      <div className="relative bg-[#181b22] border border-white/10 rounded-3xl p-7 sm:p-8 shadow-2xl backdrop-blur-2xl">
+      {/* Apple Liquid Glass Auth Card */}
+      <div className="relative glass-card border border-white/10 rounded-3xl p-7 sm:p-8 shadow-[0_32px_80px_rgba(0,0,0,0.8),0_0_36px_rgba(16,185,129,0.12)]">
         {/* Fixed Header */}
         <div className="min-h-[56px] mb-5">
           {mode === "forgot_pin" ? (
@@ -195,7 +195,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                   setForgotStep("enter_username");
                   setError(null);
                 }}
-                className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 transition"
+                className="p-2 rounded-xl glass-dock text-neutral-300 hover:text-white transition"
               >
                 <ArrowLeft className="h-4 w-4" />
               </button>
@@ -221,19 +221,19 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
           )}
         </div>
 
-        {/* Mode Toggle (Segmented iOS Glass Style) */}
+        {/* Mode Toggle (Liquid Glass Capsule Dock) */}
         {mode !== "forgot_pin" && (
-          <div className="grid grid-cols-2 gap-1 bg-[#101216]/90 p-1 rounded-2xl border border-white/5 mb-6">
+          <div className="grid grid-cols-2 gap-1.5 glass-dock p-1.5 rounded-2xl mb-6">
             <button
               type="button"
               onClick={() => {
                 setMode("login");
                 setError(null);
               }}
-              className={`py-2 text-xs font-bold rounded-xl transition-all ${
+              className={`py-2.5 text-xs rounded-xl transition-all ${
                 mode === "login"
-                  ? "bg-white/10 text-white shadow-sm font-black"
-                  : "text-neutral-400 hover:text-white"
+                  ? "glass-dock-item-active font-black"
+                  : "text-neutral-400 hover:text-white font-bold"
               }`}
             >
               Login with PIN
@@ -244,10 +244,10 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                 setMode("register");
                 setError(null);
               }}
-              className={`py-2 text-xs font-bold rounded-xl transition-all ${
+              className={`py-2.5 text-xs rounded-xl transition-all ${
                 mode === "register"
-                  ? "bg-emerald-500 text-[#0b1410] shadow-sm font-black"
-                  : "text-neutral-400 hover:text-white"
+                  ? "glass-dock-item-active font-black"
+                  : "text-neutral-400 hover:text-white font-bold"
               }`}
             >
               Create Profile
@@ -290,7 +290,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                     onChange={(e) => setUsername(cleanUsernameInput(e.target.value))}
                     placeholder="alex"
                     autoFocus
-                    className="w-full bg-[#101216] border border-white/10 rounded-2xl pl-8 pr-4 py-2.5 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition font-mono"
+                    className="w-full glass-dock border border-white/15 rounded-2xl pl-8 pr-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition font-mono"
                   />
                 </div>
               </div>
@@ -298,7 +298,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-400 active:scale-[0.99] text-[#0b1410] font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/15 transition"
+                className="btn-primary w-full py-3.5 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30 cursor-pointer transition"
               >
                 {loading ? (
                   <div className="h-4 w-4 border-2 border-[#0b1410] border-t-transparent rounded-full animate-spin" />
@@ -312,8 +312,8 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
             </form>
           ) : (
             <form onSubmit={handleResetPinSubmit} className="space-y-4">
-              <div className="bg-[#101216] p-3 rounded-2xl border border-white/5 space-y-1">
-                <span className="text-[10px] uppercase font-bold text-neutral-500 block">Security Question:</span>
+              <div className="glass-dock p-3.5 rounded-2xl border border-white/15 space-y-1">
+                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Security Question:</span>
                 <p className="text-xs font-bold text-emerald-400">{fetchedQuestion}</p>
               </div>
 
@@ -329,7 +329,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                   onChange={(e) => setSecurityAnswer(e.target.value)}
                   placeholder="Enter your backup answer"
                   autoFocus
-                  className="w-full bg-[#101216] border border-white/10 rounded-2xl px-4 py-2.5 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition"
+                  className="w-full glass-dock border border-white/15 rounded-2xl px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition"
                 />
               </div>
 
@@ -346,14 +346,14 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                   value={newPin}
                   onChange={(e) => setNewPin(cleanPinInput(e.target.value))}
                   placeholder="••••"
-                  className="w-full bg-[#101216] border border-white/10 rounded-2xl px-4 py-2.5 text-sm text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition font-mono"
+                  className="w-full glass-dock border border-white/15 rounded-2xl px-4 py-2.5 text-sm text-white tracking-widest placeholder-neutral-500 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition font-mono"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-400 active:scale-[0.99] text-[#0b1410] font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/15 transition"
+                className="btn-primary w-full py-3.5 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30 cursor-pointer transition"
               >
                 {loading ? (
                   <div className="h-4 w-4 border-2 border-[#0b1410] border-t-transparent rounded-full animate-spin" />
@@ -385,7 +385,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                   value={username}
                   onChange={(e) => setUsername(cleanUsernameInput(e.target.value))}
                   placeholder="e.g. alex"
-                  className="w-full bg-[#101216] border border-white/10 rounded-2xl pl-8 pr-4 py-2.5 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition font-mono"
+                  className="w-full glass-dock border border-white/15 rounded-2xl pl-8 pr-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition font-mono"
                 />
               </div>
             </div>
@@ -418,7 +418,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                 value={pin}
                 onChange={(e) => setPin(cleanPinInput(e.target.value))}
                 placeholder="••••"
-                className="w-full bg-[#101216] border border-white/10 rounded-2xl px-4 py-2.5 text-sm text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition font-mono"
+                className="w-full glass-dock border border-white/15 rounded-2xl px-4 py-2.5 text-sm text-white tracking-widest placeholder-neutral-500 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition font-mono"
               />
             </div>
 
@@ -468,7 +468,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                     value={securityAnswer}
                     onChange={(e) => setSecurityAnswer(e.target.value)}
                     placeholder="e.g. Chicago, Max, or Sunrise"
-                    className="w-full bg-[#101216] border border-white/10 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+                    className="w-full glass-dock border border-white/15 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500/60 transition"
                   />
                   <p className="text-[10px] text-neutral-500 mt-1">
                     Used to safely reset your PIN if you ever forget it.
@@ -481,7 +481,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-400 active:scale-[0.99] text-[#0b1410] font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/15 transition"
+              className="btn-primary w-full py-3.5 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30 cursor-pointer transition"
             >
               {loading ? (
                 <div className="h-4 w-4 border-2 border-[#0b1410] border-t-transparent rounded-full animate-spin" />

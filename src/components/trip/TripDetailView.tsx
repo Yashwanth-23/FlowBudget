@@ -332,7 +332,7 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
       </div>
 
       {/* iOS Segmented Sub-Navigation */}
-      <div className="flex items-center bg-[#12141a] p-1 rounded-2xl border border-white/[0.08] max-w-md no-print">
+      <div className="flex items-center glass-dock p-1 rounded-2xl max-w-md no-print">
         <button
           onClick={() => setActiveTab("expenses")}
           className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold transition-all duration-150 ${
@@ -384,7 +384,7 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
           </div>
 
           {expenses.length === 0 ? (
-            <div className="py-12 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.06] rounded-2xl bg-[#090a0d]">
+            <div className="py-12 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.1] rounded-2xl bg-black/20 backdrop-blur-md">
               <Receipt className="h-6 w-6 text-neutral-600 mb-2" />
               <p className="text-xs text-neutral-400 font-medium">No group expenses logged yet</p>
               <p className="text-[10px] text-neutral-500 mt-0.5">Click &ldquo;Add Expense&rdquo; to start recording shared costs</p>

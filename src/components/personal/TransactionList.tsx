@@ -80,7 +80,7 @@ export function TransactionList({
           </button>
 
           {/* Type Filter - iOS Segmented Style */}
-          <div className="flex bg-[#090a0d] p-1 rounded-xl border border-white/[0.08] no-print">
+          <div className="flex glass-dock p-1 rounded-xl no-print">
             <button
               onClick={() => setFilterType("ALL")}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition duration-150 ${
@@ -131,7 +131,7 @@ export function TransactionList({
 
       {/* List */}
       {filtered.length === 0 ? (
-        <div className="py-12 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.06] rounded-2xl bg-[#090a0d]">
+        <div className="py-12 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/10 rounded-2xl bg-black/20 backdrop-blur-md">
           <Receipt className="h-6 w-6 text-neutral-600 mb-2" />
           <p className="text-xs text-neutral-400 font-medium">No transactions found</p>
           <p className="text-[10px] text-neutral-500 mt-0.5">Click &ldquo;Add Transaction&rdquo; to record your first entry</p>

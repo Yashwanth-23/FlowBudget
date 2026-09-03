@@ -173,7 +173,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
 
         <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 no-print">
           {/* Month Controller with Quick Calendar Picker Popover */}
-          <div className="flex items-center bg-[#12141a] border border-white/[0.08] rounded-2xl p-1 shadow-sm">
+          <div className="flex items-center glass-dock rounded-2xl p-1 shadow-sm">
             <button
               onClick={handlePrevMonth}
               className="p-1.5 text-neutral-400 hover:text-white hover:bg-white/[0.06] rounded-xl transition duration-150 active:scale-95"

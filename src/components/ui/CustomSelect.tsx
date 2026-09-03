@@ -39,19 +39,32 @@ export function CustomSelect({
 
   const selectedOption = normalizedOptions.find((opt) => opt.value === value);
 
-  // Close on outside click
+  // Close on outside click or touch
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
+    function handleClickOutside(e: MouseEvent | TouchEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     }
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
+  }, [isOpen]);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
   const sizeClasses = {
@@ -67,9 +80,11 @@ export function CustomSelect({
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setIsOpen(!isOpen)}
-        className={`w-full ${sizeClasses[size]} rounded-xl bg-[#090a0d] border ${
-          isOpen ? "border-emerald-500/60 ring-1 ring-emerald-500/30" : "border-white/10 hover:border-white/20"
-        } flex items-center justify-between text-left text-white transition duration-150 select-none focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed`}
+        className={`w-full ${sizeClasses[size]} rounded-xl bg-[#0c0e14] border ${
+          isOpen
+            ? "border-emerald-500/60 ring-1 ring-emerald-500/30"
+            : "border-white/10 hover:border-white/20"
+        } shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] flex items-center justify-between text-left text-white transition duration-150 select-none focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed`}
       >
         <div className="flex items-center gap-2 truncate min-w-0">
           {selectedOption?.icon && <span className="shrink-0">{selectedOption.icon}</span>}
@@ -90,9 +105,9 @@ export function CustomSelect({
         />
       </button>
 
-      {/* Floating Menu Popover */}
+      {/* Floating Menu Popover - Apple iOS Liquid Glass Surface */}
       {isOpen && (
-        <div className="absolute left-0 right-0 top-full mt-1.5 z-[120] max-h-60 overflow-y-auto rounded-2xl bg-[#12141a] border border-white/15 p-1.5 shadow-2xl backdrop-blur-xl animate-in fade-in duration-150">
+        <div className="absolute left-0 right-0 top-full mt-1.5 z-[120] max-h-60 overflow-y-auto rounded-2xl glass-popover p-1.5 animate-in fade-in zoom-in-95 duration-150">
           {normalizedOptions.length === 0 ? (
             <div className="p-3 text-center text-xs text-neutral-500">No options available</div>
           ) : (
@@ -106,9 +121,9 @@ export function CustomSelect({
                     onChange(opt.value);
                     setIsOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs sm:text-sm text-left transition duration-150 ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs sm:text-sm text-left transition duration-150 ${
                     isSelected
-                      ? "bg-emerald-500/10 text-emerald-400 font-bold"
+                      ? "bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/30 shadow-sm"
                       : "text-neutral-300 hover:bg-white/[0.06] hover:text-white"
                   }`}
                 >

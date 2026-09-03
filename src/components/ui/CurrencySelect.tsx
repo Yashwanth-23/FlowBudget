@@ -86,9 +86,9 @@ export function CurrencySelect({
         <div
           className={`absolute ${
             isBadge ? "left-0 sm:left-auto sm:right-0" : "left-0"
-          } top-full mt-1.5 z-[200] w-52 max-h-60 overflow-y-auto rounded-2xl bg-[#12141a] border border-white/15 p-1.5 shadow-2xl backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-150`}
+          } top-full mt-1.5 z-[200] w-52 max-h-60 overflow-y-auto rounded-2xl glass-popover p-1.5 animate-in fade-in zoom-in-95 duration-150`}
         >
-          <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-neutral-500">
+          <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-neutral-400">
             Select Currency
           </div>
           {Object.values(SUPPORTED_CURRENCIES).map((c) => {
@@ -103,7 +103,7 @@ export function CurrencySelect({
                 }}
                 className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-mono text-left transition duration-150 ${
                   isSelected
-                    ? "bg-emerald-500/10 text-emerald-400 font-bold"
+                    ? "bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/30 shadow-sm"
                     : "text-neutral-300 hover:bg-white/[0.06] hover:text-white"
                 }`}
               >

@@ -6,6 +6,7 @@ import { X, Receipt, Check, Users, User, AlertCircle, Calendar } from "lucide-re
 import { getCurrencySymbol } from "@/lib/currencies";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 import { CurrencySelect } from "@/components/ui/CurrencySelect";
+import { LiquidGlassDatePicker } from "@/components/ui/LiquidGlassDatePicker";
 
 interface AddGroupExpenseModalProps {
   isOpen: boolean;
@@ -223,11 +224,11 @@ export function AddGroupExpenseModal({
 
   const modal = (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto cursor-pointer"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-[#090d16]/40 backdrop-blur-xl overflow-y-auto cursor-pointer"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto cursor-default"
+        className="w-full max-w-lg glass-modal rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -330,12 +331,11 @@ export function AddGroupExpenseModal({
               </label>
               <span className="text-[10px] text-neutral-500">Future dates disabled</span>
             </div>
-            <input
-              type="date"
-              max={todayStr}
+            <LiquidGlassDatePicker
               value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full h-12 bg-[#090a0d] border border-white/10 rounded-xl px-3.5 text-xs sm:text-sm text-white focus:outline-none focus:border-emerald-500/60 transition font-mono"
+              onChange={setDate}
+              max={todayStr}
+              className="w-full"
             />
           </div>
 
@@ -347,13 +347,15 @@ export function AddGroupExpenseModal({
                 <span>1. Who Paid the Bill?</span>
               </label>
 
-              {/* iOS Segmented Toggle */}
-              <div className="flex bg-[#090a0d] p-0.5 rounded-lg border border-white/5 text-[10px]">
+              {/* iOS Liquid Glass Segmented Toggle */}
+              <div className="flex glass-segmented-track p-1 rounded-xl text-[10px]">
                 <button
                   type="button"
                   onClick={() => setPayerMode("SINGLE")}
-                  className={`px-2.5 py-1 rounded-md font-bold transition ${
-                    payerMode === "SINGLE" ? "bg-white/10 text-emerald-400 font-bold" : "text-neutral-400"
+                  className={`px-3 py-1.5 rounded-lg font-bold transition-all duration-200 ${
+                    payerMode === "SINGLE"
+                      ? "glass-segmented-active"
+                      : "text-neutral-400 hover:text-white"
                   }`}
                 >
                   Single Person
@@ -361,8 +363,10 @@ export function AddGroupExpenseModal({
                 <button
                   type="button"
                   onClick={() => setPayerMode("MULTIPLE")}
-                  className={`px-2.5 py-1 rounded-md font-bold transition ${
-                    payerMode === "MULTIPLE" ? "bg-white/10 text-emerald-400 font-bold" : "text-neutral-400"
+                  className={`px-3 py-1.5 rounded-lg font-bold transition-all duration-200 ${
+                    payerMode === "MULTIPLE"
+                      ? "glass-segmented-active"
+                      : "text-neutral-400 hover:text-white"
                   }`}
                 >
                   Multiple People
@@ -426,13 +430,15 @@ export function AddGroupExpenseModal({
                 <span>2. Split Between</span>
               </label>
 
-              {/* iOS Segmented Toggle */}
-              <div className="flex bg-[#090a0d] p-0.5 rounded-lg border border-white/5 text-[10px]">
+              {/* iOS Liquid Glass Segmented Toggle */}
+              <div className="flex glass-segmented-track p-1 rounded-xl text-[10px]">
                 <button
                   type="button"
                   onClick={() => setSplitMode("EQUAL")}
-                  className={`px-2.5 py-1 rounded-md font-bold transition ${
-                    splitMode === "EQUAL" ? "bg-white/10 text-emerald-400 font-bold" : "text-neutral-400"
+                  className={`px-3 py-1.5 rounded-lg font-bold transition-all duration-200 ${
+                    splitMode === "EQUAL"
+                      ? "glass-segmented-active"
+                      : "text-neutral-400 hover:text-white"
                   }`}
                 >
                   Split Equally
@@ -440,8 +446,10 @@ export function AddGroupExpenseModal({
                 <button
                   type="button"
                   onClick={() => setSplitMode("CUSTOM")}
-                  className={`px-2.5 py-1 rounded-md font-bold transition ${
-                    splitMode === "CUSTOM" ? "bg-white/10 text-emerald-400 font-bold" : "text-neutral-400"
+                  className={`px-3 py-1.5 rounded-lg font-bold transition-all duration-200 ${
+                    splitMode === "CUSTOM"
+                      ? "glass-segmented-active"
+                      : "text-neutral-400 hover:text-white"
                   }`}
                 >
                   Custom Unequal

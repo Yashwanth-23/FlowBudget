@@ -17,6 +17,7 @@ import {
   Filter,
 } from "lucide-react";
 import { formatCurrency, getCurrencySymbol, SUPPORTED_CURRENCIES } from "@/lib/currencies";
+import { LiquidGlassDatePicker } from "../ui/LiquidGlassDatePicker";
 import {
   ResponsiveContainer,
   BarChart,
@@ -265,8 +266,8 @@ export function ReportsView({ user }: ReportsViewProps) {
         </div>
       </div>
 
-      {/* FILTER DASHBOARD: PERIODS & CURRENCY SELECTOR */}
-      <div className="glass-card rounded-3xl p-4 sm:p-6 space-y-4 no-print border border-white/10 shadow-xl">
+      {/* FILTER DASHBOARD: PERIODS & CURRENCY SELECTOR - Apple iOS Liquid Glass */}
+      <div className="glass-liquid rounded-3xl p-4 sm:p-6 space-y-4 no-print border border-white/12 shadow-2xl relative z-20">
         {/* ROW 1: PRIMARY PERIOD SELECTOR */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -276,17 +277,17 @@ export function ReportsView({ user }: ReportsViewProps) {
             </span>
           </div>
 
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 bg-[#090a0d] p-1 rounded-2xl border border-white/5 text-xs font-bold">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 glass-segmented-track p-1.5 rounded-2xl text-xs font-bold">
             {(["MONTHLY", "QUARTERLY", "ANNUAL", "LIFETIME", "CUSTOM"] as PeriodType[]).map(
               (p) => (
                 <button
                   key={p}
                   type="button"
                   onClick={() => setPeriodType(p)}
-                  className={`py-2 px-3 rounded-xl transition duration-150 text-center ${
+                  className={`py-2 px-3 rounded-xl transition-all duration-200 text-center ${
                     periodType === p
-                      ? "bg-emerald-500 text-[#04130c] font-black shadow-md shadow-emerald-500/20"
-                      : "text-neutral-400 hover:text-white"
+                      ? "glass-segmented-active shadow-md"
+                      : "text-neutral-400 hover:text-white hover:bg-white/[0.04]"
                   }`}
                 >
                   {p === "MONTHLY"
@@ -304,13 +305,13 @@ export function ReportsView({ user }: ReportsViewProps) {
           </div>
         </div>
 
-        {/* ROW 2: DYNAMIC SUB-CONTROLS BASED ON SELECTED PERIOD */}
-        <div className="pt-3 border-t border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        {/* ROW 2: DYNAMIC SUB-CONTROLS BASED ON SELECTED PERIOD - LOCKED HEIGHT TO PREVENT ALL JUMPS */}
+        <div className="pt-3 border-t border-white/5 min-h-[52px] flex flex-col md:flex-row md:items-center justify-between gap-3">
           {/* Sub-controls for MONTHLY */}
           {periodType === "MONTHLY" && (
             <div className="flex items-center gap-2">
               <span className="text-xs text-neutral-400 font-medium">Selected Month:</span>
-              <div className="flex items-center bg-[#090a0d] border border-white/10 rounded-xl p-1">
+              <div className="flex items-center glass-dock rounded-xl p-1">
                 <button
                   onClick={handlePrevMonth}
                   className="p-1 text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition"
@@ -332,17 +333,17 @@ export function ReportsView({ user }: ReportsViewProps) {
 
           {/* Sub-controls for QUARTERLY */}
           {periodType === "QUARTERLY" && (
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs text-neutral-400 font-medium">Year:</span>
-                <div className="flex gap-1 bg-[#090a0d] p-1 rounded-xl border border-white/10 text-xs">
+                <div className="flex gap-1 glass-dock p-1 rounded-xl text-xs">
                   {[currentYear, currentYear - 1, currentYear - 2].map((yr) => (
                     <button
                       key={yr}
                       onClick={() => setSelectedYear(yr)}
                       className={`px-2.5 py-1 rounded-lg font-mono font-bold transition ${
                         selectedYear === yr
-                          ? "bg-white/10 text-white"
+                          ? "bg-white/15 text-white shadow-sm"
                           : "text-neutral-400 hover:text-white"
                       }`}
                     >
@@ -354,19 +355,20 @@ export function ReportsView({ user }: ReportsViewProps) {
 
               <div className="flex items-center gap-1.5">
                 <span className="text-xs text-neutral-400 font-medium">Quarter:</span>
-                <div className="flex gap-1 bg-[#090a0d] p-1 rounded-xl border border-white/10 text-xs">
+                <div className="flex gap-1 glass-dock p-1 rounded-xl text-xs">
                   {[
-                    { q: 1, label: "Q1 (Jan–Mar)" },
-                    { q: 2, label: "Q2 (Apr–Jun)" },
-                    { q: 3, label: "Q3 (Jul–Sep)" },
-                    { q: 4, label: "Q4 (Oct–Dec)" },
+                    { q: 1, label: "Q1", tip: "Q1: Jan – Mar" },
+                    { q: 2, label: "Q2", tip: "Q2: Apr – Jun" },
+                    { q: 3, label: "Q3", tip: "Q3: Jul – Sep" },
+                    { q: 4, label: "Q4", tip: "Q4: Oct – Dec" },
                   ].map((item) => (
                     <button
                       key={item.q}
                       onClick={() => setSelectedQuarter(item.q)}
-                      className={`px-2.5 py-1 rounded-lg font-bold transition ${
+                      title={item.tip}
+                      className={`px-3 py-1 rounded-lg font-bold transition ${
                         selectedQuarter === item.q
-                          ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                          ? "bg-emerald-500 text-[#04130c] shadow-sm"
                           : "text-neutral-400 hover:text-white"
                       }`}
                     >
@@ -382,7 +384,7 @@ export function ReportsView({ user }: ReportsViewProps) {
           {periodType === "ANNUAL" && (
             <div className="flex items-center gap-2">
               <span className="text-xs text-neutral-400 font-medium">Select Year:</span>
-              <div className="flex gap-1.5 bg-[#090a0d] p-1 rounded-xl border border-white/10 text-xs font-mono font-bold">
+              <div className="flex gap-1.5 glass-dock p-1 rounded-xl text-xs font-mono font-bold">
                 {[currentYear, currentYear - 1, currentYear - 2].map((yr) => (
                   <button
                     key={yr}
@@ -402,7 +404,7 @@ export function ReportsView({ user }: ReportsViewProps) {
 
           {/* Sub-controls for LIFETIME */}
           {periodType === "LIFETIME" && (
-            <div className="flex items-center gap-2 text-xs text-neutral-400">
+            <div className="flex items-center gap-2 text-xs text-neutral-400 h-9">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>Auditing complete all-time ledger history</span>
             </div>
@@ -410,37 +412,33 @@ export function ReportsView({ user }: ReportsViewProps) {
 
           {/* Sub-controls for CUSTOM */}
           {periodType === "CUSTOM" && (
-            <div className="flex flex-wrap items-center gap-2 text-xs">
+            <div className="flex flex-wrap items-center gap-3 text-xs">
               <div className="flex items-center gap-1.5">
                 <span className="text-neutral-400 font-medium">From:</span>
-                <input
-                  type="date"
-                  max={todayStr}
+                <LiquidGlassDatePicker
                   value={customStart}
-                  onChange={(e) => setCustomStart(e.target.value)}
-                  className="bg-[#090a0d] border border-white/10 rounded-xl px-2.5 py-1 text-white font-mono"
+                  onChange={setCustomStart}
+                  max={todayStr}
                 />
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="text-neutral-400 font-medium">To:</span>
-                <input
-                  type="date"
-                  max={todayStr}
+                <LiquidGlassDatePicker
                   value={customEnd}
-                  onChange={(e) => setCustomEnd(e.target.value)}
-                  className="bg-[#090a0d] border border-white/10 rounded-xl px-2.5 py-1 text-white font-mono"
+                  onChange={setCustomEnd}
+                  max={todayStr}
                 />
               </div>
             </div>
           )}
 
           {/* CURRENCY SELECTOR PILLS */}
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="flex items-center gap-2 md:ml-auto">
             <div className="flex items-center gap-1 text-xs text-neutral-400">
               <Coins className="h-3.5 w-3.5 text-emerald-400" />
               <span className="font-semibold">Currency:</span>
             </div>
-            <div className="flex items-center gap-1 bg-[#090a0d] p-1 rounded-xl border border-white/10">
+            <div className="flex items-center gap-1 glass-dock p-1 rounded-xl">
               {availableCurrencies.map((curr) => (
                 <button
                   key={curr}
@@ -457,6 +455,7 @@ export function ReportsView({ user }: ReportsViewProps) {
             </div>
           </div>
         </div>
+
       </div>
 
       {/* PRINT-ONLY EXECUTIVE HEADER */}
@@ -477,13 +476,13 @@ export function ReportsView({ user }: ReportsViewProps) {
         </div>
       </div>
 
-      {/* LOADING SPINNER */}
-      {loading ? (
-        <div className="py-20 flex items-center justify-center">
+      {/* INITIAL LOAD SPINNER (Only on cold start before any data is loaded) */}
+      {!analytics && loading ? (
+        <div className="py-24 flex items-center justify-center min-h-[50vh]">
           <div className="h-8 w-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
-        <>
+        <div className="space-y-6 sm:space-y-8">
           {/* EXECUTIVE KPI SUMMARY CARDS */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {/* Total Inflow */}
@@ -580,7 +579,7 @@ export function ReportsView({ user }: ReportsViewProps) {
               </div>
 
               {!hasMonthlyTrends ? (
-                <div className="h-64 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.06] rounded-2xl bg-[#090a0d]">
+                <div className="h-64 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/10 rounded-2xl bg-black/20 backdrop-blur-md">
                   <p className="text-xs text-neutral-400">No cash flow recorded for {selectedCurrency} in this period</p>
                 </div>
               ) : (
@@ -624,7 +623,7 @@ export function ReportsView({ user }: ReportsViewProps) {
               </div>
 
               {!hasCategoryBreakdown ? (
-                <div className="h-64 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.06] rounded-2xl bg-[#090a0d]">
+                <div className="h-64 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/10 rounded-2xl bg-black/20 backdrop-blur-md">
                   <p className="text-xs text-neutral-400">No expense categories recorded for {selectedCurrency}</p>
                 </div>
               ) : (
@@ -773,7 +772,7 @@ export function ReportsView({ user }: ReportsViewProps) {
               </div>
             )}
           </div>
-        </>
+        </div>
       )}
     </div>
   );
