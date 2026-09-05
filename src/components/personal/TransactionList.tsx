@@ -63,7 +63,7 @@ export function TransactionList({
           <button
             onClick={handlePrintPDF}
             title="Print or Save Statement as PDF"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-[#090a0d] hover:bg-white/[0.06] text-neutral-300 border border-white/[0.08] transition duration-150 active:scale-95 no-print"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-[#070a10] hover:bg-white/[0.06] text-neutral-300 border border-white/[0.08] transition duration-150 active:scale-95 no-print"
           >
             <Printer className="h-3.5 w-3.5 text-cyan-400" />
             <span>Print / PDF</span>
@@ -73,9 +73,9 @@ export function TransactionList({
           <button
             onClick={onExportCSV}
             title="Export Raw Data to CSV Spreadsheet"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-[#090a0d] hover:bg-white/[0.06] text-neutral-300 border border-white/[0.08] transition duration-150 active:scale-95 no-print"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-[#070a10] hover:bg-white/[0.06] text-neutral-300 border border-white/[0.08] transition duration-150 active:scale-95 no-print"
           >
-            <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-400" />
+            <FileSpreadsheet className="h-3.5 w-3.5 text-cyan-400" />
             <span>Export CSV</span>
           </button>
 
@@ -105,7 +105,7 @@ export function TransactionList({
               onClick={() => setFilterType("INCOME")}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition duration-150 ${
                 filterType === "INCOME"
-                  ? "bg-emerald-500/15 text-emerald-300 font-semibold border border-emerald-500/20"
+                  ? "bg-cyan-500/12 text-cyan-300 font-semibold border border-cyan-500/20"
                   : "text-neutral-400 hover:text-white"
               }`}
             >
@@ -125,7 +125,7 @@ export function TransactionList({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by category, notes, or payment mode..."
-          className="w-full bg-[#090a0d] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500/50 transition duration-150"
+          className="w-full bg-[#070a10] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500/50 transition duration-150"
         />
       </div>
 
@@ -155,7 +155,7 @@ export function TransactionList({
                   <div
                     className={`h-8 w-8 rounded-xl flex items-center justify-center shrink-0 ${
                       isIncome
-                        ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
+                        ? "bg-cyan-500/10 border border-cyan-500/20 text-cyan-400"
                         : "bg-rose-500/10 border border-rose-500/20 text-rose-400"
                     }`}
                   >
@@ -188,7 +188,7 @@ export function TransactionList({
                   <div className="flex items-center gap-1.5">
                     <span
                       className={`text-xs sm:text-sm font-bold font-mono ${
-                        isIncome ? "text-emerald-400" : "text-rose-400"
+                        isIncome ? "text-cyan-400" : "text-rose-400"
                       }`}
                     >
                       {isIncome ? "+" : "-"}

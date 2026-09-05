@@ -207,11 +207,11 @@ export function AddTransactionModal({
             }}
             className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
               type === "INCOME"
-                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm"
+                ? "bg-white/[0.12] text-white border border-white/25 shadow-sm"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
+            <TrendingUp className="h-4 w-4 text-cyan-400" />
             <span>Income (Earned)</span>
           </button>
         </div>
@@ -232,7 +232,7 @@ export function AddTransactionModal({
               </label>
               <span className="text-[10px] text-neutral-500 font-mono">Select currency</span>
             </div>
-            <div className="flex items-center h-12 rounded-xl bg-[#090a0d] border border-white/10 focus-within:border-emerald-500/60 transition relative">
+            <div className="flex items-center h-12 rounded-xl bg-[#070a10] border border-white/10 focus-within:border-white/30 transition relative">
               <CurrencySelect
                 value={txCurrency}
                 onChange={setTxCurrency}
@@ -260,7 +260,7 @@ export function AddTransactionModal({
                   key={inc}
                   type="button"
                   onClick={() => handleQuickAdd(inc)}
-                  className="px-2.5 py-1 text-[10px] font-bold bg-[#090a0d] hover:bg-white/5 border border-white/5 text-neutral-300 rounded-lg transition"
+                  className="px-2.5 py-1 text-[10px] font-bold bg-[#070a10] hover:bg-white/5 border border-white/5 text-neutral-300 rounded-lg transition"
                 >
                   +{symbol}{inc}
                 </button>
@@ -272,7 +272,7 @@ export function AddTransactionModal({
           <div>
             <div className="flex items-center justify-between h-5 mb-1.5">
               <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
-                <Tag className="h-3.5 w-3.5 text-emerald-400" />
+                <Tag className="h-3.5 w-3.5 text-cyan-400" />
                 <span>Category</span>
               </label>
               <span className="text-[10px] text-neutral-500">Expense classification</span>
@@ -288,7 +288,7 @@ export function AddTransactionModal({
           {/* Payment Method */}
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-              <CreditCard className="h-3.5 w-3.5 text-emerald-400" />
+              <CreditCard className="h-3.5 w-3.5 text-cyan-400" />
               <span>Payment Mode</span>
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -299,8 +299,8 @@ export function AddTransactionModal({
                   onClick={() => setPaymentMethod(method.id)}
                   className={`py-2 px-3 text-xs font-semibold rounded-xl border text-left transition ${
                     paymentMethod === method.id
-                      ? "bg-emerald-500/10 border-emerald-500/60 text-emerald-400"
-                      : "bg-[#090a0d] border-white/5 text-neutral-400 hover:text-white"
+                      ? "bg-cyan-500/10 border-emerald-500/60 text-cyan-400"
+                      : "bg-[#070a10] border-white/5 text-neutral-400 hover:text-white"
                   }`}
                 >
                   {method.label}
@@ -313,7 +313,7 @@ export function AddTransactionModal({
           <div>
             <div className="flex items-center justify-between h-5 mb-1.5">
               <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
-                <Calendar className="h-3.5 w-3.5 text-emerald-400" />
+                <Calendar className="h-3.5 w-3.5 text-cyan-400" />
                 <span>Date</span>
               </label>
               <span className="text-[10px] text-neutral-500">Future dates disabled</span>
@@ -330,7 +330,7 @@ export function AddTransactionModal({
           <div>
             <div className="flex items-center justify-between h-5 mb-1.5">
               <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
-                <FileText className="h-3.5 w-3.5 text-emerald-400" />
+                <FileText className="h-3.5 w-3.5 text-cyan-400" />
                 <span>Notes / Description (Optional)</span>
               </label>
               <span className="text-[10px] text-neutral-500">Memo</span>
@@ -340,7 +340,7 @@ export function AddTransactionModal({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="e.g. Dinner with team, Grocery run, Gas"
-              className="w-full h-12 bg-[#090a0d] border border-white/10 rounded-xl px-3.5 text-xs sm:text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+              className="w-full h-12 bg-[#070a10] border border-white/10 rounded-xl px-3.5 text-xs sm:text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
             />
           </div>
 
@@ -349,7 +349,7 @@ export function AddTransactionModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 h-12 rounded-xl text-xs sm:text-sm font-bold bg-[#090a0d] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
+              className="flex-1 h-12 rounded-xl text-xs sm:text-sm font-bold bg-[#070a10] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
             >
               Cancel
             </button>

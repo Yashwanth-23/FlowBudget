@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { formatCurrency, getCurrencySymbol, SUPPORTED_CURRENCIES } from "@/lib/currencies";
 import { LiquidGlassDatePicker } from "../ui/LiquidGlassDatePicker";
+import { MonthYearPickerModal } from "../personal/MonthYearPickerModal";
 import {
   ResponsiveContainer,
   BarChart,
@@ -76,6 +77,7 @@ export function ReportsView({ user }: ReportsViewProps) {
   const [selectedQuarter, setSelectedQuarter] = useState(Math.ceil(currentMonthNum / 3));
   const [customStart, setCustomStart] = useState(`${currentYear}-01-01`);
   const [customEnd, setCustomEnd] = useState(todayStr);
+  const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
 
   // Active reporting currency
   const [selectedCurrency, setSelectedCurrency] = useState(user.currency || "USD");
@@ -259,7 +261,7 @@ export function ReportsView({ user }: ReportsViewProps) {
             <span>Print / PDF Report</span>
           </button>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-emerald-400 text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-cyan-400 text-xs font-semibold">
             <Sparkles className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Real-time Intelligence</span>
           </div>
@@ -271,7 +273,7 @@ export function ReportsView({ user }: ReportsViewProps) {
         {/* ROW 1: PRIMARY PERIOD SELECTOR */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-emerald-400" />
+            <Filter className="h-4 w-4 text-cyan-400" />
             <span className="text-xs font-bold uppercase tracking-wider text-neutral-300">
               Period Scope:
             </span>
@@ -318,9 +320,15 @@ export function ReportsView({ user }: ReportsViewProps) {
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
-                <span className="px-3 text-xs font-mono font-bold text-white">
-                  {getPeriodTitle()}
-                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsMonthPickerOpen(true)}
+                  title="Click to jump to any Month or Year via Calendar"
+                  className="px-2.5 py-1 text-xs font-mono font-bold text-white hover:bg-white/10 rounded-lg flex items-center gap-1.5 transition select-none cursor-pointer"
+                >
+                  <Calendar className="h-3.5 w-3.5 text-cyan-400" />
+                  <span>{getPeriodTitle()}</span>
+                </button>
                 <button
                   onClick={handleNextMonth}
                   className="p-1 text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition"
@@ -368,7 +376,7 @@ export function ReportsView({ user }: ReportsViewProps) {
                       title={item.tip}
                       className={`px-3 py-1 rounded-lg font-bold transition ${
                         selectedQuarter === item.q
-                          ? "bg-emerald-500 text-[#04130c] shadow-sm"
+                          ? "bg-white/[0.15] text-white border border-white/25 shadow-sm"
                           : "text-neutral-400 hover:text-white"
                       }`}
                     >
@@ -391,7 +399,7 @@ export function ReportsView({ user }: ReportsViewProps) {
                     onClick={() => setSelectedYear(yr)}
                     className={`px-3 py-1.5 rounded-lg transition ${
                       selectedYear === yr
-                        ? "bg-emerald-500 text-[#04130c]"
+                        ? "bg-white/[0.15] text-white"
                         : "text-neutral-400 hover:text-white"
                     }`}
                   >
@@ -435,7 +443,7 @@ export function ReportsView({ user }: ReportsViewProps) {
           {/* CURRENCY SELECTOR PILLS */}
           <div className="flex items-center gap-2 md:ml-auto">
             <div className="flex items-center gap-1 text-xs text-neutral-400">
-              <Coins className="h-3.5 w-3.5 text-emerald-400" />
+              <Coins className="h-3.5 w-3.5 text-cyan-400" />
               <span className="font-semibold">Currency:</span>
             </div>
             <div className="flex items-center gap-1 glass-dock p-1 rounded-xl">
@@ -445,7 +453,7 @@ export function ReportsView({ user }: ReportsViewProps) {
                   onClick={() => setSelectedCurrency(curr)}
                   className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition ${
                     selectedCurrency === curr
-                      ? "bg-emerald-500 text-[#04130c] shadow-sm"
+                      ? "bg-white/[0.15] text-white border border-white/25 shadow-sm"
                       : "text-neutral-400 hover:text-white"
                   }`}
                 >
@@ -491,7 +499,7 @@ export function ReportsView({ user }: ReportsViewProps) {
                 <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
                   Total Inflow
                 </span>
-                <div className="h-7 w-7 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                <div className="h-7 w-7 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
                   <TrendingUp className="h-3.5 w-3.5" />
                 </div>
               </div>
@@ -534,7 +542,7 @@ export function ReportsView({ user }: ReportsViewProps) {
               <p
                 className={`text-xl sm:text-2xl lg:text-3xl font-bold font-mono tracking-tight ${
                   summary.netSavings > 0
-                    ? "text-emerald-400"
+                    ? "text-cyan-400"
                     : summary.netSavings < 0
                     ? "text-rose-400"
                     : "text-white"
@@ -543,7 +551,7 @@ export function ReportsView({ user }: ReportsViewProps) {
                 {formatCurrency(summary.netSavings, selectedCurrency)}
               </p>
               <p className="text-[10px] text-neutral-400 mt-1">
-                Savings Rate: <span className="text-emerald-400 font-bold">{summary.savingsRate}%</span>
+                Savings Rate: <span className="text-cyan-400 font-bold">{summary.savingsRate}%</span>
               </p>
             </div>
 
@@ -703,7 +711,7 @@ export function ReportsView({ user }: ReportsViewProps) {
             </div>
 
             {transactions.length === 0 ? (
-              <div className="py-10 text-center text-xs text-neutral-500 bg-[#090a0d] rounded-2xl border border-white/5">
+              <div className="py-10 text-center text-xs text-neutral-500 bg-[#070a10] rounded-2xl border border-white/5">
                 No transactions found for this period in {selectedCurrency}.
               </div>
             ) : (
@@ -725,7 +733,7 @@ export function ReportsView({ user }: ReportsViewProps) {
                         <div
                           className={`h-8 w-8 rounded-xl flex items-center justify-center shrink-0 ${
                             isIncome
-                              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                              ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"
                               : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
                           }`}
                         >
@@ -756,7 +764,7 @@ export function ReportsView({ user }: ReportsViewProps) {
                       <div className="flex items-center gap-1.5 shrink-0">
                         <span
                           className={`text-xs sm:text-sm font-bold font-mono ${
-                            isIncome ? "text-emerald-400" : "text-rose-400"
+                            isIncome ? "text-cyan-400" : "text-rose-400"
                           }`}
                         >
                           {isIncome ? "+" : "-"}
@@ -774,6 +782,14 @@ export function ReportsView({ user }: ReportsViewProps) {
           </div>
         </div>
       )}
+
+      {/* Interactive Month-Year Calendar Picker */}
+      <MonthYearPickerModal
+        isOpen={isMonthPickerOpen}
+        onClose={() => setIsMonthPickerOpen(false)}
+        currentMonth={selectedMonth}
+        onSelectMonth={(newMonth) => setSelectedMonth(newMonth)}
+      />
     </div>
   );
 }

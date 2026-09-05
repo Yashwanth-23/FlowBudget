@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #090a0d;
-  --foreground: #f8fafc;
-  --surface: #12141a;
-  --surface-hover: #181b22;
-  --surface-border: rgba(255, 255, 255, 0.08);
+  --background: #070a10;
+  --foreground: #f0f2f8;
+  --surface: #0e1018;
+  --surface-hover: #14161e;
+  --surface-border: rgba(255, 255, 255, 0.07);
 }
 
 html {
@@ -14,16 +14,30 @@ html {
 }
 
 body {
-  background-color: #090a0d;
-  color: #f8fafc;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  background-color: #070a10;
+  color: #f0f2f8;
+  font-family: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
 /* =========================================================================
-   Apple WWDC Liquid Glass Design Language (Specular Refraction System)
+   Tabular Numerals - Financial Precision Typography
+   ========================================================================= */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* =========================================================================
+   Pure Neutral Liquid Glass Design System
+   —————————————————————————————————————————————————————————————————————
+   Every glass surface is 100% pure neutral and translucent.
+   NO hardcoded color gradients on buttons or cards.
+   The living multicolor aurora engine underneath naturally radiates and
+   refracts through every frosted surface, pill, and dock.
+   NO border-image (preserves perfect border-radius on all cards and capsules).
    ========================================================================= */
 
 /* Liquid Glass Base Surface */
@@ -31,181 +45,201 @@ body {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.06) 0%,
-    rgba(255, 255, 255, 0.01) 100%
-  ), rgba(15, 18, 26, 0.75);
-  backdrop-filter: blur(32px) saturate(180%);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-top: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.16),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4),
-    0 16px 40px -10px rgba(0, 0, 0, 0.65),
-    0 0 0 1px rgba(0, 0, 0, 0.2);
-}
-
-/* Floating Navigation Capsule Dock (Liquid Glass Dynamic Island - Pure Neutral Glass) */
-.glass-dock {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.07) 0%,
-    rgba(255, 255, 255, 0.01) 100%
-  ), rgba(10, 14, 24, 0.45);
+    rgba(255, 255, 255, 0.015) 100%
+  ), rgba(12, 16, 26, 0.50);
   backdrop-filter: blur(32px) saturate(190%);
   -webkit-backdrop-filter: blur(32px) saturate(190%);
   border: 1px solid rgba(255, 255, 255, 0.10);
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.35),
+    0 16px 40px -10px rgba(0, 0, 0, 0.6);
+}
+
+/* Floating Navigation Capsule Dock (Pure Neutral Liquid Glass) */
+.glass-dock {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  ), rgba(10, 14, 24, 0.45);
+  backdrop-filter: blur(32px) saturate(190%);
+  -webkit-backdrop-filter: blur(32px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-top: 1px solid rgba(255, 255, 255, 0.25);
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow:
     inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 0 rgba(0, 0, 0, 0.3),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.25),
     0 16px 36px -10px rgba(0, 0, 0, 0.65);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-dock:hover {
   border-color: rgba(255, 255, 255, 0.18);
-  border-top-color: rgba(255, 255, 255, 0.38);
+  border-top-color: rgba(255, 255, 255, 0.35);
   box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.28),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
     0 20px 48px -10px rgba(0, 0, 0, 0.75);
 }
 
-/* Active Segmented Item in Dock (Pure Neutral Liquid Glass Pill - Zero Green Tint) */
+/* Active Segmented Item in Dock (Pure Neutral Frosted Glass Pill) */
 .glass-dock-item-active {
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.14) 0%,
-    rgba(255, 255, 255, 0.05) 100%
-  ), rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-top: 1px solid rgba(255, 255, 255, 0.32);
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-top: 1px solid rgba(255, 255, 255, 0.38);
   box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
-    0 4px 16px -2px rgba(0, 0, 0, 0.5);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.30),
+    0 4px 16px -2px rgba(0, 0, 0, 0.45);
   color: #ffffff !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Liquid Glass Modal Shell */
 .glass-modal {
   background: linear-gradient(
     155deg,
-    rgba(255, 255, 255, 0.04) 0%,
-    rgba(255, 255, 255, 0) 100%
-  ), rgba(12, 16, 26, 0.7);
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  ), rgba(12, 16, 26, 0.78);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-top: 1px solid rgba(255, 255, 255, 0.26);
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow:
     inset 0 1px 0 0 rgba(255, 255, 255, 0.20),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.5),
-    0 32px 80px -15px rgba(0, 0, 0, 0.9),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4),
+    0 32px 80px -15px rgba(0, 0, 0, 0.85);
 }
 
-/* Popover Dropdown Liquid Glass (Solid Frosted Obsidian - Zero Color Tint) */
+/* Popover Dropdown Liquid Glass (Solid Frosted Obsidian) */
 .glass-popover {
-  background-color: #0d111a !important;
+  background-color: #0c101a !important;
   background-image: linear-gradient(
     165deg,
-    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.05) 0%,
     rgba(255, 255, 255, 0) 100%
   ) !important;
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   border-top: 1px solid rgba(255, 255, 255, 0.26) !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
   box-shadow:
     inset 0 1px 0 0 rgba(255, 255, 255, 0.20),
-    0 24px 60px -10px rgba(0, 0, 0, 0.95),
-    0 0 0 1px rgba(0, 0, 0, 0.6) !important;
+    0 24px 60px -10px rgba(0, 0, 0, 0.95);
 }
 
 /* iOS Liquid Glass Segmented Track */
 .glass-segmented-track {
-  background: rgba(10, 13, 20, 0.5);
+  background: rgba(8, 12, 20, 0.55);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.45);
 }
 
-/* iOS Liquid Glass Segmented Active Thumb */
+/* Segmented Active Thumb — Pure Neutral Liquid Glass Pill */
 .glass-segmented-active {
   background: linear-gradient(
     180deg,
-    rgba(16, 185, 129, 0.9) 0%,
-    rgba(5, 150, 105, 0.95) 100%
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.08) 100%
   );
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
   box-shadow:
-    inset 0 1.5px 0 0 rgba(255, 255, 255, 0.6),
-    0 4px 16px -1px rgba(16, 185, 129, 0.5);
-  color: #04130c !important;
-  font-weight: 800;
+    inset 0 1.5px 0 0 rgba(255, 255, 255, 0.40),
+    0 4px 16px -1px rgba(0, 0, 0, 0.45);
+  color: #ffffff !important;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* 3D Liquid Glass Interactive Card - Soft Eye Comfort */
+/* 3D Liquid Glass Interactive Card — Pure Neutral Translucent */
 .glass-card {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.04) 0%,
-    rgba(255, 255, 255, 0.01) 100%
-  ), rgba(12, 17, 28, 0.42);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+    rgba(255, 255, 255, 0.055) 0%,
+    rgba(255, 255, 255, 0.012) 100%
+  ), rgba(12, 16, 26, 0.42);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-top: 1px solid rgba(255, 255, 255, 0.22);
-  border-left: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
-    0 16px 36px -8px rgba(0, 0, 0, 0.5);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+    0 16px 40px -8px rgba(0, 0, 0, 0.55);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.06) 0%,
-    rgba(255, 255, 255, 0.015) 100%
-  ), rgba(16, 23, 38, 0.50);
-  border-color: rgba(255, 255, 255, 0.16);
-  border-top: 1px solid rgba(255, 255, 255, 0.35);
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  ), rgba(16, 22, 36, 0.52);
+  border-color: rgba(255, 255, 255, 0.18);
+  border-top-color: rgba(255, 255, 255, 0.32);
   box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
-    0 20px 48px -10px rgba(0, 0, 0, 0.65);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    0 24px 50px -10px rgba(0, 0, 0, 0.68);
   transform: translateY(-2px);
 }
 
 .glass-panel {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.04) 0%,
-    rgba(255, 255, 255, 0.01) 100%
-  ), rgba(12, 17, 28, 0.42);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.012) 100%
+  ), rgba(12, 16, 26, 0.45);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
   border: 1px solid rgba(255, 255, 255, 0.10);
-  border-top: 1px solid rgba(255, 255, 255, 0.24);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 20px 40px -15px rgba(0, 0, 0, 0.65);
 }
 
-/* Primary Button with Subtle Emerald Glow */
+/* Primary Button — Pure Neutral Liquid Glass (Catches Dynamic Aurora Beneath) */
 .btn-primary {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #04130c;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.20) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  color: #ffffff;
   font-weight: 700;
-  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 8px 24px -4px rgba(0, 0, 0, 0.5);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.28) 0%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.35);
+  border-top-color: rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 12px 30px -4px rgba(0, 0, 0, 0.6);
   transform: translateY(-1px);
 }
 
@@ -213,24 +247,28 @@ body {
   transform: scale(0.98);
 }
 
-/* Secondary Liquid Glass Button - Dynamic Aurora Translucency */
+/* Secondary Neutral Glass Button */
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(24px) saturate(190%);
   -webkit-backdrop-filter: blur(24px) saturate(190%);
   color: #e2e8f0;
   border: 1px solid rgba(255, 255, 255, 0.10);
-  border-top: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 4px 12px rgba(0, 0, 0, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 4px 12px rgba(0, 0, 0, 0.35);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.10);
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.20);
-  border-top-color: rgba(255, 255, 255, 0.35);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.20), 0 6px 16px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.18);
+  border-top-color: rgba(255, 255, 255, 0.30);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 6px 16px rgba(0, 0, 0, 0.45);
 }
 
 .btn-secondary:active {
@@ -322,13 +360,35 @@ input[type="number"] {
     180deg,
     rgba(255, 255, 255, 0.08) 0%,
     rgba(255, 255, 255, 0.02) 100%
-  ), rgba(12, 16, 26, 0.90);
+  ), rgba(10, 14, 24, 0.90);
   backdrop-filter: blur(40px) saturate(210%);
   -webkit-backdrop-filter: blur(40px) saturate(210%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-top: 1.5px solid rgba(255, 255, 255, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.32);
   box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.20),
     0 20px 50px -5px rgba(0, 0, 0, 0.95),
     0 0 0 1px rgba(0, 0, 0, 0.6);
 }
+
+/* =========================================================================
+   Living Aurora Liquid Glass Brand Typography
+   Real-time chromatic synchronization with the live upper-left aurora cloud
+   ========================================================================= */
+.aurora-brand-text {
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    hsl(var(--aurora-brand-hue, 160), 95%, 75%) 40%,
+    hsl(var(--aurora-brand-hue, 160), 90%, 65%) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  filter: drop-shadow(0 0 14px hsla(var(--aurora-brand-hue, 160), 90%, 65%, 0.45));
+  transition: filter 0.2s ease-out;
+}
+
+

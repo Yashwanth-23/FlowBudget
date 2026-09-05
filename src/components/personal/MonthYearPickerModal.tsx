@@ -88,7 +88,7 @@ export function MonthYearPickerModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto cursor-default"
+        className="w-full max-w-md bg-[#0e1018] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -101,7 +101,7 @@ export function MonthYearPickerModal({
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+          <div className="h-10 w-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
             <Calendar className="h-5 w-5" />
           </div>
           <div>
@@ -111,7 +111,7 @@ export function MonthYearPickerModal({
         </div>
 
         {/* Year Selector */}
-        <div className="bg-[#090a0d] border border-white/[0.08] rounded-2xl p-2.5 mb-5 space-y-2.5">
+        <div className="bg-[#070a10] border border-white/[0.08] rounded-2xl p-2.5 mb-5 space-y-2.5">
           <div className="flex items-center justify-between">
             <button
               type="button"
@@ -170,15 +170,15 @@ export function MonthYearPickerModal({
                 onClick={() => handlePickMonth(m.num)}
                 className={`p-3 rounded-2xl border text-center transition duration-150 flex flex-col items-center gap-0.5 active:scale-95 ${
                   isSelected
-                    ? "bg-emerald-500/15 border-emerald-500/50 text-white shadow-md shadow-emerald-500/10"
-                    : "bg-[#090a0d] border-white/[0.06] text-neutral-300 hover:text-white hover:bg-white/[0.04]"
+                    ? "bg-cyan-500/12 border-emerald-500/50 text-white shadow-md shadow-cyan-500/10"
+                    : "bg-[#070a10] border-white/[0.06] text-neutral-300 hover:text-white hover:bg-white/[0.04]"
                 }`}
               >
                 <span className="text-xs font-bold">{m.short}</span>
                 <span className="text-[10px] text-neutral-500 font-mono">{m.num}</span>
-                {isSelected && <Check className="h-3 w-3 text-emerald-400 mt-0.5" />}
+                {isSelected && <Check className="h-3 w-3 text-cyan-400 mt-0.5" />}
                 {!isSelected && isCurrentMonthNow && (
-                  <span className="text-[9px] text-emerald-400 font-semibold mt-0.5">Now</span>
+                  <span className="text-[9px] text-cyan-400 font-semibold mt-0.5">Now</span>
                 )}
               </button>
             );
@@ -190,9 +190,9 @@ export function MonthYearPickerModal({
           <button
             type="button"
             onClick={handleJumpToNow}
-            className="flex-1 py-2 px-3 bg-[#090a0d] hover:bg-white/[0.06] border border-white/[0.08] text-neutral-300 hover:text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5"
+            className="flex-1 py-2 px-3 bg-[#070a10] hover:bg-white/[0.06] border border-white/[0.08] text-neutral-300 hover:text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5"
           >
-            <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
+            <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
             <span>Current Month ({new Date().toLocaleDateString("en-US", { month: "short", year: "numeric" })})</span>
           </button>
         </div>

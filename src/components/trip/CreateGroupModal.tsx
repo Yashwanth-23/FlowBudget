@@ -99,7 +99,7 @@ export function CreateGroupModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto cursor-default"
+        className="w-full max-w-md glass-modal rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -110,7 +110,7 @@ export function CreateGroupModal({
         </button>
 
         <div className="flex items-center gap-3 mb-5">
-          <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+          <div className="h-10 w-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
             <Users className="h-5 w-5" />
           </div>
           <div>
@@ -138,7 +138,7 @@ export function CreateGroupModal({
               placeholder="e.g. Dinner with Friends, Roommates, Household Bills, Vacation"
               required
               autoFocus
-              className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+              className="w-full bg-[#070a10] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
             />
           </div>
 
@@ -159,8 +159,8 @@ export function CreateGroupModal({
               <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
                 Budget Cap (Optional)
               </label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-neutral-500 text-xs font-mono">
+              <div className="relative flex items-center h-11 sm:h-12 rounded-xl bg-[#0c0e14] border border-white/10 focus-within:border-white/30 transition">
+                <span className="pl-3.5 pr-1 text-neutral-500 text-xs sm:text-sm font-mono font-bold select-none">
                   {symbol}
                 </span>
                 <input
@@ -170,7 +170,7 @@ export function CreateGroupModal({
                   value={totalBudget}
                   onChange={(e) => setTotalBudget(e.target.value)}
                   placeholder="e.g. 1000"
-                  className="w-full bg-[#090a0d] border border-white/10 rounded-xl pl-7 pr-3 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
+                  className="w-full h-full bg-transparent pl-1 pr-3.5 text-xs sm:text-sm text-white placeholder-neutral-600 focus:outline-none font-mono tabular-nums"
                 />
               </div>
             </div>
@@ -180,7 +180,7 @@ export function CreateGroupModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#090a0d] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
+              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#070a10] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
             >
               Cancel
             </button>

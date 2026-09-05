@@ -201,7 +201,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
               </button>
               <div>
                 <h2 className="text-lg font-black tracking-tight text-white flex items-center gap-1.5">
-                  <KeyRound className="h-4 w-4 text-emerald-400" />
+                  <KeyRound className="h-4 w-4 text-cyan-400" />
                   <span>Reset Forgotten PIN</span>
                 </h2>
                 <p className="text-xs text-neutral-400">Recover profile with your secret backup word</p>
@@ -264,7 +264,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
 
         {/* Success Alert */}
         {successMsg && (
-          <div className="mb-4 p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs flex items-center gap-2">
             <CheckCircle className="h-4 w-4 shrink-0" />
             <span>{successMsg}</span>
           </div>
@@ -276,7 +276,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
             <form onSubmit={handleFetchQuestion} className="space-y-4">
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-                  <User className="h-3.5 w-3.5 text-emerald-400" />
+                  <User className="h-3.5 w-3.5 text-cyan-400" />
                   <span>Your Username</span>
                 </label>
                 <div className="relative">
@@ -298,7 +298,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-primary w-full py-3.5 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30 cursor-pointer transition"
+                className="btn-primary w-full py-3.5 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/30 cursor-pointer transition"
               >
                 {loading ? (
                   <div className="h-4 w-4 border-2 border-[#0b1410] border-t-transparent rounded-full animate-spin" />
@@ -314,12 +314,12 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
             <form onSubmit={handleResetPinSubmit} className="space-y-4">
               <div className="glass-dock p-3.5 rounded-2xl border border-white/15 space-y-1">
                 <span className="text-[10px] uppercase font-bold text-neutral-400 block">Security Question:</span>
-                <p className="text-xs font-bold text-emerald-400">{fetchedQuestion}</p>
+                <p className="text-xs font-bold text-cyan-400">{fetchedQuestion}</p>
               </div>
 
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-                  <HelpCircle className="h-3.5 w-3.5 text-emerald-400" />
+                  <HelpCircle className="h-3.5 w-3.5 text-cyan-400" />
                   <span>Your Secret Backup Word</span>
                 </label>
                 <input
@@ -335,7 +335,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
 
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-                  <Lock className="h-3.5 w-3.5 text-emerald-400" />
+                  <Lock className="h-3.5 w-3.5 text-cyan-400" />
                   <span>Choose New PIN (4–6 Digits)</span>
                 </label>
                 <input
@@ -353,7 +353,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-primary w-full py-3.5 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30 cursor-pointer transition"
+                className="btn-primary w-full py-3.5 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/30 cursor-pointer transition"
               >
                 {loading ? (
                   <div className="h-4 w-4 border-2 border-[#0b1410] border-t-transparent rounded-full animate-spin" />
@@ -372,7 +372,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
             {/* Username Input */}
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-                <User className="h-3.5 w-3.5 text-emerald-400" />
+                <User className="h-3.5 w-3.5 text-cyan-400" />
                 <span>Unique Username</span>
               </label>
               <div className="relative">
@@ -394,7 +394,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
-                  <Lock className="h-3.5 w-3.5 text-emerald-400" />
+                  <Lock className="h-3.5 w-3.5 text-cyan-400" />
                   <span>{mode === "login" ? "4–6 Digit PIN" : "Choose 4–6 Digit PIN"}</span>
                 </label>
                 {mode === "login" && (
@@ -404,7 +404,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                       setMode("forgot_pin");
                       setError(null);
                     }}
-                    className="text-[11px] text-emerald-400 hover:text-emerald-300 font-semibold"
+                    className="text-[11px] text-cyan-400 hover:text-cyan-300 font-semibold"
                   >
                     Forgot PIN?
                   </button>
@@ -428,7 +428,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                 {/* Preferred Currency */}
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-                    <Globe className="h-3.5 w-3.5 text-emerald-400" />
+                    <Globe className="h-3.5 w-3.5 text-cyan-400" />
                     <span>Primary Currency</span>
                   </label>
                   <CustomSelect
@@ -445,7 +445,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                 {/* Security Question */}
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-                    <HelpCircle className="h-3.5 w-3.5 text-emerald-400" />
+                    <HelpCircle className="h-3.5 w-3.5 text-cyan-400" />
                     <span>PIN Recovery Question</span>
                   </label>
                   <CustomSelect
@@ -459,7 +459,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
                 {/* Secret Backup Word */}
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-                    <KeyRound className="h-3.5 w-3.5 text-emerald-400" />
+                    <KeyRound className="h-3.5 w-3.5 text-cyan-400" />
                     <span>Secret Backup Word</span>
                   </label>
                   <input
@@ -481,7 +481,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full py-3.5 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30 cursor-pointer transition"
+              className="btn-primary w-full py-3.5 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/30 cursor-pointer transition"
             >
               {loading ? (
                 <div className="h-4 w-4 border-2 border-[#0b1410] border-t-transparent rounded-full animate-spin" />

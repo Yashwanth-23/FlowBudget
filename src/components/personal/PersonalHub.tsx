@@ -188,7 +188,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
               title="Click to jump to any Month or Year"
               className="px-2.5 sm:px-3 py-1 hover:bg-white/[0.06] rounded-xl text-xs font-semibold text-white flex items-center gap-1.5 min-w-[120px] sm:min-w-[140px] justify-center select-none transition duration-150"
             >
-              <Calendar className="h-3.5 w-3.5 text-emerald-400" />
+              <Calendar className="h-3.5 w-3.5 text-cyan-400" />
               <span>{monthLabel}</span>
             </button>
 
@@ -206,7 +206,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
             onClick={() => setIsBudgetOpen(true)}
             className="btn-secondary flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 text-xs font-medium rounded-2xl"
           >
-            <Target className="h-3.5 w-3.5 text-emerald-400/90" />
+            <Target className="h-3.5 w-3.5 text-violet-400/90" />
             <span>Set Budget Cap</span>
           </button>
 
@@ -223,10 +223,10 @@ export function PersonalHub({ user }: PersonalHubProps) {
 
       {/* MULTI-CURRENCY SEGREGATION CONTROLLER (Shows when transactions exist in >1 currency) */}
       {hasMultipleCurrencies && (
-        <div className="glass-card rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 border border-emerald-500/20 shadow-lg">
+        <div className="glass-card rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 border border-cyan-500/20 shadow-lg">
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-300">
-              <Coins className="h-4 w-4 text-emerald-400" />
+              <Coins className="h-4 w-4 text-cyan-400" />
               <span>Multi-Currency Active ({analytics.availableCurrencies.length}):</span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -236,8 +236,8 @@ export function PersonalHub({ user }: PersonalHubProps) {
                   onClick={() => setSelectedCurrency(curr)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition duration-150 flex items-center gap-1.5 ${
                     activeCurr === curr
-                      ? "bg-emerald-500 text-[#04130c] shadow-md shadow-emerald-500/20"
-                      : "bg-[#090a0d] border border-white/10 text-neutral-300 hover:text-white"
+                      ? "bg-white/[0.15] text-white border border-white/30 shadow-sm"
+                      : "bg-[#070a10] border border-white/10 text-neutral-300 hover:text-white"
                   }`}
                 >
                   <span>{curr}</span>
@@ -257,12 +257,12 @@ export function PersonalHub({ user }: PersonalHubProps) {
                 className={`px-2.5 py-1 rounded-lg border font-mono text-xs cursor-pointer transition ${
                   activeCurr === s.currency
                     ? "bg-white/10 border-white/20 text-white font-bold"
-                    : "bg-[#090a0d] border-white/5 text-neutral-400 hover:text-neutral-200"
+                    : "bg-[#070a10] border-white/5 text-neutral-400 hover:text-neutral-200"
                 }`}
                 title={`Click to switch dashboard to ${s.currency}`}
               >
                 <span className="text-neutral-400 font-semibold">{s.currency}: </span>
-                <span className={s.netSavings >= 0 ? "text-emerald-400 font-bold" : "text-rose-400 font-bold"}>
+                <span className={s.netSavings >= 0 ? "text-cyan-400 font-bold" : "text-rose-400 font-bold"}>
                   {formatCurrency(s.netSavings, s.currency)}
                 </span>
               </div>
@@ -290,7 +290,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
         </div>
       )}
 
-      {/* Summary KPI Grid - Cleanly Segregated by Currency */}
+      {/* Summary KPI Grid - Prismatic Opal Glass with Tabular Numerals */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* 1. Total Income */}
         <div className="glass-card rounded-3xl p-4 sm:p-5 relative overflow-hidden group transition duration-200">
@@ -298,15 +298,15 @@ export function PersonalHub({ user }: PersonalHubProps) {
             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
               Total Inflow ({activeCurr})
             </span>
-            <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
+            <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center">
               <TrendingUp className="h-3.5 w-3.5" />
             </div>
           </div>
-          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white font-mono tracking-tight">
+          <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white font-mono tracking-tight tabular-nums">
             {formatCurrency(summary.totalIncome, activeCurr)}
           </p>
           <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] text-neutral-400 font-medium">
-            <span className="text-emerald-400/90 font-semibold">Income</span>
+            <span className="text-cyan-400/90 font-semibold">Income</span>
             <span>•</span>
             <span className="truncate">{monthLabel}</span>
           </div>
@@ -322,7 +322,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
               <TrendingDown className="h-3.5 w-3.5" />
             </div>
           </div>
-          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white font-mono tracking-tight">
+          <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white font-mono tracking-tight tabular-nums">
             {formatCurrency(summary.totalExpense, activeCurr)}
           </p>
           <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] text-neutral-400 font-medium">
@@ -338,14 +338,14 @@ export function PersonalHub({ user }: PersonalHubProps) {
             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
               Net Cash Flow ({activeCurr})
             </span>
-            <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center">
+            <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center">
               <PiggyBank className="h-3.5 w-3.5" />
             </div>
           </div>
           <p
-            className={`text-xl sm:text-2xl lg:text-3xl font-bold font-mono tracking-tight ${
+            className={`text-xl sm:text-2xl lg:text-3xl font-extrabold font-mono tracking-tight tabular-nums ${
               summary.netSavings > 0
-                ? "text-emerald-400"
+                ? "text-cyan-400"
                 : summary.netSavings < 0
                 ? "text-rose-400"
                 : "text-white"
@@ -355,7 +355,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
           </p>
           <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] text-neutral-400 font-medium">
             <span className="text-neutral-300 font-semibold">Savings Rate:</span>
-            <span className="font-mono text-emerald-400/90 font-semibold">{summary.savingsRate}%</span>
+            <span className="font-mono text-violet-400/90 font-semibold tabular-nums">{summary.savingsRate}%</span>
           </div>
         </div>
 
@@ -369,13 +369,13 @@ export function PersonalHub({ user }: PersonalHubProps) {
               <Flame className="h-3.5 w-3.5" />
             </div>
           </div>
-          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white font-mono tracking-tight">
+          <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white font-mono tracking-tight tabular-nums">
             {formatCurrency(summary.avgDailyExpense, activeCurr)}
             <span className="text-xs sm:text-sm font-normal text-neutral-500 ml-1">/day</span>
           </p>
           <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] text-neutral-400 font-medium truncate">
             <span>Est. Month End:</span>
-            <span className="font-mono text-neutral-300 font-semibold truncate">
+            <span className="font-mono text-neutral-300 font-semibold truncate tabular-nums">
               {formatCurrency(summary.projectedMonthEndExpense, activeCurr)}
             </span>
           </div>
@@ -394,7 +394,7 @@ export function PersonalHub({ user }: PersonalHubProps) {
             </div>
             <button
               onClick={() => setIsBudgetOpen(true)}
-              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition"
+              className="text-xs font-semibold text-cyan-400 hover:text-emerald-300 transition"
             >
               + Adjust Budgets
             </button>
@@ -407,13 +407,13 @@ export function PersonalHub({ user }: PersonalHubProps) {
               return (
                 <div
                   key={item.category}
-                  className="bg-[#090a0d] p-3.5 rounded-2xl border border-white/[0.06] space-y-2"
+                  className="bg-[#070a10] p-3.5 rounded-2xl border border-white/[0.06] space-y-2"
                 >
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-semibold text-white">{item.category}</span>
                     <span
                       className={`font-mono font-bold ${
-                        isOver ? "text-rose-400" : isWarn ? "text-amber-400" : "text-emerald-400"
+                        isOver ? "text-rose-400" : isWarn ? "text-amber-400" : "text-cyan-400"
                       }`}
                     >
                       {item.percentUsed}%
@@ -421,10 +421,10 @@ export function PersonalHub({ user }: PersonalHubProps) {
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="w-full bg-[#161820] rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-[#0e1018] rounded-full h-1.5 overflow-hidden">
                     <div
                       className={`h-full transition-all duration-300 rounded-full ${
-                        isOver ? "bg-rose-500" : isWarn ? "bg-amber-500" : "bg-emerald-500"
+                        isOver ? "bg-rose-500" : isWarn ? "bg-amber-500" : "bg-cyan-500"
                       }`}
                       style={{ width: `${Math.min(item.percentUsed, 100)}%` }}
                     />

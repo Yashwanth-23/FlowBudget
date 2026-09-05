@@ -177,7 +177,7 @@ export function SecuritySettingsModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto cursor-default"
+        className="w-full max-w-lg bg-[#0e1018] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -189,7 +189,7 @@ export function SecuritySettingsModal({
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+          <div className="h-10 w-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
             <Shield className="h-5 w-5" />
           </div>
           <div>
@@ -199,7 +199,7 @@ export function SecuritySettingsModal({
         </div>
 
         {/* Status Badge */}
-        <div className="mb-5 p-3 rounded-2xl bg-[#090a0d] border border-white/5 flex items-center justify-between">
+        <div className="mb-5 p-3 rounded-2xl bg-[#070a10] border border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="h-7 w-7 rounded-xl bg-white/5 text-neutral-300 font-bold text-xs flex items-center justify-center">
               @{user.username.charAt(0).toUpperCase()}
@@ -217,7 +217,7 @@ export function SecuritySettingsModal({
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                 hasBackupConfigured
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                  ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"
                   : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
               }`}
             >
@@ -227,7 +227,7 @@ export function SecuritySettingsModal({
         </div>
 
         {/* Section Navigation */}
-        <div className="grid grid-cols-2 gap-1 bg-[#090a0d] p-1 rounded-2xl border border-white/5 mb-5">
+        <div className="grid grid-cols-2 gap-1 bg-[#070a10] p-1 rounded-2xl border border-white/5 mb-5">
           <button
             type="button"
             onClick={() => {
@@ -270,7 +270,7 @@ export function SecuritySettingsModal({
         )}
 
         {success && (
-          <div className="mb-4 p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs flex items-center gap-2">
             <CheckCircle className="h-4 w-4 shrink-0" />
             <span>{success}</span>
           </div>
@@ -285,7 +285,7 @@ export function SecuritySettingsModal({
 
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-                <HelpCircle className="h-3.5 w-3.5 text-emerald-400" />
+                <HelpCircle className="h-3.5 w-3.5 text-cyan-400" />
                 <span>Select Security Question</span>
               </label>
               <CustomSelect
@@ -298,7 +298,7 @@ export function SecuritySettingsModal({
 
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-                <KeyRound className="h-3.5 w-3.5 text-emerald-400" />
+                <KeyRound className="h-3.5 w-3.5 text-cyan-400" />
                 <span>{hasBackupConfigured ? "New Secret Backup Word" : "Set Secret Backup Word"}</span>
               </label>
               <input
@@ -307,7 +307,7 @@ export function SecuritySettingsModal({
                 value={securityAnswer}
                 onChange={(e) => setSecurityAnswer(e.target.value)}
                 placeholder="e.g. Chicago, Max, or Sunrise"
-                className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+                className="w-full bg-[#070a10] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
               />
               <p className="text-[10px] text-neutral-500 mt-1">
                 Answers are case-insensitive and hashed with salted Bcrypt.
@@ -333,7 +333,7 @@ export function SecuritySettingsModal({
           <form onSubmit={handleChangePin} className="space-y-4">
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center gap-1.5">
-                <Lock className="h-3.5 w-3.5 text-emerald-400" />
+                <Lock className="h-3.5 w-3.5 text-cyan-400" />
                 <span>Current PIN</span>
               </label>
               <input
@@ -344,7 +344,7 @@ export function SecuritySettingsModal({
                 value={currentPin}
                 onChange={(e) => setCurrentPin(e.target.value.replace(/\D/g, ""))}
                 placeholder="••••"
-                className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
+                className="w-full bg-[#070a10] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
               />
             </div>
 
@@ -361,7 +361,7 @@ export function SecuritySettingsModal({
                   value={newPin}
                   onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ""))}
                   placeholder="••••"
-                  className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
+                  className="w-full bg-[#070a10] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
                 />
               </div>
 
@@ -377,7 +377,7 @@ export function SecuritySettingsModal({
                   value={confirmPin}
                   onChange={(e) => setConfirmPin(e.target.value.replace(/\D/g, ""))}
                   placeholder="••••"
-                  className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
+                  className="w-full bg-[#070a10] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono"
                 />
               </div>
             </div>

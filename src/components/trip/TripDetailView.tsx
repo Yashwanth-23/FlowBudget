@@ -155,7 +155,7 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="p-2 bg-[#12141a] hover:bg-white/[0.06] border border-white/[0.08] text-neutral-300 rounded-xl transition duration-150 active:scale-95 no-print"
+            className="p-2 bg-[#0e1018] hover:bg-white/[0.06] border border-white/[0.08] text-neutral-300 rounded-xl transition duration-150 active:scale-95 no-print"
             title="Back to All Groups"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -170,13 +170,13 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
                   variant="badge"
                 />
               ) : (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                   {currency}
                 </span>
               )}
             </div>
             <p className="text-xs text-neutral-400 mt-0.5">
-              Group code: <span className="font-mono text-emerald-400 font-semibold">{group.code}</span>
+              Group code: <span className="font-mono text-cyan-400 font-semibold">{group.code}</span>
             </p>
           </div>
         </div>
@@ -197,7 +197,7 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
             onClick={() => setIsShareOpen(true)}
             className="btn-secondary flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 text-xs font-medium rounded-2xl"
           >
-            <Share2 className="h-3.5 w-3.5 text-emerald-400/90" />
+            <Share2 className="h-3.5 w-3.5 text-cyan-400/90" />
             <span>Invite Members</span>
           </button>
 
@@ -237,7 +237,7 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
               Members Joined
             </span>
-            <span className="text-2xl sm:text-3xl font-bold text-emerald-400">
+            <span className="text-2xl sm:text-3xl font-bold text-cyan-400">
               {members.length} {members.length === 1 ? "Person" : "People"}
             </span>
           </div>
@@ -253,20 +253,20 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
                     ? "text-rose-400"
                     : budgetPercent > 80
                     ? "text-amber-400"
-                    : "text-emerald-400"
+                    : "text-cyan-400"
                 }`}
               >
                 {budgetPercent}%
               </span>
             </div>
-            <div className="w-full bg-[#090a0d] rounded-full h-2 overflow-hidden border border-white/[0.06]">
+            <div className="w-full bg-[#070a10] rounded-full h-2 overflow-hidden border border-white/[0.06]">
               <div
                 className={`h-full rounded-full transition-all duration-300 ${
                   budgetPercent > 100
                     ? "bg-rose-500"
                     : budgetPercent > 80
                     ? "bg-amber-500"
-                    : "bg-emerald-500"
+                    : "bg-white/80"
                 }`}
                 style={{ width: `${Math.min(budgetPercent, 100)}%` }}
               />
@@ -279,7 +279,7 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
       <div className="glass-card rounded-3xl p-5">
         <div className="flex items-center justify-between mb-3.5">
           <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-emerald-400" />
+            <Users className="h-4 w-4 text-cyan-400" />
             <h3 className="text-xs font-bold text-white uppercase tracking-wider">
               Group Participants ({members.length})
             </h3>
@@ -300,13 +300,13 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
             return (
               <div
                 key={m.id}
-                className="flex items-center gap-2 bg-[#090a0d] border border-white/[0.08] pl-3 pr-2 py-1.5 rounded-xl text-xs"
+                className="flex items-center gap-2 bg-[#070a10] border border-white/[0.08] pl-3 pr-2 py-1.5 rounded-xl text-xs"
               >
-                <div className="h-5 w-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold text-[10px] flex items-center justify-center">
+                <div className="h-5 w-5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-bold text-[10px] flex items-center justify-center">
                   {m.username.charAt(0).toUpperCase()}
                 </div>
                 <span className="font-medium text-neutral-200">
-                  @{m.username} {isMe && <span className="text-emerald-400 font-semibold">(You)</span>}
+                  @{m.username} {isMe && <span className="text-cyan-400 font-semibold">(You)</span>}
                 </span>
 
                 {isMemberAdmin && (
@@ -377,7 +377,7 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
             <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Group Expense Feed</h3>
             <button
               onClick={() => setIsAddExpenseOpen(true)}
-              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition no-print"
+              className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition no-print"
             >
               + Add Expense
             </button>
@@ -419,19 +419,19 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
                     className="py-3.5 flex items-start sm:items-center justify-between gap-4 hover:bg-white/[0.02] px-2 rounded-xl transition duration-150"
                   >
                     <div className="flex items-start gap-3 min-w-0">
-                      <div className="h-8 w-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+                      <div className="h-8 w-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
                         <Receipt className="h-4 w-4" />
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs sm:text-sm font-semibold text-white truncate">{exp.description}</p>
                         <div className="flex flex-wrap items-center gap-2 text-[10px] text-neutral-400 mt-0.5">
-                          <span className="font-semibold text-emerald-400">
+                          <span className="font-semibold text-cyan-400">
                             {payersLabel}
                           </span>
                           <span>•</span>
                           <span className="font-mono">{dateStr}</span>
                           <span>•</span>
-                          <span className="px-2 py-0.5 rounded bg-[#090a0d] border border-white/[0.08] text-neutral-400">
+                          <span className="px-2 py-0.5 rounded bg-[#070a10] border border-white/[0.08] text-neutral-400">
                             {exp.category}
                           </span>
                         </div>
@@ -489,7 +489,7 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
               Group Spending by Category
             </h3>
             {calculations.categoryBreakdown.length === 0 ? (
-              <div className="h-44 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.06] rounded-2xl bg-[#090a0d]">
+              <div className="h-44 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.06] rounded-2xl bg-[#070a10]">
                 <p className="text-xs text-neutral-400">No group expense data yet</p>
               </div>
             ) : (
@@ -561,13 +561,13 @@ export function TripDetailView({ groupId, onBack, currentUserId, userCurrency }:
                   <div key={mb.userId} className="space-y-1">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-semibold text-neutral-200">@{mb.username}</span>
-                      <span className="font-mono text-emerald-400 font-semibold text-[11px]">
+                      <span className="font-mono text-cyan-400 font-semibold text-[11px]">
                         {formatCurrency(mb.totalPaid, currency)} ({pct}%)
                       </span>
                     </div>
-                    <div className="w-full bg-[#090a0d] rounded-full h-1.5 overflow-hidden">
+                    <div className="w-full bg-[#070a10] rounded-full h-1.5 overflow-hidden">
                       <div
-                        className="bg-emerald-500 h-full rounded-full transition-all duration-300"
+                        className="bg-white/80 h-full rounded-full transition-all duration-300"
                         style={{ width: `${pct}%` }}
                       />
                     </div>

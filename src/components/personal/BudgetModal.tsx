@@ -114,7 +114,7 @@ export function BudgetModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto cursor-default"
+        className="w-full max-w-md glass-modal rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto cursor-default min-h-[470px] flex flex-col justify-between"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -170,7 +170,7 @@ export function BudgetModal({
                 onChange={(e) => setMonthlyLimit(e.target.value)}
                 placeholder="e.g. 500"
                 required
-                className="w-full bg-[#090a0d] border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-lg font-bold text-white placeholder-neutral-600 focus:outline-none focus:border-teal-500/60 transition font-mono"
+                className="w-full bg-[#070a10] border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-lg font-bold text-white placeholder-neutral-600 focus:outline-none focus:border-teal-500/60 transition font-mono"
               />
             </div>
             <p className="text-[10px] text-neutral-500 mt-1">
@@ -186,7 +186,7 @@ export function BudgetModal({
                 key={val}
                 type="button"
                 onClick={() => setMonthlyLimit(val.toString())}
-                className="px-2 py-0.5 text-[11px] font-bold bg-[#090a0d] hover:bg-white/5 border border-white/5 text-neutral-300 rounded-lg transition"
+                className="px-2 py-0.5 text-[11px] font-bold bg-[#070a10] hover:bg-white/5 border border-white/5 text-neutral-300 rounded-lg transition"
               >
                 {symbol}{val}
               </button>
@@ -197,7 +197,7 @@ export function BudgetModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#090a0d] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
+              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#070a10] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
             >
               Cancel
             </button>

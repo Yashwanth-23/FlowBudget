@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { FluidAuroraBackground } from "@/components/ui/FluidAuroraBackground";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
@@ -17,6 +18,14 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "FlowBudget • Personal Budgeting & Shared Group Expense Splitter",
   description: "Track daily income and expenditures, set category budgets, and split shared group expenses with automated Min-Cash-Flow settlements.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "32x32" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -27,10 +36,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${jakartaSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col bg-[#080b12] text-slate-100 relative overflow-x-hidden selection:bg-emerald-500 selection:text-black">
-        {/* Apple Intelligence & Gemini Living Multicolor Aurora Engine */}
+      <body className="min-h-full flex flex-col bg-[#070a10] text-slate-100 relative overflow-x-hidden selection:bg-cyan-400/30 selection:text-white font-sans">
+        {/* Prismatic Opal Aurora Engine */}
         <FluidAuroraBackground />
 
         {/* Foreground Content Stack */}
@@ -42,3 +51,4 @@ export default function RootLayout({
     </html>
   );
 }
+

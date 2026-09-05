@@ -32,14 +32,12 @@ export function CustomSelect({
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Normalize options
   const normalizedOptions: OptionItem[] = options.map((opt) =>
     typeof opt === "string" ? { value: opt, label: opt } : opt
   );
 
   const selectedOption = normalizedOptions.find((opt) => opt.value === value);
 
-  // Close on outside click or touch
   useEffect(() => {
     function handleClickOutside(e: MouseEvent | TouchEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -56,7 +54,6 @@ export function CustomSelect({
     };
   }, [isOpen]);
 
-  // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsOpen(false);
@@ -82,9 +79,9 @@ export function CustomSelect({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         className={`w-full ${sizeClasses[size]} rounded-xl bg-[#0c0e14] border ${
           isOpen
-            ? "border-emerald-500/60 ring-1 ring-emerald-500/30"
+            ? "border-white/35 ring-1 ring-white/15"
             : "border-white/10 hover:border-white/20"
-        } shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] flex items-center justify-between text-left text-white transition duration-150 select-none focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed`}
+        } shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] flex items-center justify-between text-left text-white transition duration-150 select-none focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer`}
       >
         <div className="flex items-center gap-2 truncate min-w-0">
           {selectedOption?.icon && <span className="shrink-0">{selectedOption.icon}</span>}
@@ -100,14 +97,16 @@ export function CustomSelect({
 
         <ChevronDown
           className={`h-4 w-4 text-neutral-400 transition-transform duration-200 shrink-0 ml-2 ${
-            isOpen ? "rotate-180 text-emerald-400" : ""
+            isOpen ? "rotate-180 text-white" : ""
           }`}
         />
       </button>
 
-      {/* Floating Menu Popover - Apple iOS Liquid Glass Surface */}
+      {/* Compact Popover: Short height (max-h-36 ~144px) so it sits neatly inside the card */}
       {isOpen && (
-        <div className="absolute left-0 right-0 top-full mt-1.5 z-[120] max-h-60 overflow-y-auto rounded-2xl glass-popover p-1.5 animate-in fade-in zoom-in-95 duration-150">
+        <div
+          className="absolute left-0 right-0 top-full mt-1.5 z-[120] max-h-36 overflow-y-auto rounded-2xl glass-popover p-1.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150"
+        >
           {normalizedOptions.length === 0 ? (
             <div className="p-3 text-center text-xs text-neutral-500">No options available</div>
           ) : (
@@ -121,9 +120,9 @@ export function CustomSelect({
                     onChange(opt.value);
                     setIsOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs sm:text-sm text-left transition duration-150 ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs sm:text-sm text-left transition duration-150 cursor-pointer ${
                     isSelected
-                      ? "bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/30 shadow-sm"
+                      ? "bg-white/[0.14] text-white font-bold border border-white/25 shadow-sm"
                       : "text-neutral-300 hover:bg-white/[0.06] hover:text-white"
                   }`}
                 >
@@ -131,13 +130,13 @@ export function CustomSelect({
                     {opt.icon && <span className="shrink-0">{opt.icon}</span>}
                     <span className="truncate">{opt.label}</span>
                     {opt.badge && (
-                      <span className="shrink-0 px-1.5 py-0.2 rounded text-[10px] font-mono bg-white/5 text-neutral-400 border border-white/10">
+                      <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-mono bg-white/5 text-neutral-400 border border-white/10">
                         {opt.badge}
                       </span>
                     )}
                   </div>
 
-                  {isSelected && <Check className="h-4 w-4 text-emerald-400 shrink-0 ml-2" />}
+                  {isSelected && <Check className="h-4 w-4 text-white shrink-0 ml-2" />}
                 </button>
               );
             })

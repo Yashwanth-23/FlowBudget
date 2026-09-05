@@ -220,7 +220,7 @@ export function HelpSupportModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto cursor-default"
+        className="w-full max-w-lg bg-[#0e1018] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -232,7 +232,7 @@ export function HelpSupportModal({
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-5">
-          <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
+          <div className="h-10 w-10 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold">
             <HelpCircle className="h-5 w-5" />
           </div>
           <div>
@@ -243,7 +243,7 @@ export function HelpSupportModal({
 
         {/* Segmented iOS Toggle */}
         <div
-          className={`grid gap-1 bg-[#090a0d] p-1 rounded-2xl border border-white/5 mb-5 ${
+          className={`grid gap-1 bg-[#070a10] p-1 rounded-2xl border border-white/5 mb-5 ${
             isSuperAdmin ? "grid-cols-3" : "grid-cols-2"
           }`}
         >
@@ -283,7 +283,7 @@ export function HelpSupportModal({
               }}
               className={`flex items-center justify-center gap-1.5 py-2 text-xs font-bold rounded-xl transition ${
                 activeTab === "inbox"
-                  ? "bg-emerald-500 text-[#0b1410] font-bold shadow-sm"
+                  ? "bg-white/[0.15] text-white border border-white/25 font-bold shadow-sm"
                   : "text-neutral-400 hover:text-white"
               }`}
             >
@@ -297,19 +297,19 @@ export function HelpSupportModal({
         {activeTab === "ticket" && (
           <div>
             {submittedTicketId ? (
-              <div className="py-8 text-center bg-[#090a0d] rounded-2xl border border-white/5 p-6 space-y-3">
-                <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-emerald-500/10 text-emerald-400">
+              <div className="py-8 text-center bg-[#070a10] rounded-2xl border border-white/5 p-6 space-y-3">
+                <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-cyan-500/10 text-cyan-400">
                   <CheckCircle2 className="h-6 w-6" />
                 </div>
                 <h3 className="text-base font-bold text-white">Ticket Submitted Successfully!</h3>
                 <p className="text-xs text-neutral-400 max-w-sm mx-auto leading-relaxed">
-                  Your ticket <span className="font-mono text-emerald-400 font-bold">#{submittedTicketId.slice(-6)}</span> has been recorded in the support desk. We will review and reply to your email shortly.
+                  Your ticket <span className="font-mono text-cyan-400 font-bold">#{submittedTicketId.slice(-6)}</span> has been recorded in the support desk. We will review and reply to your email shortly.
                 </p>
                 <div className="pt-2">
                   <button
                     type="button"
                     onClick={handleResetForm}
-                    className="px-4 py-2 bg-[#12141a] hover:bg-white/5 border border-white/10 text-neutral-200 text-xs font-bold rounded-xl transition"
+                    className="px-4 py-2 bg-[#0e1018] hover:bg-white/5 border border-white/10 text-neutral-200 text-xs font-bold rounded-xl transition"
                   >
                     Submit Another Question
                   </button>
@@ -335,7 +335,7 @@ export function HelpSupportModal({
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Alex"
-                      className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+                      className="w-full bg-[#070a10] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
                     />
                   </div>
 
@@ -349,7 +349,7 @@ export function HelpSupportModal({
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@email.com"
-                      className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+                      className="w-full bg-[#070a10] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
                     />
                   </div>
                 </div>
@@ -376,7 +376,7 @@ export function HelpSupportModal({
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
                       placeholder="e.g. Question on bill split"
-                      className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+                      className="w-full bg-[#070a10] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
                     />
                   </div>
                 </div>
@@ -391,7 +391,7 @@ export function HelpSupportModal({
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Provide details so we can assist you quickly..."
-                    className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition resize-none"
+                    className="w-full bg-[#070a10] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition resize-none"
                   />
                 </div>
 
@@ -424,19 +424,19 @@ export function HelpSupportModal({
               return (
                 <div
                   key={idx}
-                  className="bg-[#090a0d] border border-white/5 rounded-2xl overflow-hidden transition"
+                  className="bg-[#070a10] border border-white/5 rounded-2xl overflow-hidden transition"
                 >
                   <button
                     onClick={() => setActiveFaq(isOpen ? null : idx)}
                     className="w-full p-3.5 flex items-center justify-between text-left hover:bg-white/[0.02] transition"
                   >
                     <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                      <Icon className="h-4 w-4 text-emerald-400 shrink-0" />
+                      <Icon className="h-4 w-4 text-cyan-400 shrink-0" />
                       <span className="text-xs font-bold text-neutral-200 truncate">{faq.q}</span>
                     </div>
                     <ChevronRight
                       className={`h-4 w-4 text-neutral-500 transition-transform duration-200 ${
-                        isOpen ? "rotate-90 text-emerald-400" : ""
+                        isOpen ? "rotate-90 text-cyan-400" : ""
                       }`}
                     />
                   </button>
@@ -457,7 +457,7 @@ export function HelpSupportModal({
           <div className="space-y-3">
             <div className="flex items-center justify-between text-xs text-neutral-400 pb-1">
               <span>All Received Support Tickets ({tickets.length})</span>
-              <button onClick={fetchTickets} className="text-emerald-400 hover:underline">
+              <button onClick={fetchTickets} className="text-cyan-400 hover:underline">
                 Refresh
               </button>
             </div>
@@ -467,7 +467,7 @@ export function HelpSupportModal({
                 <div className="h-6 w-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
               </div>
             ) : tickets.length === 0 ? (
-              <div className="py-12 text-center text-xs text-neutral-500 bg-[#090a0d] rounded-2xl border border-white/5">
+              <div className="py-12 text-center text-xs text-neutral-500 bg-[#070a10] rounded-2xl border border-white/5">
                 No tickets received yet.
               </div>
             ) : (
@@ -485,8 +485,8 @@ export function HelpSupportModal({
                       key={t.id}
                       className={`p-3.5 rounded-2xl border transition space-y-2 ${
                         isResolved
-                          ? "bg-[#090a0d]/50 border-white/5 opacity-70"
-                          : "bg-[#090a0d] border-emerald-500/20"
+                          ? "bg-[#070a10]/50 border-white/5 opacity-70"
+                          : "bg-[#070a10] border-cyan-500/20"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
@@ -497,7 +497,7 @@ export function HelpSupportModal({
                               ({t.email})
                             </span>
                           </div>
-                          <p className="text-xs font-semibold text-emerald-400 mt-0.5">
+                          <p className="text-xs font-semibold text-cyan-400 mt-0.5">
                             {t.subject}
                           </p>
                         </div>
@@ -506,14 +506,14 @@ export function HelpSupportModal({
                           className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
                             isResolved
                               ? "bg-white/5 text-neutral-400"
-                              : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                              : "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"
                           }`}
                         >
                           {t.status}
                         </span>
                       </div>
 
-                      <div className="bg-[#12141a] p-2.5 rounded-xl border border-white/5 text-xs text-neutral-300 leading-relaxed font-sans">
+                      <div className="bg-[#0e1018] p-2.5 rounded-xl border border-white/5 text-xs text-neutral-300 leading-relaxed font-sans">
                         &ldquo;{t.message}&rdquo;
                       </div>
 
@@ -540,7 +540,7 @@ export function HelpSupportModal({
                           <button
                             onClick={() => handleToggleResolve(t.id, t.status)}
                             title="Toggle Resolved"
-                            className="p-1 text-neutral-400 hover:text-white bg-[#12141a] hover:bg-white/10 rounded-lg transition"
+                            className="p-1 text-neutral-400 hover:text-white bg-[#0e1018] hover:bg-white/10 rounded-lg transition"
                           >
                             <Check className="h-3.5 w-3.5" />
                           </button>

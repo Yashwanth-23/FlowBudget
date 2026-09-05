@@ -65,7 +65,7 @@ export function ShareModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto cursor-default"
+        className="w-full max-w-md bg-[#0e1018] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -76,7 +76,7 @@ export function ShareModal({
         </button>
 
         <div className="flex items-center gap-3 mb-5">
-          <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
+          <div className="h-10 w-10 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold">
             <Share2 className="h-5 w-5" />
           </div>
           <div>
@@ -87,20 +87,20 @@ export function ShareModal({
 
         <div className="space-y-3.5">
           {/* Join Code Box */}
-          <div className="bg-[#090a0d] p-3.5 rounded-2xl border border-white/5 flex items-center justify-between">
+          <div className="bg-[#070a10] p-3.5 rounded-2xl border border-white/5 flex items-center justify-between">
             <div>
               <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-500 block">
                 Group Invite Code
               </span>
-              <span className="text-base font-bold text-emerald-400 font-mono tracking-widest">
+              <span className="text-base font-bold text-cyan-400 font-mono tracking-widest">
                 {groupCode}
               </span>
             </div>
             <button
               onClick={handleCopyCode}
-              className="p-2 bg-[#12141a] hover:bg-white/5 border border-white/10 text-neutral-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
+              className="p-2 bg-[#0e1018] hover:bg-white/5 border border-white/10 text-neutral-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
             >
-              {copiedCode ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+              {copiedCode ? <Check className="h-3.5 w-3.5 text-cyan-400" /> : <Copy className="h-3.5 w-3.5" />}
               <span>{copiedCode ? "Copied" : "Copy"}</span>
             </button>
           </div>
@@ -115,13 +115,13 @@ export function ShareModal({
                 type="text"
                 readOnly
                 value={shareLink}
-                className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-3 py-2 text-xs text-neutral-300 font-mono focus:outline-none"
+                className="w-full bg-[#070a10] border border-white/10 rounded-xl px-3 py-2 text-xs text-neutral-300 font-mono focus:outline-none"
               />
               <button
                 onClick={handleCopyLink}
                 className="px-3 py-2 btn-primary text-xs font-bold rounded-xl shrink-0 flex items-center gap-1 transition"
               >
-                {copiedLink ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                {copiedLink ? <Check className="h-3.5 w-3.5 text-cyan-400" /> : <Copy className="h-3.5 w-3.5" />}
                 <span>{copiedLink ? "Copied" : "Copy Link"}</span>
               </button>
             </div>

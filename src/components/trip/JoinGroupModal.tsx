@@ -72,7 +72,7 @@ export function JoinGroupModal({ isOpen, onClose, onSuccess }: JoinGroupModalPro
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md bg-[#12141a] border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto cursor-default"
+        className="w-full max-w-md glass-modal rounded-3xl p-6 sm:p-7 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -111,7 +111,7 @@ export function JoinGroupModal({ isOpen, onClose, onSuccess }: JoinGroupModalPro
               placeholder="e.g. DINNER-4A9"
               required
               autoFocus
-              className="w-full bg-[#090a0d] border border-white/10 rounded-xl px-4 py-3 text-center text-base font-bold text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono uppercase"
+              className="w-full bg-[#070a10] border border-white/10 rounded-xl px-4 py-3 text-center text-base font-bold text-white tracking-widest placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition font-mono uppercase"
             />
           </div>
 
@@ -119,7 +119,7 @@ export function JoinGroupModal({ isOpen, onClose, onSuccess }: JoinGroupModalPro
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#090a0d] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
+              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#070a10] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
             >
               Cancel
             </button>

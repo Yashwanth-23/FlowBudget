@@ -14,6 +14,7 @@ import {
 import { SUPPORTED_CURRENCIES } from "@/lib/currencies";
 import { SecuritySettingsModal } from "../auth/SecuritySettingsModal";
 import { HelpSupportModal } from "../support/HelpSupportModal";
+import { FlowLogo } from "@/components/ui/FlowLogo";
 
 interface NavbarProps {
   currentTab: "personal" | "groups" | "reports";
@@ -75,7 +76,7 @@ export function Navbar({
   return (
     <>
       {/* Top Navbar */}
-      <header className="sticky top-0 z-40 w-full border-b border-white/[0.08] bg-[#090d16]/35 backdrop-blur-2xl no-print">
+      <header className="sticky top-0 z-40 w-full bg-transparent no-print">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Brand Logo */}
@@ -83,12 +84,10 @@ export function Navbar({
               className="flex items-center gap-2.5 cursor-pointer select-none group"
               onClick={() => onTabChange("personal")}
             >
-              <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/30 flex items-center justify-center shadow-inner group-hover:border-emerald-500/50 transition duration-200">
-                <Wallet className="h-4 w-4 text-emerald-400 font-bold" />
-              </div>
+              <FlowLogo size={36} className="group-hover:scale-105 transition-transform duration-200" />
               <div>
                 <span className="text-base sm:text-lg font-bold tracking-tight text-white flex items-center">
-                  Flow<span className="text-emerald-400 font-semibold ml-0.5">Budget</span>
+                  Flow<span className="aurora-brand-text ml-0.5">Budget</span>
                 </span>
               </div>
             </div>
@@ -142,7 +141,7 @@ export function Navbar({
                 title="Help & Support Desk"
                 className="p-2 text-neutral-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.12] backdrop-blur-2xl border border-white/[0.10] hover:border-white/[0.22] rounded-xl transition duration-200 active:scale-95 cursor-pointer shadow-sm"
               >
-                <HelpCircle className="h-4 w-4 text-emerald-400/90" />
+                <HelpCircle className="h-4 w-4 text-cyan-400/90" />
               </button>
 
               {user && (
@@ -153,11 +152,11 @@ export function Navbar({
                       onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/[0.04] hover:bg-white/[0.12] backdrop-blur-2xl border border-white/[0.10] hover:border-white/[0.22] text-neutral-200 hover:text-white transition duration-200 active:scale-95 cursor-pointer shadow-sm"
                     >
-                      <Globe className="h-3.5 w-3.5 text-emerald-400" />
+                      <Globe className="h-3.5 w-3.5 text-cyan-400" />
                       <span className="font-mono">{user.currency || "USD"}</span>
                       <ChevronDown
                         className={`h-3 w-3 text-neutral-400 transition-transform duration-200 ${
-                          currencyDropdownOpen ? "rotate-180 text-emerald-400" : ""
+                          currencyDropdownOpen ? "rotate-180 text-cyan-400" : ""
                         }`}
                       />
                     </button>
@@ -197,13 +196,13 @@ export function Navbar({
                       title="Profile & Security Settings"
                       className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.12] backdrop-blur-2xl border border-white/[0.10] hover:border-white/[0.22] text-neutral-200 hover:text-white transition duration-200 active:scale-95 cursor-pointer shadow-sm"
                     >
-                      <div className="h-5 w-5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-[10px]">
+                      <div className="h-5 w-5 rounded-full bg-cyan-500/12 border border-cyan-500/25 text-cyan-400 flex items-center justify-center font-bold text-[10px]">
                         {user.username.charAt(0).toUpperCase()}
                       </div>
                       <span className="text-xs font-medium hidden sm:inline">
                         @{user.username}
                       </span>
-                      <Shield className="h-3 w-3 text-emerald-400/80 hidden sm:inline" />
+                      <Shield className="h-3 w-3 text-violet-400/80 hidden sm:inline" />
                     </button>
 
                     {/* Logout Button */}

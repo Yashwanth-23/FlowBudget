@@ -239,7 +239,7 @@ export function AddGroupExpenseModal({
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
+          <div className="h-10 w-10 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold">
             <Receipt className="h-5 w-5" />
           </div>
           <div>
@@ -271,7 +271,7 @@ export function AddGroupExpenseModal({
               placeholder="e.g. Dinner, Grocery Run, Gas, Tickets"
               required
               autoFocus
-              className="w-full h-12 bg-[#090a0d] border border-white/10 rounded-xl px-3.5 text-xs sm:text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
+              className="w-full h-12 bg-[#070a10] border border-white/10 rounded-xl px-3.5 text-xs sm:text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500/60 transition"
             />
           </div>
 
@@ -285,7 +285,7 @@ export function AddGroupExpenseModal({
                 </label>
                 <span className="text-[10px] text-neutral-500 font-mono">Currency</span>
               </div>
-              <div className="flex items-center h-12 rounded-xl bg-[#090a0d] border border-white/10 focus-within:border-emerald-500/60 transition relative">
+              <div className="flex items-center h-12 rounded-xl bg-[#070a10] border border-white/10 focus-within:border-emerald-500/60 transition relative">
                 <CurrencySelect
                   value={expCurrency}
                   onChange={setExpCurrency}
@@ -326,7 +326,7 @@ export function AddGroupExpenseModal({
           <div>
             <div className="flex items-center justify-between h-5 mb-1.5">
               <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
-                <Calendar className="h-3.5 w-3.5 text-emerald-400" />
+                <Calendar className="h-3.5 w-3.5 text-cyan-400" />
                 <span>Date</span>
               </label>
               <span className="text-[10px] text-neutral-500">Future dates disabled</span>
@@ -343,7 +343,7 @@ export function AddGroupExpenseModal({
           <div className="pt-2 border-t border-white/5 space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-300 flex items-center gap-1.5">
-                <User className="h-3.5 w-3.5 text-emerald-400" />
+                <User className="h-3.5 w-3.5 text-cyan-400" />
                 <span>1. Who Paid the Bill?</span>
               </label>
 
@@ -383,12 +383,12 @@ export function AddGroupExpenseModal({
               />
             ) : (
               /* Multiple Payers Entry */
-              <div className="space-y-1.5 bg-[#090a0d] p-3 rounded-2xl border border-white/5">
+              <div className="space-y-1.5 bg-[#070a10] p-3 rounded-2xl border border-white/5">
                 <div className="flex items-center justify-between text-[10px] text-neutral-400 pb-1">
                   <span>Enter what each contributor paid:</span>
                   <span
                     className={`font-mono font-bold ${
-                      Math.abs(currentPayersSum - numAmount) < 0.05 ? "text-emerald-400" : "text-amber-400"
+                      Math.abs(currentPayersSum - numAmount) < 0.05 ? "text-cyan-400" : "text-amber-400"
                     }`}
                   >
                     Sum: {symbol}{currentPayersSum.toFixed(2)} / {symbol}{numAmount.toFixed(2)}
@@ -399,10 +399,10 @@ export function AddGroupExpenseModal({
                   {members.map((m) => (
                     <div
                       key={m.userId}
-                      className="flex items-center justify-between bg-[#12141a] p-2 rounded-xl border border-white/5"
+                      className="flex items-center justify-between bg-[#0e1018] p-2 rounded-xl border border-white/5"
                     >
                       <span className="text-xs font-semibold text-neutral-200">
-                        @{m.username} {m.userId === currentUserId && <span className="text-emerald-400">(You)</span>}
+                        @{m.username} {m.userId === currentUserId && <span className="text-cyan-400">(You)</span>}
                       </span>
                       <div className="flex items-center gap-1 w-28">
                         <span className="text-xs text-neutral-500 font-mono">{symbol}</span>
@@ -412,7 +412,7 @@ export function AddGroupExpenseModal({
                           placeholder="0.00"
                           value={customPayers[m.userId] || ""}
                           onChange={(e) => handleCustomPayerChange(m.userId, e.target.value)}
-                          className="w-full bg-[#090a0d] border border-white/10 rounded-lg px-2 py-1 text-xs text-white font-mono text-right focus:outline-none focus:border-emerald-500/60"
+                          className="w-full bg-[#070a10] border border-white/10 rounded-lg px-2 py-1 text-xs text-white font-mono text-right focus:outline-none focus:border-emerald-500/60"
                         />
                       </div>
                     </div>
@@ -426,7 +426,7 @@ export function AddGroupExpenseModal({
           <div className="pt-2 border-t border-white/5 space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-300 flex items-center gap-1.5">
-                <Users className="h-3.5 w-3.5 text-emerald-400" />
+                <Users className="h-3.5 w-3.5 text-cyan-400" />
                 <span>2. Split Between</span>
               </label>
 
@@ -462,7 +462,7 @@ export function AddGroupExpenseModal({
                 <div className="flex items-center justify-between text-[10px] text-neutral-400 pb-0.5">
                   <span>Selected: {selectedSplitUserIds.length} members sharing cost</span>
                   {numAmount > 0 && selectedSplitUserIds.length > 0 && (
-                    <span className="font-mono text-emerald-400 font-bold">
+                    <span className="font-mono text-cyan-400 font-bold">
                       ~{symbol}{calculatedEqualShare} / person
                     </span>
                   )}
@@ -478,12 +478,12 @@ export function AddGroupExpenseModal({
                         onClick={() => toggleSelectSplitUser(m.userId)}
                         className={`py-1.5 px-2.5 rounded-xl border text-xs font-semibold flex items-center justify-between transition ${
                           isSelected
-                            ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-300"
-                            : "bg-[#090a0d] border-white/5 text-neutral-500 hover:text-neutral-400"
+                            ? "bg-cyan-500/10 border-emerald-500/50 text-cyan-300"
+                            : "bg-[#070a10] border-white/5 text-neutral-500 hover:text-neutral-400"
                         }`}
                       >
                         <span className="truncate">@{m.username}</span>
-                        {isSelected && <Check className="h-3 w-3 text-emerald-400 shrink-0" />}
+                        {isSelected && <Check className="h-3 w-3 text-cyan-400 shrink-0" />}
                       </button>
                     );
                   })}
@@ -491,12 +491,12 @@ export function AddGroupExpenseModal({
               </div>
             ) : (
               /* Custom Unequal Split Shares */
-              <div className="space-y-1.5 bg-[#090a0d] p-3 rounded-2xl border border-white/5">
+              <div className="space-y-1.5 bg-[#070a10] p-3 rounded-2xl border border-white/5">
                 <div className="flex items-center justify-between text-[10px] text-neutral-400 pb-1">
                   <span>Enter each person&apos;s share owed:</span>
                   <span
                     className={`font-mono font-bold ${
-                      Math.abs(currentSplitsSum - numAmount) < 0.05 ? "text-emerald-400" : "text-amber-400"
+                      Math.abs(currentSplitsSum - numAmount) < 0.05 ? "text-cyan-400" : "text-amber-400"
                     }`}
                   >
                     Sum: {symbol}{currentSplitsSum.toFixed(2)} / {symbol}{numAmount.toFixed(2)}
@@ -507,7 +507,7 @@ export function AddGroupExpenseModal({
                   {members.map((m) => (
                     <div
                       key={m.userId}
-                      className="flex items-center justify-between bg-[#12141a] p-2 rounded-xl border border-white/5"
+                      className="flex items-center justify-between bg-[#0e1018] p-2 rounded-xl border border-white/5"
                     >
                       <span className="text-xs font-semibold text-neutral-200">@{m.username}</span>
                       <div className="flex items-center gap-1 w-28">
@@ -518,7 +518,7 @@ export function AddGroupExpenseModal({
                           placeholder="0.00"
                           value={customSplits[m.userId] || ""}
                           onChange={(e) => handleCustomSplitChange(m.userId, e.target.value)}
-                          className="w-full bg-[#090a0d] border border-white/10 rounded-lg px-2 py-1 text-xs text-white font-mono text-right focus:outline-none focus:border-emerald-500/60"
+                          className="w-full bg-[#070a10] border border-white/10 rounded-lg px-2 py-1 text-xs text-white font-mono text-right focus:outline-none focus:border-emerald-500/60"
                         />
                       </div>
                     </div>
@@ -533,7 +533,7 @@ export function AddGroupExpenseModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 h-12 rounded-xl text-xs sm:text-sm font-bold bg-[#090a0d] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
+              className="flex-1 h-12 rounded-xl text-xs sm:text-sm font-bold bg-[#070a10] border border-white/5 text-neutral-300 hover:bg-white/5 transition"
             >
               Cancel
             </button>

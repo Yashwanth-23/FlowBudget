@@ -18,20 +18,20 @@ interface AuroraOrb {
 }
 
 const ORBS: AuroraOrb[] = [
-  // Orb 1: Upper-left (Emerald -> Cyan -> Indigo -> Rose -> Amber)
+  // Orb 1: Upper-left Header & Brand Anchor (directly illuminates FlowBudget)
   {
-    baseX: 0.25,
-    baseY: 0.2,
-    ampX: 0.2,
-    ampY: 0.15,
+    baseX: 0.15,
+    baseY: 0.12,
+    ampX: 0.12,
+    ampY: 0.10,
     freqX: 0.00035,
     freqY: 0.00045,
     phaseX: 0,
     phaseY: 1.2,
-    radiusFactor: 0.55,
+    radiusFactor: 0.65,
     baseHue: 160,
     hueSpeed: 0.008,
-    alpha: 0.28,
+    alpha: 0.32,
   },
   // Orb 2: Upper-right (Coral -> Amber -> Mint -> Sky Blue -> Violet)
   {
@@ -141,6 +141,14 @@ export function FluidAuroraBackground() {
         const radius = orb.radiusFactor * maxDim;
 
         const currentHue = (orb.baseHue + elapsed * orb.hueSpeed) % 360;
+
+        // Synchronize the header brand logo hue in real-time with the live upper-left aurora cloud
+        if (i === 0) {
+          document.documentElement.style.setProperty(
+            "--aurora-brand-hue",
+            Math.round(currentHue).toString()
+          );
+        }
 
         const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
         grad.addColorStop(0, `hsla(${currentHue}, 85%, 60%, ${orb.alpha})`);
