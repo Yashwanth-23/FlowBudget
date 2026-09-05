@@ -110,7 +110,10 @@ export function FluidAuroraBackground() {
     let height = 0;
 
     const handleResize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const isMobile = window.innerWidth < 768;
+      // On mobile viewports, scaling down the canvas resolution provides 3x-4x faster draw rates
+      // while GPU bilinear upscaling naturally softens gradient contours without GPU thermal throttling.
+      const dpr = isMobile ? 0.75 : Math.min(window.devicePixelRatio || 1, 1.25);
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = Math.round(width * dpr);
@@ -141,14 +144,6 @@ export function FluidAuroraBackground() {
         const radius = orb.radiusFactor * maxDim;
 
         const currentHue = (orb.baseHue + elapsed * orb.hueSpeed) % 360;
-
-        // Synchronize the header brand logo hue in real-time with the live upper-left aurora cloud
-        if (i === 0) {
-          document.documentElement.style.setProperty(
-            "--aurora-brand-hue",
-            Math.round(currentHue).toString()
-          );
-        }
 
         const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
         grad.addColorStop(0, `hsla(${currentHue}, 85%, 60%, ${orb.alpha})`);
@@ -186,8 +181,9 @@ export function FluidAuroraBackground() {
         ref={canvasRef}
         className="w-full h-full block"
         style={{
-          filter: "blur(40px)",
+          filter: "blur(32px)",
           transform: "translate3d(0, 0, 0)",
+          willChange: "transform",
         }}
       />
     </div>

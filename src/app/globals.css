@@ -373,22 +373,33 @@ input[type="number"] {
 
 /* =========================================================================
    Living Aurora Liquid Glass Brand Typography
-   Real-time chromatic synchronization with the live upper-left aurora cloud
+   GPU-composited hardware-accelerated continuous chromatic flow
+   Synchronized 1:1 with the live upper-left aurora cloud (45s period)
    ========================================================================= */
 .aurora-brand-text {
   background: linear-gradient(
     180deg,
     #ffffff 0%,
-    hsl(var(--aurora-brand-hue, 160), 95%, 75%) 40%,
-    hsl(var(--aurora-brand-hue, 160), 90%, 65%) 100%
+    hsl(160, 95%, 75%) 40%,
+    hsl(160, 90%, 65%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
   font-weight: 800;
   letter-spacing: -0.02em;
-  filter: drop-shadow(0 0 14px hsla(var(--aurora-brand-hue, 160), 90%, 65%, 0.45));
-  transition: filter 0.2s ease-out;
+  animation: aurora-brand-flow 45s linear infinite;
+  will-change: filter;
 }
+
+@keyframes aurora-brand-flow {
+  0% {
+    filter: drop-shadow(0 0 14px hsla(160, 90%, 65%, 0.45)) hue-rotate(0deg);
+  }
+  100% {
+    filter: drop-shadow(0 0 14px hsla(160, 90%, 65%, 0.45)) hue-rotate(360deg);
+  }
+}
+
 
 
