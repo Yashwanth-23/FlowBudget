@@ -373,33 +373,43 @@ input[type="number"] {
 
 /* =========================================================================
    Living Aurora Liquid Glass Brand Typography
-   GPU-composited hardware-accelerated continuous chromatic flow
-   Synchronized 1:1 with the live upper-left aurora cloud (45s period)
+   GPU-composited continuous chromatic flow via background-position shift
+   Works on all mobile WebKit/Blink without paint-layer recalculation
    ========================================================================= */
 .aurora-brand-text {
-  background: linear-gradient(
-    180deg,
-    #ffffff 0%,
-    hsl(160, 95%, 75%) 40%,
-    hsl(160, 90%, 65%) 100%
-  );
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.08) 50%, transparent 70%),
+    linear-gradient(
+      90deg,
+      hsl(160, 90%, 68%),
+      hsl(195, 90%, 68%),
+      hsl(230, 85%, 72%),
+      hsl(275, 85%, 72%),
+      hsl(320, 85%, 70%),
+      hsl(355, 88%, 70%),
+      hsl(25, 90%, 68%),
+      hsl(55, 90%, 68%),
+      hsl(100, 88%, 68%),
+      hsl(160, 90%, 68%)
+    );
+  background-size: 100% 100%, 800% 100%;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
   font-weight: 800;
   letter-spacing: -0.02em;
-  animation: aurora-brand-flow 45s linear infinite;
-  will-change: filter;
+  filter: drop-shadow(0 0 12px hsla(160, 80%, 60%, 0.35));
+  animation: aurora-brand-flow 40s linear infinite;
+  will-change: background-position;
 }
 
 @keyframes aurora-brand-flow {
   0% {
-    filter: drop-shadow(0 0 14px hsla(160, 90%, 65%, 0.45)) hue-rotate(0deg);
+    background-position: 0 0, 0% 50%;
   }
   100% {
-    filter: drop-shadow(0 0 14px hsla(160, 90%, 65%, 0.45)) hue-rotate(360deg);
+    background-position: 0 0, -800% 50%;
   }
 }
-
-
 

@@ -228,7 +228,7 @@ export function Navbar({
             <div className="glass-dock-mobile p-1.5 rounded-full flex items-center justify-around">
               <button
                 onClick={() => onTabChange("personal")}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all duration-300 ${
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-colors duration-150 ${
                   currentTab === "personal"
                     ? "glass-dock-item-active"
                     : "text-neutral-400 hover:text-white"
@@ -240,7 +240,7 @@ export function Navbar({
 
               <button
                 onClick={() => onTabChange("groups")}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all duration-300 ${
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-colors duration-150 ${
                   currentTab === "groups"
                     ? "glass-dock-item-active"
                     : "text-neutral-400 hover:text-white"
@@ -252,7 +252,7 @@ export function Navbar({
 
               <button
                 onClick={() => onTabChange("reports")}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all duration-300 ${
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-colors duration-150 ${
                   currentTab === "reports"
                     ? "glass-dock-item-active"
                     : "text-neutral-400 hover:text-white"
