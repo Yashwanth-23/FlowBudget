@@ -17,14 +17,44 @@ interface UserProfile {
   currency: string;
 }
 
+function normalizeTab(tab: string | null): "personal" | "groups" | "reports" {
+  if (!tab) return "personal";
+  const lower = tab.toLowerCase();
+  if (lower === "trips" || lower === "groups") return "groups";
+  if (lower === "reports") return "reports";
+  return "personal";
+}
+
 function MainAppContent() {
   const searchParams = useSearchParams();
-  const initialTab = (searchParams.get("tab") as "personal" | "groups" | "reports") || "personal";
+  const initialTab = normalizeTab(searchParams.get("tab"));
 
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentTab, setCurrentTab] = useState<"personal" | "groups" | "reports">(initialTab);
   const [isLandingHelpOpen, setIsLandingHelpOpen] = useState(false);
+
+  // Sync tab with URL on load/change
+  useEffect(() => {
+    const rawTab = searchParams.get("tab");
+    const resolvedTab = normalizeTab(rawTab);
+    setCurrentTab(resolvedTab);
+
+    if (typeof window !== "undefined" && rawTab !== resolvedTab) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", resolvedTab);
+      window.history.replaceState(null, "", url.toString());
+    }
+  }, [searchParams]);
+
+  const handleTabChange = (newTab: "personal" | "groups" | "reports") => {
+    setCurrentTab(newTab);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", newTab);
+      window.history.replaceState(null, "", url.toString());
+    }
+  };
 
   useEffect(() => {
     async function loadUser() {
@@ -180,7 +210,7 @@ function MainAppContent() {
     <div className="min-h-screen bg-transparent text-[#f8fafc] selection:bg-cyan-400/30 selection:text-white">
       <Navbar
         currentTab={currentTab}
-        onTabChange={(tab) => setCurrentTab(tab)}
+        onTabChange={handleTabChange}
         user={user}
         onLogout={handleLogout}
         onCurrencyChange={handleCurrencyChange}
@@ -188,9 +218,9 @@ function MainAppContent() {
       />
 
       <main className="max-w-7xl mx-auto min-h-[calc(100vh-4rem)] pb-28 md:pb-12">
-        {currentTab === "personal" && <PersonalHub user={user} />}
         {currentTab === "groups" && <GroupsHub user={user} />}
         {currentTab === "reports" && <ReportsView user={user} />}
+        {currentTab !== "groups" && currentTab !== "reports" && <PersonalHub user={user} />}
       </main>
     </div>
   );

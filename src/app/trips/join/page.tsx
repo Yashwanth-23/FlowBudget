@@ -55,7 +55,7 @@ function JoinPageContent() {
 
       setStatusMessage("Joined trip successfully! Redirecting to dashboard...");
       setTimeout(() => {
-        router.push("/?tab=trips");
+        router.push("/?tab=groups");
       }, 1200);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error joining group");
