@@ -135,6 +135,6 @@ Distributed under the [MIT License](LICENSE).
 ---
 
 <p align="center">
-  <sub>Built with 🦊 | <strong>FlowBudget</strong>: Track your cash, split your trips, and keep your friends. The only finance tracker that guards your wallet while you sleep.</sub>
+  <sub>Built with 🦊 | <strong>FlowBudget</strong>: Because <em>"I'll Zelle you when I get home"</em> is the biggest lie in human history.</sub>
 </p>
 
