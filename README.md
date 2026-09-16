@@ -135,6 +135,6 @@ Distributed under the [MIT License](LICENSE).
 ---
 
 <p align="center">
-  <sub>Built with 🦊 | <strong>FlowBudget</strong>: Because <em>"I'll Zelle you when I get home"</em> is the biggest lie in human history.</sub>
+  <sub>🦊 <strong>FlowBudget</strong>: Built out of trust issues, because <em>"I'll Zelle you when I get home"</em> is the biggest lie in human history.</sub>
 </p>
 
