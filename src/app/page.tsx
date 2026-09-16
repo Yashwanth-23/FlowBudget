@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { PersonalHub } from "@/components/personal/PersonalHub";
@@ -19,15 +19,17 @@ interface UserProfile {
 
 function normalizeTab(tab: string | null): "personal" | "groups" | "reports" {
   if (!tab) return "personal";
-  const lower = tab.toLowerCase();
+  const lower = tab.toLowerCase().trim();
   if (lower === "trips" || lower === "groups") return "groups";
-  if (lower === "reports") return "reports";
+  if (lower === "reports" || lower === "analytics") return "reports";
   return "personal";
 }
 
 function MainAppContent() {
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const initialTab = normalizeTab(searchParams.get("tab"));
+  const initialTab = normalizeTab(searchParams ? searchParams.get("tab") : null);
 
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -36,23 +38,29 @@ function MainAppContent() {
 
   // Sync tab with URL on load/change
   useEffect(() => {
-    const rawTab = searchParams.get("tab");
+    const rawTab = searchParams ? searchParams.get("tab") : null;
     const resolvedTab = normalizeTab(rawTab);
     setCurrentTab(resolvedTab);
 
-    if (typeof window !== "undefined" && rawTab !== resolvedTab) {
-      const url = new URL(window.location.href);
-      url.searchParams.set("tab", resolvedTab);
-      window.history.replaceState(null, "", url.toString());
+    if (rawTab && (rawTab.toLowerCase() === "trips" || rawTab !== resolvedTab)) {
+      const params = new URLSearchParams(searchParams ? searchParams.toString() : "");
+      params.set("tab", resolvedTab);
+      const newUrl = `${pathname}?${params.toString()}`;
+      router.replace(newUrl, { scroll: false });
+      if (typeof window !== "undefined") {
+        window.history.replaceState(null, "", newUrl);
+      }
     }
-  }, [searchParams]);
+  }, [searchParams, pathname, router]);
 
   const handleTabChange = (newTab: "personal" | "groups" | "reports") => {
     setCurrentTab(newTab);
+    const params = new URLSearchParams(searchParams ? searchParams.toString() : "");
+    params.set("tab", newTab);
+    const newUrl = `${pathname}?${params.toString()}`;
+    router.replace(newUrl, { scroll: false });
     if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("tab", newTab);
-      window.history.replaceState(null, "", url.toString());
+      window.history.replaceState(null, "", newUrl);
     }
   };
 

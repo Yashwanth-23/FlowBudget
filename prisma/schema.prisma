@@ -18,6 +18,10 @@ model User {
   securityAnswerHash String?
   currency           String            @default("USD")
   createdAt          DateTime          @default(now())
+
+  // Rate-limiting: Progressive Exponential Backoff
+  failedLoginAttempts  Int             @default(0)
+  lockoutExpiresAt     DateTime?
   
   // Relations
   transactions       Transaction[]

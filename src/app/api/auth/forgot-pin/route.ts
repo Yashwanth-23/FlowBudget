@@ -92,7 +92,11 @@ export async function POST(req: NextRequest) {
     const newPinHash = await hashPin(newPin.trim());
     const updatedUser = await prisma.user.update({
       where: { id: user.id },
-      data: { pinHash: newPinHash },
+      data: {
+        pinHash: newPinHash,
+        failedLoginAttempts: 0,
+        lockoutExpiresAt: null,
+      },
     });
 
     const token = createSessionToken({

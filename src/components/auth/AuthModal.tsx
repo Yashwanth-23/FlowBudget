@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   Lock,
   User,
@@ -11,6 +11,7 @@ import {
   KeyRound,
   ArrowLeft,
   CheckCircle,
+  Timer,
 } from "lucide-react";
 import { SUPPORTED_CURRENCIES } from "@/lib/currencies";
 import { CustomSelect } from "@/components/ui/CustomSelect";
@@ -45,6 +46,48 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // Progressive Backoff Lockout State
+  const [lockoutSeconds, setLockoutSeconds] = useState(0);
+  const lockoutTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Countdown timer: ticks every second, clears at zero
+  useEffect(() => {
+    if (lockoutSeconds <= 0) {
+      if (lockoutTimerRef.current) {
+        clearInterval(lockoutTimerRef.current);
+        lockoutTimerRef.current = null;
+      }
+      return;
+    }
+
+    lockoutTimerRef.current = setInterval(() => {
+      setLockoutSeconds((prev) => {
+        if (prev <= 1) {
+          if (lockoutTimerRef.current) clearInterval(lockoutTimerRef.current);
+          lockoutTimerRef.current = null;
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (lockoutTimerRef.current) {
+        clearInterval(lockoutTimerRef.current);
+        lockoutTimerRef.current = null;
+      }
+    };
+  }, [lockoutSeconds > 0]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const formatCountdown = useCallback((seconds: number): string => {
+    if (seconds < 60) return `${seconds}s`;
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return s > 0 ? `${m}m ${s}s` : `${m}m`;
+  }, []);
+
+  const isLockedOut = lockoutSeconds > 0;
 
   const cleanUsernameInput = (val: string) => {
     return val.toLowerCase().replace(/[^a-z0-9_.-]/g, "");
@@ -127,6 +170,12 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
     setError(null);
     setSuccessMsg(null);
 
+    // Block submission if currently locked out
+    if (isLockedOut && mode === "login") {
+      setError(`Please wait ${formatCountdown(lockoutSeconds)} before trying again.`);
+      return;
+    }
+
     const cleanUser = cleanUsernameInput(username);
     const cleanPin = cleanPinInput(pin);
 
@@ -168,10 +217,20 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
 
       const data = await res.json();
 
+      // Handle progressive backoff lockout (HTTP 429)
+      if (res.status === 429 && data.retryAfterSeconds) {
+        setLockoutSeconds(data.retryAfterSeconds);
+        setPin(""); // Clear PIN input for security
+        setError(null); // Error replaced by the lockout banner
+        return;
+      }
+
       if (!res.ok) {
         throw new Error(data.error || "Authentication failed");
       }
 
+      // Success — lockout counter is reset server-side
+      setLockoutSeconds(0);
       onSuccess(data.user);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Authentication error occurred");
@@ -267,6 +326,33 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
           <div className="mb-4 p-3 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs flex items-center gap-2">
             <CheckCircle className="h-4 w-4 shrink-0" />
             <span>{successMsg}</span>
+          </div>
+        )}
+
+        {/* Lockout Countdown Banner */}
+        {isLockedOut && mode === "login" && (
+          <div className="mb-4 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs space-y-2">
+            <div className="flex items-center gap-2">
+              <Timer className="h-4 w-4 shrink-0 animate-pulse" />
+              <span className="font-bold">
+                Try again in {formatCountdown(lockoutSeconds)}
+              </span>
+            </div>
+            <p className="text-amber-400/70 text-[10px] leading-relaxed">
+              Too many incorrect attempts. You can still{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("forgot_pin");
+                  setLockoutSeconds(0);
+                  setError(null);
+                }}
+                className="text-cyan-400 hover:text-cyan-300 font-bold underline underline-offset-2"
+              >
+                reset your PIN with your Secret Word
+              </button>{" "}
+              at any time.
+            </p>
           </div>
         )}
 
@@ -480,11 +566,20 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={loading}
-              className="btn-primary w-full py-3.5 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/30 cursor-pointer transition"
+              disabled={loading || (isLockedOut && mode === "login")}
+              className={`btn-primary w-full py-3.5 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/30 transition ${
+                isLockedOut && mode === "login"
+                  ? "opacity-40 cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
             >
               {loading ? (
                 <div className="h-4 w-4 border-2 border-[#0b1410] border-t-transparent rounded-full animate-spin" />
+              ) : isLockedOut && mode === "login" ? (
+                <>
+                  <Timer className="h-4 w-4" />
+                  <span>Wait {formatCountdown(lockoutSeconds)}</span>
+                </>
               ) : (
                 <>
                   <span>{mode === "login" ? "Log In to FlowBudget" : "Create Profile"}</span>
